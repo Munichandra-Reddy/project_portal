@@ -1,0 +1,297 @@
+{
+  "title": "Testing",
+  "introduction": {
+    "what_it_is": "Testing in Python involves writing code to verify that your application code works as expected. It ensures that individual units of code (functions, classes) and the system as a whole behave correctly under various conditions.",
+    "why_important": "Testing catches bugs early in the development cycle, prevents regressions (breaking existing features when adding new ones), serves as documentation, and provides confidence to refactor code.",
+    "real_world": [
+      "Ensuring an e-commerce checkout function calculates totals and taxes correctly.",
+      "Verifying that an API endpoint returns the correct JSON structure.",
+      "Testing edge cases in a data processing pipeline to prevent pipeline failures."
+    ]
+  },
+  "detailed_theory": "Software testing is a crucial discipline in software engineering. In Python, testing is typically broken down into several levels: Unit Testing, Integration Testing, and End-to-End (E2E) Testing.\n\n**Unit Testing** is the foundation. It involves testing the smallest testable parts of an application, like individual functions or methods, in isolation. The goal is to ensure each unit performs exactly as intended. Dependencies (like database connections or network calls) are often 'mocked' or 'stubbed' to keep the test fast and deterministic.\n\n**Integration Testing** checks if different modules or services work properly when combined. For example, verifying that your Python application interacts correctly with a real database or an external API.\n\n**End-to-End Testing** simulates a real user scenario from start to finish, such as opening a browser, logging in, adding items to a cart, and checking out. These are the most realistic but also the slowest and most brittle tests.\n\nPython has a built-in module for testing called `unittest`. It is inspired by Java's JUnit and requires creating test classes that inherit from `unittest.TestCase`. While robust, its class-based boilerplate can sometimes feel heavy.\n\nBecause of this, **pytest** has become the most popular testing framework in the Python community. Pytest allows you to write simple, function-based tests. It features powerful capabilities like 'fixtures' for managing setup and teardown code, parameterized testing to run a test with multiple sets of data, and highly readable output when tests fail. Pytest can also automatically discover and run tests written using the standard `unittest` library.\n\nAnother important concept in testing is **Mocking**. The `unittest.mock` module (also used with pytest) allows you to replace parts of your system under test with mock objects. This is essential when you want to test a function that sends an email or charges a credit card, but you don't want to actually perform those actions during an automated test.\n\nTest-Driven Development (TDD) is a methodology where you write the test *before* writing the implementation code. The cycle is: Write a failing test -> Write the minimum code to pass the test -> Refactor the code. TDD often leads to better-designed, highly testable code with high test coverage.",
+  "key_features": {
+    "features": [
+      {
+        "name": "unittest module",
+        "description": "The built-in Python testing framework that uses an object-oriented approach."
+      },
+      {
+        "name": "pytest framework",
+        "description": "A popular third-party framework that simplifies testing with function-based tests and powerful fixtures."
+      },
+      {
+        "name": "Mocking",
+        "description": "Simulating objects or external services to isolate the code being tested."
+      },
+      {
+        "name": "Test Coverage",
+        "description": "Tools like `coverage.py` measure the percentage of your codebase that is executed by your tests."
+      }
+    ],
+    "advantages": [
+      "Reduces bugs and improves software reliability.",
+      "Facilitates safe refactoring of code.",
+      "Tests act as executable documentation showing how code is supposed to be used.",
+      "Speeds up development in the long run by catching issues early."
+    ],
+    "limitations": [
+      "Writing tests takes initial time and effort.",
+      "Tests need to be maintained alongside the application code.",
+      "100% test coverage does not guarantee bug-free software; tests are only as good as the assertions written."
+    ]
+  },
+  "syntax": {
+    "explanation": "A simple pytest setup involves writing a function starting with `test_` and using the standard Python `assert` statement.",
+    "breakdown": [
+      "`def test_addition():`: Test functions must start with `test_` so pytest can discover them.",
+      "`assert calculate(2, 3) == 5`: Uses the native `assert` keyword to verify conditions.",
+      "`@pytest.fixture`: A decorator to create reusable setup code that can be injected into test functions."
+    ],
+    "rules": [
+      "Test files should typically be named starting or ending with `test` (e.g., `test_math.py`).",
+      "Test functions inside those files must start with `test_`.",
+      "Do not use `try/except` blocks to catch expected exceptions; use `pytest.raises` instead."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "A Simple Pytest Function",
+      "code": "# my_math.py\ndef add(a, b):\n    return a + b\n\n# test_math.py\nfrom my_math import add\n\ndef test_add_positive_numbers():\n    assert add(2, 3) == 5\n\ndef test_add_negative_numbers():\n    assert add(-1, -1) == -2",
+      "output": "(Running `pytest` in terminal)\n================ test session starts ================\ncollected 2 items\ntest_math.py ..                                [100%]\n============== 2 passed in 0.01s ===============",
+      "explanation": "This demonstrates basic pytest usage. We import the function to test, write test functions starting with `test_`, and use standard `assert` statements."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Using Pytest Fixtures",
+      "code": "import pytest\n\nclass Database:\n    def connect(self): return True\n    def close(self): pass\n\n@pytest.fixture\ndef db_connection():\n    db = Database()\n    db.connect() # Setup\n    yield db     # Provide the fixture to the test\n    db.close()   # Teardown (runs after test)\n\ndef test_database_is_connected(db_connection):\n    assert db_connection.connect() is True",
+      "output": "1 passed",
+      "explanation": "Fixtures provide a way to set up state before a test and clean it up afterward. The `yield` keyword separates the setup and teardown phases. The fixture name is passed as an argument to the test."
+    },
+    {
+      "level": "Advanced",
+      "title": "Mocking External API Calls",
+      "code": "import requests\nfrom unittest.mock import patch\n\ndef fetch_user_name(user_id):\n    response = requests.get(f'https://api.example.com/users/{user_id}')\n    return response.json().get('name')\n\n@patch('requests.get')\ndef test_fetch_user_name(mock_get):\n    # Configure the mock to return a specific JSON response\n    mock_get.return_value.json.return_value = {'name': 'Alice'}\n    \n    result = fetch_user_name(1)\n    \n    assert result == 'Alice'\n    mock_get.assert_called_once_with('https://api.example.com/users/1')",
+      "output": "1 passed",
+      "explanation": "The `@patch` decorator replaces `requests.get` with a Mock object. We configure this mock to return a predefined value, preventing actual network calls during testing."
+    },
+    {
+      "level": "Real-world",
+      "title": "Testing Exceptions",
+      "code": "import pytest\n\ndef divide(a, b):\n    if b == 0:\n        raise ValueError('Cannot divide by zero')\n    return a / b\n\ndef test_divide_by_zero_raises_error():\n    with pytest.raises(ValueError) as exc_info:\n        divide(10, 0)\n    \n    assert str(exc_info.value) == 'Cannot divide by zero'",
+      "output": "1 passed",
+      "explanation": "It is crucial to test that your code handles errors correctly. `pytest.raises` asserts that a specific block of code raises a specific exception."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "unittest vs. pytest Comparison",
+        "headers": ["Feature", "unittest", "pytest"],
+        "rows": [
+          ["Style", "Object-Oriented (Classes)", "Functional (Functions)"],
+          ["Assertions", "self.assertEqual(a, b)", "assert a == b"],
+          ["Setup/Teardown", "setUp() / tearDown() methods", "Fixtures"],
+          ["Boilerplate", "High", "Low"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Unit Testing",
+        "concept_b": "Integration Testing",
+        "explanation": "Unit testing checks a single function in isolation, often mocking dependencies. Integration testing checks how multiple functions or systems (like an app and a database) work together."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "pytest.fixture()",
+      "description": "Decorator to mark a function as a fixture, providing setup and teardown for tests.",
+      "parameters": "scope='function', autouse=False, ...",
+      "return_value": "None",
+      "example_usage": "@pytest.fixture\ndef my_fixture(): ..."
+    },
+    {
+      "name": "pytest.raises()",
+      "description": "Context manager to assert that a specific exception is raised within a code block.",
+      "parameters": "expected_exception",
+      "return_value": "ExceptionInfo object.",
+      "example_usage": "with pytest.raises(ValueError): my_func()"
+    },
+    {
+      "name": "patch()",
+      "description": "A context manager/decorator from unittest.mock to temporarily replace the target object with a mock.",
+      "parameters": "target",
+      "return_value": "A MagicMock object.",
+      "example_usage": "@patch('module.Class')"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Testing implementation details instead of behavior",
+      "description": "Writing tests that are tightly coupled to how a function is implemented, making tests break even when refactoring doesn't change the output.",
+      "wrong_example": "(Mocking an internal helper function just to test the parent function)",
+      "correct_example": "Only mock external dependencies (DBs, APIs). Test the function based on inputs and expected outputs.",
+      "debugging_tip": "If changing a variable name or moving logic to a helper function breaks your test, your test is too coupled to the implementation."
+    },
+    {
+      "title": "Not isolating tests",
+      "description": "Tests that depend on the state left behind by a previous test.",
+      "wrong_example": "(Test A creates a DB record, Test B assumes that record exists)",
+      "correct_example": "Use fixtures to ensure every test starts with a clean slate (e.g., an empty database or fresh mock).",
+      "debugging_tip": "If running an individual test passes, but running the whole suite fails, you have an isolation problem."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between `unittest` and `pytest`?",
+        "answer": "`unittest` is part of the Python standard library and uses class-based tests with specific assertion methods (like `assertEqual`). `pytest` is a third-party framework that uses simple functions, native `assert` statements, and offers powerful features like fixtures."
+      },
+      {
+        "question": "Why do we mock objects in testing?",
+        "answer": "We mock objects to isolate the unit of code being tested from external dependencies like databases, networks, or file systems. This makes tests faster, deterministic, and focuses the test solely on the logic of the code being tested."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain what a Pytest Fixture is.",
+        "answer": "A fixture is a function decorated with `@pytest.fixture` that provides a fixed baseline (setup state) upon which tests can reliably execute. They handle setup and teardown logic and can be injected into test functions as arguments."
+      },
+      {
+        "question": "What is Test-Driven Development (TDD)?",
+        "answer": "TDD is a software development process where you write a failing test before writing the actual code to implement the feature. The cycle is: Red (write failing test), Green (write code to pass), Refactor (improve code while keeping tests green)."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you test a function that involves asynchronous code (async/await) in Pytest?",
+        "answer": "You can use the `pytest-asyncio` plugin. You decorate the test function with `@pytest.mark.asyncio`, allowing the test function itself to be defined as `async def` and use the `await` keyword inside it."
+      },
+      {
+        "question": "What is mutation testing?",
+        "answer": "Mutation testing is a technique to evaluate the quality of your test suite. It involves slightly modifying (mutating) your source code in small ways and running the test suite. If the tests still pass, it means your tests missed a potential bug. A 'killed' mutant means the tests caught the change."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a function that reverses a string, and write a pytest function to test it.",
+      "Create a test to verify that calling `len()` on an empty list returns 0.",
+      "Write a test using `unittest` syntax (class inheriting from `TestCase`) to assert 2 + 2 equals 4.",
+      "Write a pytest function to verify that `\"python\".upper()` returns `\"PYTHON\"`.",
+      "Run your tests from the command line using the `pytest` command."
+    ],
+    "medium": [
+      "Write a function that parses a date string. Write a test using `pytest.raises` to ensure it throws a ValueError for invalid formats.",
+      "Create a pytest fixture that returns a dictionary of dummy user data and use it in a test.",
+      "Use `pytest.mark.parametrize` to test a function `is_even(n)` with multiple inputs (2, 4, 6) in a single test definition.",
+      "Write a test that mocks `datetime.datetime.now()` to return a specific fixed date for testing time-sensitive logic.",
+      "Install and run `pytest-cov` to generate a test coverage report for your code."
+    ],
+    "hard": [
+      "Write an integration test that uses a test SQLite database to insert a record and then retrieve it.",
+      "Mock an external REST API call using `@patch` and simulate different HTTP status codes (200, 404, 500) to test error handling.",
+      "Implement a custom pytest fixture with 'session' scope that sets up a heavy resource once for the entire test suite.",
+      "Write tests for a Flask application route using Flask's `test_client`.",
+      "Create a CI/CD configuration file (e.g., GitHub Actions) that automatically runs pytest when code is pushed."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a function `get_discount(price, discount_percent)` and write tests to cover normal cases, 0% discount, 100% discount, and invalid inputs.",
+      "input": "Prices and percentages.",
+      "output": "Test cases asserting correctness and exceptions.",
+      "constraints": "Throw ValueError if percentage is < 0 or > 100.",
+      "solution": "import pytest\ndef get_discount(price, pct):\n    if not 0 <= pct <= 100: raise ValueError()\n    return price * (1 - pct/100)\n\ndef test_normal(): assert get_discount(100, 20) == 80\ndef test_zero_pct(): assert get_discount(100, 0) == 100\ndef test_full_pct(): assert get_discount(100, 100) == 0\ndef test_invalid():\n    with pytest.raises(ValueError):\n        get_discount(100, 110)"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Continuous Integration (CI)",
+      "explanation": "Automated testing is the foundation of CI pipelines. Tests run automatically every time a developer commits code to ensure the new code doesn't break the build."
+    },
+    {
+      "field": "Refactoring Legacy Code",
+      "explanation": "Before changing old, messy code, developers write comprehensive tests around it. This ensures that their refactoring changes the structure but preserves the original behavior."
+    }
+  ],
+  "best_practices": [
+    "Keep tests fast. Slow tests discourage developers from running them frequently.",
+    "Name tests descriptively so it's obvious what failed when reading the test report (e.g., `test_login_fails_with_wrong_password`).",
+    "Each test should verify exactly one concept or behavior.",
+    "Aim for high test coverage, but prioritize testing complex business logic over simple getters/setters.",
+    "Run tests continuously locally before pushing code."
+  ],
+  "summary": [
+    "Testing verifies that code works correctly and prevents regressions.",
+    "Unit tests check isolated functions, while integration tests check combined systems.",
+    "Pytest is the most popular testing framework in Python due to its simplicity and powerful fixtures.",
+    "Mocking is used to simulate external dependencies during tests.",
+    "TDD involves writing tests before the implementation code."
+  ],
+  "quiz": [
+    {
+      "question": "Which keyword is used natively in Python and pytest to verify conditions in tests?",
+      "options": ["verify", "check", "assert", "expect"],
+      "answer": "assert",
+      "explanation": "Pytest uses the standard Python 'assert' statement for verification, making tests very readable."
+    },
+    {
+      "question": "What is the primary purpose of mocking in unit tests?",
+      "options": ["To make the code run faster in production", "To isolate the unit of code by simulating external dependencies", "To generate fake data for the database", "To test the user interface"],
+      "answer": "To isolate the unit of code by simulating external dependencies",
+      "explanation": "Mocking replaces components like network calls or databases with predictable, simulated objects."
+    },
+    {
+      "question": "How do you define a setup mechanism in Pytest that can be reused across multiple tests?",
+      "options": ["setUp() method", "constructor", "Decorator @pytest.fixture", "Decorator @setup"],
+      "answer": "Decorator @pytest.fixture",
+      "explanation": "Fixtures provide a structured way to handle setup and teardown logic and inject it into test functions."
+    },
+    {
+      "question": "What is the convention for naming a test function so that pytest discovers it?",
+      "options": ["It must end with _test", "It must start with test_", "It must be named run_test", "There is no convention"],
+      "answer": "It must start with test_",
+      "explanation": "Pytest automatically discovers tests by looking for files and functions matching the test_*.py and test_* conventions."
+    },
+    {
+      "question": "How do you test that a specific exception is raised in pytest?",
+      "options": ["try/except block", "assert raises(Exception)", "with pytest.raises(Exception):", "self.assertRaises()"],
+      "answer": "with pytest.raises(Exception):",
+      "explanation": "The pytest.raises context manager is the idiomatic way to assert that a block of code throws an expected exception."
+    },
+    {
+      "question": "What does TDD stand for?",
+      "options": ["Test-Driven Development", "Technical Design Document", "Time-Delayed Deployment", "Testing Database Design"],
+      "answer": "Test-Driven Development",
+      "explanation": "Test-Driven Development is a software practice where tests are written before the functional code."
+    },
+    {
+      "question": "Which module in the Python standard library is used for creating mock objects?",
+      "options": ["pytest.mock", "unittest.mock", "mocking", "fake"],
+      "answer": "unittest.mock",
+      "explanation": "The unittest.mock module provides a core Mock class and the patch() decorator for mocking."
+    },
+    {
+      "question": "What is test coverage?",
+      "options": ["The number of tests written", "The percentage of source code executed by the test suite", "The speed at which tests run", "The number of bugs found by tests"],
+      "answer": "The percentage of source code executed by the test suite",
+      "explanation": "Test coverage measures how much of your actual application code is executed when your tests run."
+    },
+    {
+      "question": "What type of testing simulates a real user's behavior from start to finish?",
+      "options": ["Unit Testing", "Integration Testing", "End-to-End (E2E) Testing", "Static Analysis"],
+      "answer": "End-to-End (E2E) Testing",
+      "explanation": "E2E testing validates the software system along with its integration and external interfaces by mimicking real user scenarios."
+    },
+    {
+      "question": "In a pytest fixture, what keyword separates the setup code from the teardown code?",
+      "options": ["return", "break", "yield", "continue"],
+      "answer": "yield",
+      "explanation": "The yield keyword pauses the fixture to allow the test to run, and the code after yield acts as the teardown."
+    }
+  ]
+}

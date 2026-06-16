@@ -1,0 +1,483 @@
+{
+  "title": "Floor Planning",
+  "introduction": {
+    "definition": "This VLSI topic covers fundamental concepts used in the design and verification of integrated circuits at the nanometer scale.",
+    "purpose": "To provide engineers with a comprehensive understanding of the topic as applied in modern semiconductor design flows.",
+    "importance": "VLSI design is the backbone of modern electronics. Every chip — from mobile SoCs to AI accelerators — relies on the principles covered in this module."
+  },
+  "detailed_theory": "VLSI (Very Large Scale Integration) refers to the process of creating integrated circuits by combining thousands to billions of transistors on a single chip. This topic covers one of the many critical areas within the VLSI design flow, from specification through to tape-out and manufacturing.\n\nModern VLSI design involves multiple layers of abstraction including system-level design, RTL (Register Transfer Level) coding, logic synthesis, physical design, and verification. Each layer uses specialized EDA (Electronic Design Automation) tools and methodologies to ensure correctness, performance, power efficiency, and manufacturability.\n\nThe semiconductor industry follows Moore's Law as a guideline — the observation that the number of transistors on a chip doubles approximately every two years. This drives the need for more efficient design techniques, lower power consumption, and advanced fabrication processes such as FinFET and Gate-All-Around (GAA) transistors used in modern process nodes (7nm, 5nm, 3nm and below).",
+  "working_principle": {
+    "steps": [
+      "Specification: Define functional and performance requirements",
+      "RTL Design: Write HDL code (VHDL/Verilog) describing behavior",
+      "Simulation: Verify functional correctness using testbenches",
+      "Synthesis: Convert RTL to gate-level netlist",
+      "Physical Design: Floor planning, placement, and routing",
+      "Verification: DRC, LVS, STA sign-off checks",
+      "Tape-Out: Send finalized design to foundry for manufacturing"
+    ],
+    "internal_operation": "The digital logic operates by switching transistors between ON and OFF states, representing binary 1 and 0. Combinational logic produces outputs based purely on current inputs, while sequential logic uses clock signals and memory elements (flip-flops) to maintain state.",
+    "signal_flow": "Input signals → Logic gates → Intermediate nodes → Output signals. In sequential circuits: Input → Combinational Logic → Flip-Flop (state register) → Output feedback path."
+  },
+  "architecture": {
+    "description": "The general VLSI chip architecture consists of multiple functional blocks organized hierarchically.",
+    "block_diagram_text": "+--------------------------------------------------+\n|                   VLSI CHIP                      |\n|  +----------+  +----------+  +--------------+   |\n|  |  Input   |  |  Core    |  |   Output     |   |\n|  |  Buffers |->| Logic    |->|   Buffers    |   |\n|  +----------+  | (RTL)    |  +--------------+   |\n|                +----------+                     |\n|  +----------+  +----------+  +--------------+   |\n|  | Clock    |  | Memory   |  | Power Grid   |   |\n|  | Tree     |  | Elements |  | (VDD/GND)    |   |\n|  +----------+  +----------+  +--------------+   |\n+--------------------------------------------------+",
+    "components": [
+      "Input/Output (I/O) Pads: Interface between chip and external world",
+      "Core Logic: Contains the functional RTL blocks and standard cells",
+      "Memory Elements: SRAM, registers, flip-flops for state storage",
+      "Clock Distribution Network: Ensures synchronous operation across the chip",
+      "Power Grid: Distributes VDD and GND uniformly to minimize IR drop"
+    ]
+  },
+  "hdl_code": {
+    "vhdl": "-- Generic VHDL Template\nlibrary IEEE;\nuse IEEE.STD_LOGIC_1164.ALL;\nuse IEEE.NUMERIC_STD.ALL;\n\nentity vlsi_module is\n    port (\n        clk   : in  STD_LOGIC;\n        rst   : in  STD_LOGIC;\n        din   : in  STD_LOGIC_VECTOR(7 downto 0);\n        dout  : out STD_LOGIC_VECTOR(7 downto 0)\n    );\nend vlsi_module;\n\narchitecture rtl of vlsi_module is\n    signal reg : STD_LOGIC_VECTOR(7 downto 0);\nbegin\n    process(clk, rst)\n    begin\n        if rst = '1' then\n            reg <= (others => '0');\n        elsif rising_edge(clk) then\n            reg <= din;\n        end if;\n    end process;\n    dout <= reg;\nend rtl;",
+    "verilog": "// Generic Verilog Template\nmodule vlsi_module (\n    input  wire       clk,\n    input  wire       rst,\n    input  wire [7:0] din,\n    output reg  [7:0] dout\n);\n\n    always @(posedge clk or posedge rst) begin\n        if (rst)\n            dout <= 8'b0;\n        else\n            dout <= din;\n    end\n\nendmodule",
+    "explanation": "This template shows a basic synchronous register module. On reset, output is cleared to zero. On every rising clock edge, the input data is captured and forwarded to the output."
+  },
+  "truth_table": {
+    "inputs": [
+      "A",
+      "B"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "table": [
+      [
+        "0",
+        "0",
+        "0"
+      ],
+      [
+        "0",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "0",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1"
+      ]
+    ]
+  },
+  "timing_diagram": {
+    "description": "A typical synchronous circuit timing diagram showing clock, input, and output relationships.",
+    "signals": [
+      "CLK:    __|--|__|--|__|--|__|--|",
+      "RST:    _|---|_________________",
+      "DIN:    ________|XXXX|_________",
+      "DOUT:   ____________|XXXX|____"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "D Flip-Flop (Verilog)",
+      "code": "module dff(input clk, rst, d, output reg q);\n  always @(posedge clk or posedge rst)\n    if (rst) q <= 0;\n    else     q <= d;\nendmodule",
+      "output": "Simulation: q follows d on rising edge, clears on rst.",
+      "explanation": "A D flip-flop captures the input D on the positive clock edge. When rst is high, the output Q is forced to 0 synchronously."
+    },
+    {
+      "level": "Intermediate",
+      "title": "4-bit Counter (Verilog)",
+      "code": "module counter4bit(input clk, rst, output reg [3:0] count);\n  always @(posedge clk or posedge rst)\n    if (rst) count <= 4'b0000;\n    else     count <= count + 1;\nendmodule",
+      "output": "count: 0000 → 0001 → 0010 → ... → 1111 → 0000",
+      "explanation": "A 4-bit binary counter that increments by 1 on every rising clock edge and resets to 0 when rst is asserted."
+    },
+    {
+      "level": "Industry",
+      "title": "FIFO Buffer Module",
+      "code": "module fifo #(parameter DEPTH=8, WIDTH=8)(\n  input clk, rst, wr_en, rd_en,\n  input [WIDTH-1:0] din,\n  output reg [WIDTH-1:0] dout,\n  output full, empty\n);\n  reg [WIDTH-1:0] mem [0:DEPTH-1];\n  reg [2:0] wr_ptr, rd_ptr;\n  reg [3:0] cnt;\n  assign full  = (cnt == DEPTH);\n  assign empty = (cnt == 0);\n  always @(posedge clk or posedge rst) begin\n    if (rst) begin wr_ptr<=0; rd_ptr<=0; cnt<=0; end\n    else begin\n      if (wr_en && !full)  begin mem[wr_ptr]<=din; wr_ptr<=wr_ptr+1; cnt<=cnt+1; end\n      if (rd_en && !empty) begin dout<=mem[rd_ptr]; rd_ptr<=rd_ptr+1; cnt<=cnt-1; end\n    end\n  end\nendmodule",
+      "output": "FIFO stores data in order, signals full/empty status flags.",
+      "explanation": "An 8-deep, 8-bit wide synchronous FIFO. Write pointer and read pointer manage circular buffer access. Full and empty flags prevent overflow and underflow conditions."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "VLSI Design Abstraction Levels",
+        "headers": [
+          "Level",
+          "Representation",
+          "Tools Used"
+        ],
+        "rows": [
+          [
+            "System",
+            "Algorithms, Architecture",
+            "MATLAB, SystemC"
+          ],
+          [
+            "RTL",
+            "HDL (Verilog/VHDL)",
+            "Vivado, Quartus"
+          ],
+          [
+            "Gate",
+            "Logic Gates, Netlist",
+            "Synopsys Design Compiler"
+          ],
+          [
+            "Layout",
+            "Polygon GDS",
+            "Cadence Innovus, Magic"
+          ]
+        ]
+      },
+      {
+        "title": "Common HDL Languages Comparison",
+        "headers": [
+          "Feature",
+          "VHDL",
+          "Verilog",
+          "SystemVerilog"
+        ],
+        "rows": [
+          [
+            "Typing",
+            "Strong",
+            "Weak",
+            "Strong"
+          ],
+          [
+            "Verbosity",
+            "High",
+            "Low",
+            "Medium"
+          ],
+          [
+            "Verification",
+            "Limited",
+            "Limited",
+            "Advanced (UVM)"
+          ],
+          [
+            "Industry Use",
+            "Europe/Defense",
+            "US/Asia",
+            "Modern Standard"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "ASIC",
+        "concept_b": "FPGA",
+        "explanation": "ASIC (Application-Specific IC) is a permanently fabricated chip optimized for a specific function — lower power, higher performance, but expensive NRE costs. FPGA (Field-Programmable Gate Array) is reconfigurable hardware that can be reprogrammed — faster time-to-market but higher power consumption and lower performance than ASIC."
+      },
+      {
+        "concept_a": "VHDL",
+        "concept_b": "Verilog",
+        "explanation": "VHDL is more verbose and strongly typed, popular in Europe and defense industries. Verilog has C-like syntax, is more concise, and is widely used in the US and Asia-Pacific. SystemVerilog extends Verilog with OOP features and is the modern industry standard for design and verification."
+      }
+    ]
+  },
+  "design_errors": [
+    {
+      "title": "Setup Time Violation",
+      "description": "Data arrives too late at a flip-flop input — the data must be stable before the clock edge.",
+      "cause": "Long combinational logic path between two flip-flops exceeds the clock period minus setup time margin.",
+      "fix": "Increase clock period (reduce frequency), insert pipeline registers to break long paths, or optimize the critical path logic using better cell selection."
+    },
+    {
+      "title": "Hold Time Violation",
+      "description": "Data changes too quickly after the clock edge — the flip-flop cannot reliably capture the value.",
+      "cause": "Very short paths from a launch flip-flop to a capture flip-flop, especially common in on-chip variation (OCV) scenarios.",
+      "fix": "Insert delay buffers on short paths, use delay cells, or apply hold-fixing algorithms in place-and-route tools."
+    },
+    {
+      "title": "Metastability",
+      "description": "A flip-flop enters an undefined state when input changes violate setup/hold simultaneously.",
+      "cause": "Asynchronous signals crossing clock domain boundaries without proper synchronization.",
+      "fix": "Use a two flip-flop synchronizer (double-register synchronizer) for every asynchronous signal crossing clock domains."
+    }
+  ],
+  "tools": [
+    {
+      "name": "Xilinx Vivado",
+      "usage": "Industry-standard FPGA design suite for synthesis, implementation, and bitstream generation targeting Xilinx/AMD FPGAs. Supports Verilog, VHDL, and SystemVerilog."
+    },
+    {
+      "name": "Intel Quartus Prime",
+      "usage": "FPGA design tool targeting Intel/Altera FPGAs. Includes TimeQuest for static timing analysis and SignalTap for on-chip debugging."
+    },
+    {
+      "name": "Synopsys Design Compiler",
+      "usage": "Industry-leading logic synthesis tool that converts RTL HDL into optimized gate-level netlists for ASIC design flows."
+    },
+    {
+      "name": "Cadence Innovus",
+      "usage": "Physical implementation tool for ASIC place and route, clock tree synthesis, and timing optimization."
+    },
+    {
+      "name": "ModelSim / QuestaSim",
+      "usage": "Industry-standard HDL simulation environment for functional verification. Supports VHDL, Verilog, and SystemVerilog testbenches."
+    }
+  ],
+  "fpga_asic_applications": "FPGA applications include prototyping ASICs before tape-out, implementing signal processing algorithms (FFT, FIR filters), real-time control systems, cryptographic accelerators, and network packet processing. ASIC applications include mobile SoCs (Snapdragon, Apple A-series), GPU chips (NVIDIA, AMD), AI inference accelerators (Google TPU, Tesla FSD), and custom networking chips.",
+  "design_flow": {
+    "rtl": "Write synthesizable HDL code in Verilog/VHDL describing the design's functionality at the register-transfer level.",
+    "synthesis": "Use Synopsys DC or Cadence Genus to map RTL to technology-specific standard cells, optimizing for area, power, and timing.",
+    "simulation": "Run functional simulation using ModelSim/VCS with comprehensive testbenches to verify correctness before and after synthesis.",
+    "implementation": "Perform physical design: floor planning, power planning, placement, clock tree synthesis (CTS), and routing using Cadence Innovus or Synopsys ICC2.",
+    "verification": "Run DRC (Design Rule Check), LVS (Layout vs Schematic), and final STA (Static Timing Analysis) sign-off to ensure manufacturability and timing closure."
+  },
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What does VLSI stand for?",
+        "answer": "VLSI stands for Very Large Scale Integration, referring to ICs with thousands to billions of transistors on a single chip."
+      },
+      {
+        "question": "What is the difference between FPGA and ASIC?",
+        "answer": "FPGA is reconfigurable programmable hardware with higher NRE cost savings but lower performance. ASIC is a fixed-function custom chip with higher performance, lower power, but significant NRE (Non-Recurring Engineering) costs."
+      },
+      {
+        "question": "What is RTL in VLSI design?",
+        "answer": "RTL (Register Transfer Level) is an abstraction level describing data flow between registers using HDL (Verilog/VHDL), used as input to logic synthesis tools."
+      },
+      {
+        "question": "What is a flip-flop?",
+        "answer": "A flip-flop is a bistable memory element that stores one bit of data and changes state on a clock edge. It is the fundamental building block of sequential logic."
+      },
+      {
+        "question": "What is synthesis in VLSI?",
+        "answer": "Synthesis is the process of converting RTL HDL description into a gate-level netlist using standard cells from a technology library, optimized for timing, area, and power."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What is setup time and hold time in a flip-flop?",
+        "answer": "Setup time is the minimum time the data must be stable BEFORE the clock edge. Hold time is the minimum time the data must remain stable AFTER the clock edge. Violating either causes metastability."
+      },
+      {
+        "question": "What is Clock Domain Crossing (CDC) and why is it a problem?",
+        "answer": "CDC occurs when signals pass from one clock domain to another with different or asynchronous clocks. Without proper synchronization, metastability can occur. Solutions include double flip-flop synchronizers, handshake protocols, and FIFOs."
+      },
+      {
+        "question": "What is the difference between combinational and sequential logic?",
+        "answer": "Combinational logic output depends only on current inputs (no memory). Sequential logic output depends on both current inputs and past state (uses flip-flops or latches)."
+      },
+      {
+        "question": "What is Static Timing Analysis (STA)?",
+        "answer": "STA is a method to verify that a circuit meets timing requirements (setup/hold) without simulating all possible input vectors. It analyzes all timing paths to find violations, using worst-case delay models."
+      },
+      {
+        "question": "What are standard cells in VLSI?",
+        "answer": "Standard cells are pre-designed, pre-characterized library elements (AND, OR, FF, MUX etc.) with fixed height and variable width. They are the building blocks used by synthesis and place-and-route tools."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain the difference between DRC and LVS.",
+        "answer": "DRC (Design Rule Check) verifies that the layout satisfies fabrication rules (minimum spacing, width, enclosure). LVS (Layout vs Schematic) compares the extracted netlist from layout to the original schematic/netlist to ensure they match electrically."
+      },
+      {
+        "question": "What is clock skew and how does it affect timing?",
+        "answer": "Clock skew is the spatial variation in clock arrival times across flip-flops due to routing differences. Positive skew (capture clock arrives later) can help setup but hurts hold. Negative skew hurts setup. Clock Tree Synthesis (CTS) minimizes skew."
+      },
+      {
+        "question": "Explain the concept of On-Chip Variation (OCV) in STA.",
+        "answer": "OCV accounts for manufacturing process variations across a chip. In STA, launch paths use maximum delay (slow corners) and capture paths use minimum delay (fast corners), or vice versa. Advanced methods include AOCV (Advanced OCV) and POCV (Parametric OCV)."
+      },
+      {
+        "question": "What is Power Intent and the UPF standard?",
+        "answer": "Power Intent describes the power architecture of a design: power domains, voltage rails, power switches, isolation cells, and level shifters. UPF (Unified Power Format, IEEE 1801) is the industry-standard format for specifying power intent, used by synthesis and physical design tools."
+      },
+      {
+        "question": "What is DFT and what are scan chains?",
+        "answer": "DFT (Design for Testability) adds testability structures to a chip to improve manufacturing test coverage. Scan chains connect flip-flops in a serial shift register, allowing the tester to shift in test patterns and shift out results for stuck-at fault testing."
+      }
+    ]
+  },
+  "practice_problems": {
+    "easy": [
+      "Write a Verilog module for a 2-input NAND gate.",
+      "Write a VHDL entity and architecture for a half adder.",
+      "Design a Verilog module for a 4-to-1 multiplexer using a case statement."
+    ],
+    "medium": [
+      "Design a synchronous 4-bit up/down counter with enable and reset in Verilog.",
+      "Write a VHDL testbench for a full adder that tests all 8 input combinations.",
+      "Implement a 8-bit shift register with serial input/output in SystemVerilog."
+    ],
+    "hard": [
+      "Design a parameterized FIFO with configurable depth and width in Verilog, including full/empty flags and gray-code pointers for CDC safety.",
+      "Implement a simple 8-bit RISC processor with fetch, decode, and execute pipeline stages in Verilog.",
+      "Design a DDR3 memory controller interface in Verilog with proper timing constraints for synthesis."
+    ]
+  },
+  "mini_exercises": [
+    {
+      "problem": "Design a 2-to-4 decoder using structural Verilog.",
+      "circuit_design": "2-to-4 decoder: inputs A, B; outputs Y0-Y3. Y0 = !A & !B, Y1 = !A & B, Y2 = A & !B, Y3 = A & B.",
+      "hdl_solution": "module decoder2to4(input A, B, output Y0, Y1, Y2, Y3);\n  assign Y0 = ~A & ~B;\n  assign Y1 = ~A &  B;\n  assign Y2 =  A & ~B;\n  assign Y3 =  A &  B;\nendmodule",
+      "explanation": "Each output is active for exactly one combination of inputs. This is combinational logic with no clock required."
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "CPUs",
+      "explanation": "Modern CPUs (Intel, AMD, Apple) use advanced VLSI techniques with billions of transistors, multi-core architectures, deep pipelines, and out-of-order execution implemented using the complete VLSI design flow."
+    },
+    {
+      "field": "GPUs",
+      "explanation": "GPUs (NVIDIA, AMD Radeon) employ massively parallel VLSI architectures with thousands of shader cores optimized for floating-point throughput in gaming, HPC, and AI workloads."
+    },
+    {
+      "field": "Mobile Processors",
+      "explanation": "Mobile SoCs (Apple A-series, Qualcomm Snapdragon) integrate CPU, GPU, NPU, and modem on a single die using advanced process nodes (3nm, 5nm) with aggressive power optimization techniques."
+    },
+    {
+      "field": "Automotive Electronics",
+      "explanation": "Automotive-grade chips (ADAS, infotainment, power management) require ISO 26262 functional safety standards, extended temperature ranges, and high reliability — all achieved through specialized VLSI design methodologies."
+    },
+    {
+      "field": "AI Accelerators",
+      "explanation": "AI chips (Google TPU, Cerebras, Groq) use custom VLSI designs with massive systolic arrays and on-chip SRAM optimized for matrix multiplication operations central to deep learning inference and training."
+    },
+    {
+      "field": "Communication Systems",
+      "explanation": "5G modems, WiFi 6/7 chips, and fiber-optic transceivers use high-speed VLSI designs with SerDes circuits, DSP blocks, and RF mixed-signal components integrated on advanced CMOS process nodes."
+    }
+  ],
+  "best_practices": [
+    "Always use synchronous reset instead of asynchronous reset in FPGA designs for better timing predictability.",
+    "Avoid latches in RTL design — use complete if-else or case statements to ensure all outputs are assigned.",
+    "Follow consistent naming conventions: use '_i' suffix for inputs, '_o' for outputs, and '_r' for registers.",
+    "Insert CDC synchronizers for every signal crossing clock domain boundaries.",
+    "Write self-checking testbenches with assertions rather than manual waveform inspection.",
+    "Use parameterized modules for reusability across different design configurations.",
+    "Apply power intent (UPF) early in the design flow rather than as an afterthought.",
+    "Analyze and fix timing violations at each stage (synthesis, post-placement, post-routing) rather than at sign-off.",
+    "Keep combinational logic between flip-flops minimal to achieve high clock frequencies.",
+    "Use formal verification tools (Cadence JasperGold, Synopsys VC Formal) for complex control logic verification."
+  ],
+  "summary": [
+    "VLSI enables integration of billions of transistors on a single chip using advanced semiconductor fabrication.",
+    "The VLSI design flow progresses from RTL specification through synthesis, physical design, and verification to tape-out.",
+    "HDL languages (Verilog, VHDL, SystemVerilog) are used to describe digital circuits at the RTL abstraction level.",
+    "FPGA and ASIC are the two primary implementation targets, each with distinct tradeoffs in cost, performance, and flexibility.",
+    "Timing analysis (STA) is critical to ensuring chip correctness and must be performed at multiple stages of the design flow.",
+    "DFT techniques improve post-manufacturing test coverage, essential for high-volume production yield improvement."
+  ],
+  "quiz": [
+    {
+      "question": "What does RTL stand for in VLSI design?",
+      "options": [
+        "A. Register Transfer Level",
+        "B. Real Time Logic",
+        "C. Routing Transfer Layer",
+        "D. Register Timing Logic"
+      ],
+      "answer": "A",
+      "explanation": "RTL (Register Transfer Level) is the abstraction level used in HDL design, describing how data moves between registers using combinational logic."
+    },
+    {
+      "question": "Which HDL is known for its strong typing and verbosity?",
+      "options": [
+        "A. Verilog",
+        "B. SystemVerilog",
+        "C. VHDL",
+        "D. SPICE"
+      ],
+      "answer": "C",
+      "explanation": "VHDL (VHSIC Hardware Description Language) is known for strong type checking and verbose syntax, making it popular in Europe and defense applications."
+    },
+    {
+      "question": "What is the primary function of a flip-flop?",
+      "options": [
+        "A. Boolean logic computation",
+        "B. Signal amplification",
+        "C. Store one bit of data",
+        "D. Clock generation"
+      ],
+      "answer": "C",
+      "explanation": "A flip-flop is a bistable sequential element that stores exactly one bit. It changes state on clock edges and retains the value between edges."
+    },
+    {
+      "question": "What does DRC stand for?",
+      "options": [
+        "A. Design Rule Check",
+        "B. Data Register Control",
+        "C. Digital Read Circuit",
+        "D. Dual Ring Counter"
+      ],
+      "answer": "A",
+      "explanation": "DRC (Design Rule Check) verifies that a chip layout satisfies the manufacturing rules specified by the foundry for the target process node."
+    },
+    {
+      "question": "Which tool is used for logic synthesis in ASIC design?",
+      "options": [
+        "A. Cadence Innovus",
+        "B. Synopsys Design Compiler",
+        "C. Xilinx Vivado",
+        "D. ModelSim"
+      ],
+      "answer": "B",
+      "explanation": "Synopsys Design Compiler is the industry-standard logic synthesis tool that converts RTL HDL code into an optimized gate-level netlist using standard cell libraries."
+    },
+    {
+      "question": "What causes setup time violations?",
+      "options": [
+        "A. Clock skew being too small",
+        "B. Logic path delay exceeding the clock period minus setup time",
+        "C. Data changing after the clock edge",
+        "D. Reset signal being asynchronous"
+      ],
+      "answer": "B",
+      "explanation": "Setup violations occur when the combinational logic path between two flip-flops takes longer than (clock period - setup time), causing data to arrive too late."
+    },
+    {
+      "question": "What is the main advantage of FPGA over ASIC?",
+      "options": [
+        "A. Lower power consumption",
+        "B. Higher performance",
+        "C. Reconfigurability and faster time-to-market",
+        "D. Lower cost for high volumes"
+      ],
+      "answer": "C",
+      "explanation": "FPGAs can be reprogrammed, making them ideal for prototyping and low-to-medium volume production. ASICs are better for high-volume production with better PPA."
+    },
+    {
+      "question": "What is Clock Domain Crossing (CDC)?",
+      "options": [
+        "A. Routing clock signals across chip regions",
+        "B. Signals passing between different clock domains",
+        "C. Converting analog clock to digital",
+        "D. Clock tree synthesis optimization"
+      ],
+      "answer": "B",
+      "explanation": "CDC occurs when signals transfer from one clock domain to another. Without proper synchronization, metastability can cause functional failures."
+    },
+    {
+      "question": "What does LVS check verify?",
+      "options": [
+        "A. Logic correctness against testbench",
+        "B. Layout matches the schematic/netlist electrically",
+        "C. Power consumption estimates",
+        "D. Signal integrity on long wires"
+      ],
+      "answer": "B",
+      "explanation": "LVS (Layout vs Schematic) compares the circuit extracted from physical layout to the original design schematic or netlist to confirm they are electrically equivalent."
+    },
+    {
+      "question": "Which process node offers better PPA compared to 28nm?",
+      "options": [
+        "A. 65nm",
+        "B. 90nm",
+        "C. 180nm",
+        "D. 7nm"
+      ],
+      "answer": "D",
+      "explanation": "7nm offers significantly better Power, Performance, and Area (PPA) than 28nm due to smaller transistor sizes, higher integration density, and lower switching power."
+    }
+  ]
+}

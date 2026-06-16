@@ -1,0 +1,483 @@
+{
+  "title": "Introduction to Java",
+  "introduction": {
+    "what_it_is": "Java is a high-level, class-based, object-oriented programming language designed to have as few implementation dependencies as possible. It was developed by James Gosling at Sun Microsystems (now owned by Oracle) and released in 1995. Java follows the principle of 'Write Once, Run Anywhere' (WORA), meaning compiled Java code can run on all platforms that support Java without recompilation.",
+    "why_important": "Java is one of the most widely used programming languages in the world. It powers billions of devices globally — from Android smartphones and enterprise servers to embedded systems and smart cards. Java's robust ecosystem, platform independence, strong memory management, and rich standard library make it a foundational language for software developers. Learning Java opens doors to web development, mobile apps, big data, cloud computing, and enterprise software.",
+    "real_world": [
+      "Android mobile applications are built using Java as the primary programming language",
+      "Large-scale enterprise applications at companies like LinkedIn, Amazon, and eBay use Java backends",
+      "Big data frameworks like Apache Hadoop and Apache Spark are written in Java",
+      "Banking and financial systems use Java for its reliability, security, and transaction management",
+      "NASA's World Wind and various scientific simulation tools are written in Java"
+    ]
+  },
+  "detailed_theory": "Java is a general-purpose, object-oriented programming language that was created with the primary goal of enabling programmers to 'Write Once, Run Anywhere.' This vision was revolutionary when Java was introduced in 1995 by James Gosling at Sun Microsystems. Unlike languages that compile to machine-specific code, Java compiles to an intermediate form called bytecode, which is then interpreted or compiled at runtime by the Java Virtual Machine (JVM). This architectural decision is the cornerstone of Java's platform independence.\n\n**History and Evolution**\nJava's journey began in 1991 when James Gosling, Mike Sheridan, and Patrick Naughton initiated the Green Project at Sun Microsystems, aiming to develop a language for digital consumer devices. Originally named 'Oak' (after a tree outside Gosling's office), the language was renamed Java in 1995. Java 1.0 was released in January 1996, and since then, Java has evolved through numerous major versions. Java 5 introduced generics and annotations, Java 8 brought lambda expressions and the Stream API, Java 9 introduced modules, and modern versions continue adding records, sealed classes, and pattern matching.\n\n**Core Philosophy: Object-Oriented Programming**\nJava is fundamentally built around the concept of objects. Everything in Java (except primitive types) is an object. This means data and the functions (methods) that operate on that data are bundled together into units called classes. Java enforces four core OOP principles:\n1. **Encapsulation**: Bundling data and methods together and restricting direct access to some components.\n2. **Inheritance**: Allowing a class to inherit properties and behaviors from another class.\n3. **Polymorphism**: Enabling one interface to represent different underlying data types.\n4. **Abstraction**: Hiding complex implementation details and exposing only essential features.\n\n**The Java Platform Architecture**\nUnderstanding Java requires understanding its platform architecture, which consists of three main components:\n- **Java Development Kit (JDK)**: The complete toolkit for developing Java applications. It includes the compiler (javac), debugger, documentation tools, and the JRE.\n- **Java Runtime Environment (JRE)**: The environment needed to run Java applications. It contains the JVM and the standard class libraries.\n- **Java Virtual Machine (JVM)**: The heart of Java's platform independence. The JVM is an abstract computing machine that enables Java programs to run on any device or operating system. It interprets bytecode and translates it into native machine instructions at runtime using Just-In-Time (JIT) compilation for performance.\n\n**How Java Works: Compilation and Execution**\nWhen you write Java code, you create source files with the `.java` extension. The Java compiler (`javac`) compiles these source files into `.class` files containing bytecode. This bytecode is not machine code — it is a highly optimized set of instructions designed specifically for the JVM. When you run the program using the `java` command, the JVM reads the bytecode and executes it. The JIT compiler within the JVM further optimizes frequently executed bytecode into native machine code, dramatically improving performance.\n\n**Key Characteristics of Java**\nJava has several defining characteristics that distinguish it from other languages:\n- **Platform Independent**: Java bytecode runs on any platform with a compatible JVM, eliminating platform-specific issues.\n- **Object-Oriented**: Java treats everything as objects, promoting code reuse and modular design.\n- **Strongly Typed**: Every variable and expression has a type that is checked at compile time, reducing runtime errors.\n- **Automatic Memory Management**: Java uses a garbage collector to automatically manage memory, freeing developers from manual memory allocation and deallocation.\n- **Multithreaded**: Java has built-in support for concurrent programming through its threading model.\n- **Secure**: Java's security model includes bytecode verification, a security manager, and an absence of explicit pointer manipulation.\n- **Robust**: Java emphasizes early error checking, runtime checking, and eliminates error-prone situations like pointer errors.\n- **Distributed**: Java has built-in support for network protocols, making it easy to build distributed applications.\n- **High Performance**: While originally slower than compiled languages, JIT compilation and ongoing JVM improvements have made Java highly competitive in performance.\n- **Dynamic**: Java can dynamically load classes at runtime, allowing applications to be extended with new capabilities without recompilation.\n\n**Java Editions**\nJava comes in several editions tailored to different use cases:\n- **Java SE (Standard Edition)**: The foundation for general-purpose Java development, including the core APIs for data structures, networking, and I/O.\n- **Java EE (Enterprise Edition) / Jakarta EE**: Extends Java SE with APIs for enterprise features like servlets, JSP, EJB, JPA, and web services.\n- **Java ME (Micro Edition)**: A subset of Java for resource-constrained devices like embedded systems and IoT devices.\n- **Java FX**: A platform for creating rich desktop and web applications with advanced UI capabilities.\n\n**Java in the Modern World**\nToday, Java remains one of the top three most popular programming languages globally, consistently ranking high on indices like TIOBE and Stack Overflow surveys. The language is the backbone of Android development (though Kotlin has gained prominence), enterprise backend systems, financial technology, big data processing, and cloud-native microservices. The Spring Framework, built on Java, is the de facto standard for enterprise Java applications. Java's mature ecosystem, rich tooling (Eclipse, IntelliJ IDEA, NetBeans), and massive community ensure its continued relevance.\n\n**Java vs Other Languages**\nCompared to C/C++, Java offers automatic memory management and platform independence but historically trades some raw performance. Compared to Python, Java is strongly typed and generally faster, though more verbose. Compared to JavaScript, Java is a server-side and application language with strict typing and a very different execution model. Each language has its strengths, and Java's combination of reliability, performance, and ecosystem breadth keeps it dominant in enterprise and large-scale application development.\n\nLearning Java is not just about learning syntax — it is about adopting a powerful, disciplined way of thinking about software design. The concepts you learn in Java form the foundation for understanding many other languages and frameworks in the modern software landscape.",
+  "key_features": {
+    "features": [
+      {"name": "Platform Independence (WORA)", "description": "Java programs compile to bytecode that runs on any JVM-compatible platform without modification."},
+      {"name": "Object-Oriented", "description": "Everything in Java is modeled as objects and classes, supporting encapsulation, inheritance, polymorphism, and abstraction."},
+      {"name": "Automatic Garbage Collection", "description": "The JVM automatically manages memory allocation and deallocation, preventing memory leaks and dangling pointer errors."},
+      {"name": "Strong Type System", "description": "Java enforces strict type checking at compile time, catching many errors before the program runs."},
+      {"name": "Multithreading Support", "description": "Java has built-in APIs for creating and managing threads, enabling concurrent and parallel programming."},
+      {"name": "Rich Standard Library", "description": "Java's standard library (Java API) provides thousands of ready-to-use classes for data structures, networking, I/O, and more."},
+      {"name": "Security Features", "description": "Java's architecture includes bytecode verification, a security manager, and no direct memory access via pointers."},
+      {"name": "JIT Compilation", "description": "The Just-In-Time compiler translates bytecode to native code at runtime, significantly improving execution speed."}
+    ],
+    "advantages": [
+      "Platform independent — write once, run anywhere on any JVM-enabled device",
+      "Mature and stable ecosystem with decades of libraries, frameworks, and community support",
+      "Strongly typed system catches bugs at compile time rather than at runtime",
+      "Automatic memory management through garbage collection reduces memory-related bugs",
+      "Excellent scalability — used in systems serving millions of users simultaneously",
+      "Rich IDE support from IntelliJ IDEA, Eclipse, and NetBeans improves developer productivity",
+      "Backward compatibility — older Java code generally runs on newer JVM versions",
+      "Extensive documentation and community resources available online"
+    ],
+    "limitations": [
+      "Verbosity — Java requires more boilerplate code compared to languages like Python or Kotlin",
+      "Performance overhead from JVM startup time and garbage collection pauses can be noticeable",
+      "Memory consumption is higher compared to languages like C or C++",
+      "Not ideal for low-level system programming where direct hardware control is needed",
+      "Slower adoption of modern language features compared to newer JVM languages like Kotlin or Scala"
+    ]
+  },
+  "syntax": {
+    "explanation": "A Java program starts with a class declaration. The class name must match the filename. Execution begins from the main method, which has a specific signature. Java is case-sensitive and uses semicolons to end statements.",
+    "breakdown": [
+      "public class HelloWorld — declares a public class named HelloWorld; filename must be HelloWorld.java",
+      "public static void main(String[] args) — the entry point of every Java program; JVM calls this method to start execution",
+      "System.out.println(...) — prints text to the standard output followed by a newline",
+      "// comment — single-line comment; /* ... */ for multi-line comments",
+      "Statements end with semicolons (;) and code blocks are enclosed in curly braces { }"
+    ],
+    "rules": [
+      "Java is case-sensitive: 'Main' and 'main' are different identifiers",
+      "The filename must exactly match the public class name (e.g., HelloWorld.java for class HelloWorld)",
+      "Every Java application must have a main method with the exact signature: public static void main(String[] args)",
+      "All code statements must end with a semicolon",
+      "Code blocks (methods, classes, loops) must be enclosed in curly braces { }",
+      "Class names conventionally use PascalCase; method and variable names use camelCase"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Hello World Program",
+      "code": "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n        System.out.println(\"Welcome to Java Programming!\");\n    }\n}",
+      "output": "Hello, World!\nWelcome to Java Programming!",
+      "explanation": "This is the simplest Java program. The class HelloWorld contains the main method which is the entry point. System.out.println prints a line of text followed by a newline character to the console."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Java Program with Variables and Input",
+      "code": "import java.util.Scanner;\n\npublic class UserGreeting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.print(\"Enter your name: \");\n        String name = scanner.nextLine();\n        int age = 25;\n        System.out.println(\"Hello, \" + name + \"!\");\n        System.out.println(\"You are \" + age + \" years old.\");\n        System.out.println(\"Java version: \" + System.getProperty(\"java.version\"));\n        scanner.close();\n    }\n}",
+      "output": "Enter your name: Alice\nHello, Alice!\nYou are 25 years old.\nJava version: 17.0.1",
+      "explanation": "This program demonstrates importing a class (Scanner), reading user input, using string concatenation, and accessing system properties. Scanner reads from standard input and the nextLine() method captures a full line of text."
+    },
+    {
+      "level": "Advanced",
+      "title": "Java Platform Information and JVM Details",
+      "code": "public class JavaPlatformInfo {\n    public static void main(String[] args) {\n        System.out.println(\"=== Java Platform Information ===\");\n        System.out.println(\"Java Version: \" + System.getProperty(\"java.version\"));\n        System.out.println(\"Java Vendor: \" + System.getProperty(\"java.vendor\"));\n        System.out.println(\"JVM Name: \" + System.getProperty(\"java.vm.name\"));\n        System.out.println(\"OS Name: \" + System.getProperty(\"os.name\"));\n        System.out.println(\"OS Architecture: \" + System.getProperty(\"os.arch\"));\n        \n        Runtime runtime = Runtime.getRuntime();\n        long maxMemory = runtime.maxMemory() / (1024 * 1024);\n        long totalMemory = runtime.totalMemory() / (1024 * 1024);\n        long freeMemory = runtime.freeMemory() / (1024 * 1024);\n        \n        System.out.println(\"\\n=== JVM Memory Info ===\");\n        System.out.println(\"Max Memory: \" + maxMemory + \" MB\");\n        System.out.println(\"Total Memory: \" + totalMemory + \" MB\");\n        System.out.println(\"Free Memory: \" + freeMemory + \" MB\");\n        System.out.println(\"Available Processors: \" + runtime.availableProcessors());\n    }\n}",
+      "output": "=== Java Platform Information ===\nJava Version: 17.0.1\nJava Vendor: Oracle Corporation\nJVM Name: Java HotSpot(TM) 64-Bit Server VM\nOS Name: Windows 10\nOS Architecture: amd64\n\n=== JVM Memory Info ===\nMax Memory: 256 MB\nTotal Memory: 8 MB\nFree Memory: 7 MB\nAvailable Processors: 8",
+      "explanation": "This program uses System.getProperty() to retrieve JVM and OS information, and Runtime.getRuntime() to access memory statistics. It demonstrates Java's ability to interact with the underlying platform while still remaining platform-independent at the code level."
+    },
+    {
+      "level": "Real-world",
+      "title": "Simple Student Management System",
+      "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class StudentManagement {\n    static class Student {\n        String name;\n        int id;\n        double gpa;\n        \n        Student(int id, String name, double gpa) {\n            this.id = id;\n            this.name = name;\n            this.gpa = gpa;\n        }\n        \n        public String toString() {\n            return String.format(\"ID: %d | Name: %-15s | GPA: %.2f\", id, name, gpa);\n        }\n    }\n    \n    public static void main(String[] args) {\n        List<Student> students = new ArrayList<>();\n        students.add(new Student(101, \"Alice Johnson\", 3.8));\n        students.add(new Student(102, \"Bob Smith\", 3.5));\n        students.add(new Student(103, \"Carol White\", 3.9));\n        students.add(new Student(104, \"David Brown\", 3.2));\n        \n        System.out.println(\"=== Student Records ===\");\n        for (Student s : students) {\n            System.out.println(s);\n        }\n        \n        double totalGpa = 0;\n        for (Student s : students) {\n            totalGpa += s.gpa;\n        }\n        System.out.println(\"\\nAverage GPA: \" + String.format(\"%.2f\", totalGpa / students.size()));\n    }\n}",
+      "output": "=== Student Records ===\nID: 101 | Name: Alice Johnson    | GPA: 3.80\nID: 102 | Name: Bob Smith        | GPA: 3.50\nID: 103 | Name: Carol White      | GPA: 3.90\nID: 104 | Name: David Brown      | GPA: 3.20\n\nAverage GPA: 3.60",
+      "explanation": "This real-world example demonstrates a mini student management system using OOP concepts (inner class Student), ArrayList for dynamic storage, a for-each loop for iteration, String.format() for formatted output, and basic data processing to compute averages."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Java Edition Comparison",
+        "headers": ["Edition", "Full Name", "Primary Use Case", "Key APIs"],
+        "rows": [
+          ["Java SE", "Standard Edition", "Desktop and general-purpose apps", "Collections, I/O, Networking, JDBC"],
+          ["Jakarta EE", "Enterprise Edition", "Large-scale enterprise applications", "Servlets, JPA, EJB, Web Services"],
+          ["Java ME", "Micro Edition", "Embedded and IoT devices", "MIDP, CLDC, Scaled-down APIs"],
+          ["JavaFX", "JavaFX Platform", "Rich desktop and web UIs", "Scene Graph, FXML, CSS Styling"]
+        ]
+      },
+      {
+        "title": "Java Version History Highlights",
+        "headers": ["Version", "Year", "Key Feature Introduced"],
+        "rows": [
+          ["Java 1.0", "1996", "First public release"],
+          ["Java 1.2", "1998", "Collections Framework, Swing UI"],
+          ["Java 5", "2004", "Generics, Annotations, Enums, Autoboxing"],
+          ["Java 8", "2014", "Lambda expressions, Stream API, Optional"],
+          ["Java 11", "2018", "LTS release, HTTP Client API, var in lambdas"],
+          ["Java 17", "2021", "LTS release, Sealed classes, Records, Pattern matching"],
+          ["Java 21", "2023", "LTS release, Virtual Threads, Record Patterns"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "JDK (Java Development Kit)",
+        "concept_b": "JRE (Java Runtime Environment)",
+        "explanation": "JDK is the full development toolkit including the compiler (javac), debugger, and JRE. JRE is only for running Java programs and contains the JVM and class libraries but not the compiler. Developers need JDK; end-users only need JRE."
+      },
+      {
+        "concept_a": "Java (Compiled Language)",
+        "concept_b": "Python (Interpreted Language)",
+        "explanation": "Java compiles source code to bytecode first, then the JVM executes it — offering better performance through JIT compilation. Python interprets source code at runtime, offering faster development cycles but generally slower execution for CPU-intensive tasks."
+      },
+      {
+        "concept_a": "Java",
+        "concept_b": "C++",
+        "explanation": "Both are OOP languages with strong typing. Java provides automatic garbage collection and platform independence but runs on JVM overhead. C++ offers direct memory management and closer-to-metal performance but requires manual memory management and is platform-specific."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "System.out.println()",
+      "description": "Prints the argument to standard output followed by a newline character",
+      "parameters": "Any data type (String, int, double, boolean, Object, etc.)",
+      "return_value": "void",
+      "example_usage": "System.out.println(\"Hello Java!\"); // Prints: Hello Java!"
+    },
+    {
+      "name": "System.out.print()",
+      "description": "Prints the argument to standard output WITHOUT a trailing newline",
+      "parameters": "Any data type",
+      "return_value": "void",
+      "example_usage": "System.out.print(\"Hello \"); System.out.print(\"World\"); // Prints: Hello World"
+    },
+    {
+      "name": "System.getProperty()",
+      "description": "Retrieves a system property value by key such as Java version, OS name, file separator, etc.",
+      "parameters": "String key — the name of the system property",
+      "return_value": "String — the property value, or null if not found",
+      "example_usage": "String version = System.getProperty(\"java.version\"); // e.g., \"17.0.1\""
+    },
+    {
+      "name": "System.exit()",
+      "description": "Terminates the currently running JVM with the specified exit status code",
+      "parameters": "int status — 0 for normal termination, non-zero for abnormal termination",
+      "return_value": "void",
+      "example_usage": "System.exit(0); // Terminates program normally"
+    },
+    {
+      "name": "Runtime.getRuntime()",
+      "description": "Returns the Runtime object associated with the current Java application, providing access to JVM info",
+      "parameters": "None",
+      "return_value": "Runtime — the current runtime instance",
+      "example_usage": "Runtime rt = Runtime.getRuntime(); long mem = rt.totalMemory();"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Filename Does Not Match Class Name",
+      "description": "In Java, the filename must exactly match the public class name, including capitalization. This is a compilation rule enforced by the compiler.",
+      "wrong_example": "// File named: helloworld.java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello!\");\n    }\n}\n// ERROR: class HelloWorld is public, should be declared in a file named HelloWorld.java",
+      "correct_example": "// File named: HelloWorld.java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello!\");\n    }\n}",
+      "debugging_tip": "Always check that your filename (without .java extension) exactly matches the public class name inside the file, including capital letters."
+    },
+    {
+      "title": "Wrong main Method Signature",
+      "description": "The main method must have the exact signature: public static void main(String[] args). Any deviation will cause the JVM to not find the entry point.",
+      "wrong_example": "public class MyProgram {\n    // Wrong: missing 'static'\n    public void main(String[] args) {\n        System.out.println(\"This won't run!\");\n    }\n}\n// ERROR: Main method is not static in class MyProgram",
+      "correct_example": "public class MyProgram {\n    // Correct: public, static, void, String[] args\n    public static void main(String[] args) {\n        System.out.println(\"This will run!\");\n    }\n}",
+      "debugging_tip": "The main method must be: public (accessible by JVM), static (callable without instantiation), void (returns nothing), and accept String[] args. Memorize: 'public static void main(String[] args)'"
+    },
+    {
+      "title": "Missing Semicolons",
+      "description": "Java requires every statement to end with a semicolon. This is a very common syntax error for beginners coming from Python or other languages.",
+      "wrong_example": "public class Test {\n    public static void main(String[] args) {\n        System.out.println(\"Line 1\")  // Missing semicolon!\n        System.out.println(\"Line 2\")  // Missing semicolon!\n    }\n}\n// ERROR: ';' expected",
+      "correct_example": "public class Test {\n    public static void main(String[] args) {\n        System.out.println(\"Line 1\");  // Correct\n        System.out.println(\"Line 2\");  // Correct\n    }\n}",
+      "debugging_tip": "Look at the line number the compiler reports for the semicolon error — it's often the line AFTER the missing semicolon. Always end each statement with ';'."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is Java and who created it?",
+        "answer": "Java is a high-level, object-oriented, platform-independent programming language created by James Gosling at Sun Microsystems (now Oracle). It was released in 1995 and follows the 'Write Once, Run Anywhere' (WORA) principle."
+      },
+      {
+        "question": "What does WORA mean in Java?",
+        "answer": "WORA stands for 'Write Once, Run Anywhere.' It means Java programs are compiled into bytecode that can run on any platform with a JVM (Java Virtual Machine) without modification or recompilation."
+      },
+      {
+        "question": "What is the difference between JDK, JRE, and JVM?",
+        "answer": "JVM (Java Virtual Machine) is the engine that executes Java bytecode. JRE (Java Runtime Environment) includes the JVM plus standard class libraries needed to run Java programs. JDK (Java Development Kit) includes the JRE plus development tools like the compiler (javac), debugger, and documentation tools."
+      },
+      {
+        "question": "What is bytecode in Java?",
+        "answer": "Bytecode is the intermediate, platform-independent code generated by the Java compiler (javac) from Java source code. It is stored in .class files and executed by the JVM. Bytecode is not machine code — it's an abstraction that allows Java to be platform-independent."
+      },
+      {
+        "question": "What are the main features of Java?",
+        "answer": "Key Java features include: platform independence (WORA), object-oriented programming, automatic garbage collection, strong type system, multithreading support, security features, robustness, and a rich standard library."
+      },
+      {
+        "question": "What is the entry point of a Java program?",
+        "answer": "The entry point of every Java program is the main method with the signature: public static void main(String[] args). The JVM looks for this exact method signature to begin program execution."
+      },
+      {
+        "question": "Is Java fully object-oriented?",
+        "answer": "Java is not considered purely object-oriented because it supports primitive data types (int, boolean, double, etc.) that are not objects. However, Java provides wrapper classes (Integer, Boolean, Double) for each primitive type to bridge this gap."
+      },
+      {
+        "question": "What is the file extension for Java source files and compiled files?",
+        "answer": "Java source files have the .java extension. When compiled using javac, they produce .class files containing bytecode. For example, HelloWorld.java compiles to HelloWorld.class."
+      },
+      {
+        "question": "What is the difference between System.out.print() and System.out.println()?",
+        "answer": "System.out.print() outputs text without a trailing newline, so the next output continues on the same line. System.out.println() outputs text followed by a newline character, so the next output starts on a new line."
+      },
+      {
+        "question": "Name three popular Java frameworks or technologies.",
+        "answer": "Three popular Java frameworks are: Spring/Spring Boot (enterprise web and microservice applications), Hibernate (object-relational mapping and database interaction), and Apache Maven or Gradle (build and dependency management tools)."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain the role of the JIT compiler in Java.",
+        "answer": "The Just-In-Time (JIT) compiler is part of the JVM that improves Java performance by compiling frequently executed bytecode into native machine code at runtime. Instead of interpreting bytecode line by line every time, the JIT compiler identifies 'hot spots' (frequently called methods) and compiles them to native code, making subsequent executions much faster."
+      },
+      {
+        "question": "What are the different Java editions and their use cases?",
+        "answer": "Java SE (Standard Edition) is for general-purpose applications; Jakarta EE (formerly Java EE) adds enterprise APIs for large-scale server-side applications; Java ME (Micro Edition) is for resource-constrained embedded and IoT devices; and JavaFX is for rich desktop and web UI applications."
+      },
+      {
+        "question": "How does Java achieve platform independence?",
+        "answer": "Java achieves platform independence through two steps: (1) The Java compiler converts source code into bytecode — a platform-neutral intermediate representation stored in .class files. (2) The JVM on each target platform interprets and executes this bytecode. Since every platform has its own JVM implementation, the same bytecode runs everywhere without recompilation."
+      },
+      {
+        "question": "What is the difference between the Java compiler and the Java interpreter?",
+        "answer": "The Java compiler (javac) translates Java source code (.java) into bytecode (.class files). The Java interpreter (java command / JVM) then reads and executes that bytecode. Modern JVMs use JIT compilation to translate bytecode to native machine code for better performance, blurring the line between interpretation and compilation."
+      },
+      {
+        "question": "What is garbage collection in Java and why is it important?",
+        "answer": "Garbage collection is the automatic process by which the JVM identifies and frees memory occupied by objects that are no longer reachable by any part of the program. It prevents memory leaks and eliminates the need for manual memory management (as in C/C++). The garbage collector runs in the background and uses algorithms like mark-and-sweep to reclaim unused heap memory."
+      },
+      {
+        "question": "What are the four pillars of OOP in Java?",
+        "answer": "The four pillars of OOP in Java are: (1) Encapsulation — bundling data and methods together in a class and restricting access using access modifiers; (2) Inheritance — allowing classes to inherit properties and methods from parent classes; (3) Polymorphism — enabling a single interface to represent different types through method overloading and overriding; (4) Abstraction — hiding implementation details using abstract classes and interfaces."
+      },
+      {
+        "question": "What is the classpath in Java?",
+        "answer": "The classpath is a parameter that tells the JVM and compiler where to look for user-defined class files and packages. It can be set via the CLASSPATH environment variable or using the -cp or -classpath command-line option. The JVM searches the classpath to find the .class files needed to run a program."
+      },
+      {
+        "question": "How do you compile and run a Java program from the command line?",
+        "answer": "To compile: use 'javac FileName.java' which produces a FileName.class file. To run: use 'java ClassName' (without the .class extension). The JVM loads the class and calls the main method. If the class is in a package, run with the fully qualified name: 'java com.example.ClassName'."
+      },
+      {
+        "question": "What is Java's memory model at a high level?",
+        "answer": "Java's memory is divided into: Heap (where all object instances and arrays are stored — managed by GC), Stack (where method call frames, local variables, and references are stored — one per thread), Method Area/Metaspace (stores class metadata, static variables, and bytecode), and PC Registers and Native Method Stacks for native code execution."
+      },
+      {
+        "question": "What is the significance of the 'public' modifier on the main method?",
+        "answer": "The 'public' modifier on the main method means it is accessible from outside the class. The JVM, which calls the main method to start program execution, resides outside the application's class hierarchy. Therefore, the main method must be public so the JVM can access and invoke it."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain the Java Memory Model (JMM) and its significance in concurrent programming.",
+        "answer": "The Java Memory Model (JMM) defines how threads interact through memory and what behaviors are allowed in concurrent execution. It specifies rules for visibility (when changes by one thread are visible to others), atomicity (which operations are indivisible), and ordering (the sequence of operations across threads). JMM uses concepts like happens-before relationships, volatile variables, and synchronized blocks to guarantee correct concurrent behavior and prevent issues like race conditions and memory visibility bugs."
+      },
+      {
+        "question": "What are the different garbage collection algorithms used in Java, and how do they differ?",
+        "answer": "Java has evolved through several GC algorithms: Serial GC — single-threaded, for small apps; Parallel GC — multi-threaded throughput-focused GC; CMS (Concurrent Mark Sweep) — low-pause concurrent GC (deprecated); G1 (Garbage First) GC — balanced pause and throughput for large heaps; ZGC and Shenandoah — ultra-low pause time GCs (<10ms) for very large heaps (terabytes). The choice depends on application requirements for latency vs. throughput."
+      },
+      {
+        "question": "What is the difference between JVM specification and JVM implementation?",
+        "answer": "The JVM specification is a document published by Oracle that defines the abstract machine: class file format, instruction set (bytecode), runtime data areas, and execution engine requirements. A JVM implementation is a concrete software product that implements this specification. Popular implementations include Oracle HotSpot JVM, OpenJ9 (Eclipse), GraalVM, and Azul Zing, each with different performance characteristics and optimizations."
+      },
+      {
+        "question": "What is GraalVM and how does it differ from the standard JVM?",
+        "answer": "GraalVM is a polyglot VM developed by Oracle that extends the JVM concept. It includes an advanced JIT compiler (Graal compiler) and supports Ahead-of-Time (AOT) compilation through Native Image, which compiles Java programs into standalone native executables. These native images start up much faster and use less memory than traditional JVM-based applications, making them ideal for microservices and cloud-native environments. GraalVM also supports running JavaScript, Python, Ruby, R, and LLVM-based languages on the same VM."
+      },
+      {
+        "question": "Explain class loading in Java and the class loading hierarchy.",
+        "answer": "Class loading is the process of loading .class files into the JVM. The Java class loader hierarchy follows the delegation model: Bootstrap ClassLoader (loads core Java API classes from rt.jar/jrt-fs.jar), Extension/Platform ClassLoader (loads JDK extensions), Application ClassLoader (loads application classes from classpath). Custom ClassLoaders extend this hierarchy. The delegation model ensures that core Java classes cannot be overridden by user classes, maintaining security."
+      },
+      {
+        "question": "What are virtual threads (Project Loom) and how do they differ from platform threads?",
+        "answer": "Virtual threads (introduced in Java 21 as GA) are lightweight threads managed by the JVM rather than the operating system. Platform threads map 1:1 to OS threads and are expensive (typically 1MB stack, kernel scheduling). Virtual threads are much cheaper — millions can exist simultaneously, as the JVM multiplexes them onto a small pool of carrier (platform) threads. They enable high-throughput concurrent programming without reactive/async complexity, using the familiar synchronous programming model."
+      },
+      {
+        "question": "What is ahead-of-time (AOT) compilation in Java and when would you use it?",
+        "answer": "AOT compilation compiles Java bytecode into native machine code before execution, rather than at runtime like JIT. GraalVM Native Image implements AOT for Java. AOT-compiled applications start nearly instantly (milliseconds vs. seconds) and have much lower memory footprints because they don't need the full JVM at runtime. This is ideal for microservices, serverless functions, and CLI tools. Tradeoffs include longer build times, limited support for reflection/dynamic class loading, and no runtime JIT optimization benefits."
+      },
+      {
+        "question": "What is the module system (Project Jigsaw) introduced in Java 9?",
+        "answer": "The Java Module System (JPMS — Java Platform Module System) introduced in Java 9 organizes the JDK and applications into modules. A module is a group of related packages with a module-info.java declaring what it exports and what it requires. Benefits include strong encapsulation (only exported packages are accessible), reliable configuration (explicit dependencies prevent classpath issues), and improved performance (JVM can optimize based on known module graph). It also allows creating custom minimal JREs with only needed modules using jlink."
+      },
+      {
+        "question": "Explain how the Java HotSpot JVM optimizes code at runtime.",
+        "answer": "HotSpot JVM uses adaptive optimization: initially bytecode is interpreted. The JVM profiles execution, identifying 'hot' methods (called frequently). These are compiled by the C1 (client) compiler for quick optimization, then recompiled by the C2 (server) compiler using advanced techniques like inlining, escape analysis, loop unrolling, and lock elision. Escape analysis can eliminate heap allocations by placing objects on the stack. The JVM can also deoptimize — reverting to interpreted mode if assumptions made during optimization are invalidated at runtime."
+      },
+      {
+        "question": "What is the difference between Java's strong, soft, weak, and phantom references?",
+        "answer": "Java provides four reference strengths for fine-grained memory management: Strong references (normal object references — GC never collects); Soft references (SoftReference — GC collects only when memory is critically low, useful for caches); Weak references (WeakReference — collected at next GC cycle regardless of memory, used in WeakHashMap); Phantom references (PhantomReference — enqueued after finalization before memory reclamation, used for cleanup actions). These enable sophisticated caching and memory management strategies beyond what strong references allow."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a Java program to print 'Hello, World!' to the console.",
+      "Write a Java program that prints your name, age, and city on separate lines.",
+      "Write a Java program to print the numbers 1 to 5, each on a new line.",
+      "Write a Java program that prints the sum of two numbers: 15 and 27.",
+      "Write a Java program that demonstrates using both System.out.print() and System.out.println().",
+      "Write a Java program to print a simple multiplication table for the number 2 (2x1 to 2x10).",
+      "Write a Java program that prints the Java version using System.getProperty().",
+      "Write a Java program with comments explaining each line of a Hello World program.",
+      "Write a Java program that prints a right-angled triangle pattern of asterisks with 4 rows.",
+      "Write a Java program that calculates and prints the area of a rectangle with width=5 and height=8."
+    ],
+    "medium": [
+      "Write a Java program that reads a user's name and age from the console and prints a personalized greeting.",
+      "Write a Java program that creates a simple calculator performing addition, subtraction, multiplication, and division of two numbers entered by the user.",
+      "Write a Java program that prints the first 10 Fibonacci numbers.",
+      "Write a Java program that demonstrates all Java primitive data types by declaring and printing one of each.",
+      "Write a Java program that reads 5 integers from the user and prints their sum, average, minimum, and maximum.",
+      "Create a Java class called 'Car' with fields for make, model, and year, and write a main method to create and display car objects.",
+      "Write a Java program that uses a while loop to print all even numbers between 1 and 50.",
+      "Write a Java program that converts temperature from Celsius to Fahrenheit and vice versa.",
+      "Write a Java program that checks if a number entered by the user is prime.",
+      "Write a Java program that prints a diamond pattern of asterisks."
+    ],
+    "hard": [
+      "Design a Java program that simulates a simple bank account system with methods for deposit, withdrawal, and balance inquiry, using proper encapsulation.",
+      "Write a Java program that implements a basic student grade management system where you can add students, record grades, and compute final averages.",
+      "Create a Java program that reads multiple student records from the console and prints them sorted by GPA in descending order.",
+      "Write a Java program that demonstrates inheritance by creating an Animal base class and Dog, Cat subclasses with overridden sound methods.",
+      "Implement a Java program that reads a file (text file) and counts the frequency of each word, printing the top 5 most frequent words.",
+      "Write a Java program that demonstrates the singleton design pattern by creating a configuration manager class.",
+      "Create a Java multi-threaded program that runs two threads simultaneously — one printing even numbers and one printing odd numbers from 1 to 20.",
+      "Write a Java program using generics to create a type-safe Pair class that can hold any two types of values.",
+      "Design a Java program that simulates a library management system with classes for Book, Member, and Library with borrow/return functionality.",
+      "Implement a Java program that demonstrates polymorphism by creating a Shape hierarchy (Shape, Circle, Rectangle, Triangle) with an abstract area() method."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Java Version Detector: Write a Java program that reads the Java version from system properties, extracts the major version number, and prints an appropriate message based on the version (e.g., 'Legacy Java (< 8)', 'Modern Java (8-16)', 'Latest Java (17+)').",
+      "input": "No user input required — uses System.getProperty(\"java.version\")",
+      "output": "Java Version: 17.0.1\nMajor Version: 17\nStatus: Latest Java (17+) - LTS Release",
+      "constraints": "Must handle version strings in both old format (1.8.0) and new format (17.0.1). Assume Java 8 or higher.",
+      "solution": "public class JavaVersionDetector {\n    public static void main(String[] args) {\n        String version = System.getProperty(\"java.version\");\n        System.out.println(\"Java Version: \" + version);\n        \n        int majorVersion;\n        if (version.startsWith(\"1.\")) {\n            // Old format: 1.8.0_291\n            majorVersion = Integer.parseInt(version.substring(2, 3));\n        } else {\n            // New format: 17.0.1\n            majorVersion = Integer.parseInt(version.split(\"\\\\.\")[0]);\n        }\n        \n        System.out.println(\"Major Version: \" + majorVersion);\n        \n        String status;\n        if (majorVersion < 8) {\n            status = \"Legacy Java (< 8) - Unsupported\";\n        } else if (majorVersion <= 16) {\n            status = \"Modern Java (8-16)\";\n        } else {\n            status = \"Latest Java (17+) - LTS Release\";\n        }\n        System.out.println(\"Status: \" + status);\n    }\n}"
+    },
+    {
+      "statement": "Platform Info Report: Write a Java program that generates a formatted system report including OS name, architecture, number of processors, and JVM memory statistics (total, free, used, max) in MB. Format the output as a neatly aligned report.",
+      "input": "No user input required",
+      "output": "╔══════════════════════════════════════╗\n║       JAVA SYSTEM REPORT             ║\n╠══════════════════════════════════════╣\n║ OS Name       : Windows 10           ║\n║ Architecture  : amd64                ║\n║ Processors    : 8                    ║\n║ Total Memory  : 256 MB               ║\n║ Free Memory   : 200 MB               ║\n║ Used Memory   : 56 MB                ║\n╚══════════════════════════════════════╝",
+      "constraints": "Use Runtime.getRuntime() and System.getProperty(). Memory values must be converted from bytes to MB.",
+      "solution": "public class PlatformReport {\n    public static void main(String[] args) {\n        Runtime rt = Runtime.getRuntime();\n        long totalMB = rt.totalMemory() / (1024 * 1024);\n        long freeMB = rt.freeMemory() / (1024 * 1024);\n        long usedMB = totalMB - freeMB;\n        \n        String os = System.getProperty(\"os.name\");\n        String arch = System.getProperty(\"os.arch\");\n        int procs = rt.availableProcessors();\n        \n        System.out.println(\"╔══════════════════════════════════════╗\");\n        System.out.println(\"║       JAVA SYSTEM REPORT             ║\");\n        System.out.println(\"╠══════════════════════════════════════╣\");\n        System.out.printf(\"║ %-14s: %-21s║%n\", \"OS Name\", os);\n        System.out.printf(\"║ %-14s: %-21s║%n\", \"Architecture\", arch);\n        System.out.printf(\"║ %-14s: %-21s║%n\", \"Processors\", procs);\n        System.out.printf(\"║ %-14s: %-18s MB ║%n\", \"Total Memory\", totalMB);\n        System.out.printf(\"║ %-14s: %-18s MB ║%n\", \"Free Memory\", freeMB);\n        System.out.printf(\"║ %-14s: %-18s MB ║%n\", \"Used Memory\", usedMB);\n        System.out.println(\"╚══════════════════════════════════════╝\");\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Applications",
+      "explanation": "Java is the backbone of enterprise software at Fortune 500 companies. Banking systems, insurance platforms, ERP systems, and CRM software are overwhelmingly built with Java and Jakarta EE frameworks. Java's reliability, transaction management, and security features make it ideal for mission-critical enterprise workloads handling billions of dollars daily."
+    },
+    {
+      "field": "Banking Systems",
+      "explanation": "Major financial institutions like JPMorgan, Goldman Sachs, and HSBC rely heavily on Java for trading platforms, core banking systems, fraud detection, and risk management. Java's strong typing, exception handling, and predictable performance characteristics make it trusted for financial transactions where correctness is paramount."
+    },
+    {
+      "field": "Android Development",
+      "explanation": "Android apps were originally developed exclusively in Java. The Android SDK is built on Java APIs, and millions of existing Android apps are written in Java. While Kotlin is now Google's preferred language for Android, Java remains valid and widely used, and Kotlin is fully interoperable with Java codebases."
+    },
+    {
+      "field": "Web Applications",
+      "explanation": "Java powers millions of web applications through frameworks like Spring MVC, Spring Boot, and Jakarta EE. E-commerce platforms, content management systems, booking engines, and government portals are commonly built with Java web frameworks that provide security, scalability, and maintainability for high-traffic applications."
+    },
+    {
+      "field": "Microservices",
+      "explanation": "Spring Boot has become the de facto standard for building microservices in Java. Companies like Netflix, Uber, and Airbnb have used Java-based microservices at massive scale. Tools like Spring Cloud provide service discovery, circuit breakers, API gateways, and distributed configuration for Java microservice architectures."
+    },
+    {
+      "field": "Cloud Applications",
+      "explanation": "Java applications run extensively on cloud platforms like AWS, Google Cloud, and Azure. With containerization via Docker and orchestration via Kubernetes, Java applications scale dynamically in the cloud. GraalVM Native Image enables Java to be competitive in serverless environments with fast startup times and low memory footprints."
+    }
+  ],
+  "best_practices": [
+    "Always match the filename to the public class name exactly, including capitalization, to avoid compilation errors",
+    "Use meaningful and descriptive class names in PascalCase (e.g., StudentRecord, not sr or student_record)",
+    "Keep the main method focused on initialization and delegation — move logic into separate methods or classes",
+    "Always close resources like Scanner, File streams, and database connections when done, or use try-with-resources",
+    "Write comments to explain the 'why' behind non-obvious code, not the 'what' (which should be clear from code itself)",
+    "Understand the difference between JDK, JRE, and JVM before starting — it helps troubleshoot setup issues",
+    "Start with a simple HelloWorld program when setting up a new development environment to verify everything works",
+    "Use an IDE like IntelliJ IDEA or Eclipse for auto-completion, error highlighting, and refactoring support"
+  ],
+  "summary": [
+    "Java is a high-level, object-oriented, platform-independent language created by James Gosling at Sun Microsystems in 1995, following the WORA (Write Once, Run Anywhere) philosophy",
+    "The JVM (Java Virtual Machine) is the key to Java's platform independence, executing bytecode compiled by the Java compiler (javac) on any compatible platform",
+    "JDK includes JRE and compiler tools for development; JRE includes JVM and class libraries for running programs; JVM is the execution engine for bytecode",
+    "Java's key strengths include automatic garbage collection, strong typing, multithreading support, a rich standard library, and a massive ecosystem of frameworks",
+    "Java is used across enterprise applications, Android development, banking systems, web backends, big data processing, and cloud-native microservices, making it one of the most in-demand programming languages worldwide"
+  ],
+  "quiz": [
+    {
+      "question": "Who created the Java programming language?",
+      "options": ["A. Dennis Ritchie", "B. James Gosling", "C. Bjarne Stroustrup", "D. Guido van Rossum"],
+      "answer": "B. James Gosling",
+      "explanation": "Java was created by James Gosling at Sun Microsystems (now Oracle) and released in 1995. Dennis Ritchie created C, Bjarne Stroustrup created C++, and Guido van Rossum created Python."
+    },
+    {
+      "question": "What does WORA stand for in Java?",
+      "options": ["A. Write Once, Run Anywhere", "B. Write Often, Run Always", "C. Working On Runtime Architecture", "D. Web-Oriented Runtime Application"],
+      "answer": "A. Write Once, Run Anywhere",
+      "explanation": "WORA means Write Once, Run Anywhere — Java programs compiled to bytecode can run on any platform with a JVM without modification or recompilation."
+    },
+    {
+      "question": "Which component of the Java platform is responsible for executing bytecode?",
+      "options": ["A. JDK", "B. javac compiler", "C. JVM (Java Virtual Machine)", "D. JRE class libraries"],
+      "answer": "C. JVM (Java Virtual Machine)",
+      "explanation": "The JVM (Java Virtual Machine) is the execution engine that reads and executes Java bytecode. The javac compiler produces bytecode, JDK is the development toolkit, and JRE class libraries provide pre-built functionality."
+    },
+    {
+      "question": "What file extension does compiled Java bytecode have?",
+      "options": ["A. .java", "B. .exe", "C. .jar", "D. .class"],
+      "answer": "D. .class",
+      "explanation": "When Java source code (.java files) is compiled by javac, it produces .class files containing platform-independent bytecode that the JVM executes."
+    },
+    {
+      "question": "Which is the correct signature for the Java main method?",
+      "options": ["A. public void main(String args)", "B. public static void main(String[] args)", "C. static main(String[] args)", "D. public static int main(String args[])"],
+      "answer": "B. public static void main(String[] args)",
+      "explanation": "The correct signature is 'public static void main(String[] args)'. It must be public (accessible by JVM), static (callable without instance), void (no return value), and accept a String array parameter."
+    },
+    {
+      "question": "Which Java edition is used for large-scale enterprise server-side applications?",
+      "options": ["A. Java ME", "B. Java SE", "C. Jakarta EE (Java EE)", "D. JavaFX"],
+      "answer": "C. Jakarta EE (Java EE)",
+      "explanation": "Jakarta EE (formerly Java EE/Enterprise Edition) provides APIs for enterprise features like Servlets, JPA, EJB, and Web Services for large-scale server applications. Java SE is for general-purpose apps, Java ME for embedded devices, JavaFX for rich UIs."
+    },
+    {
+      "question": "What is automatic garbage collection in Java?",
+      "options": ["A. Manually deleting objects using the delete keyword", "B. Compressing class files to save disk space", "C. The JVM automatically freeing memory occupied by unreachable objects", "D. Organizing Java source files into packages"],
+      "answer": "C. The JVM automatically freeing memory occupied by unreachable objects",
+      "explanation": "Java's garbage collector automatically identifies objects that are no longer referenced by any part of the program and reclaims their memory, eliminating the need for manual memory management like in C/C++."
+    },
+    {
+      "question": "If your public class is named 'MyProgram', what must the filename be?",
+      "options": ["A. myprogram.java", "B. my_program.java", "C. MyProgram.java", "D. MYPROGRAM.java"],
+      "answer": "C. MyProgram.java",
+      "explanation": "In Java, the filename must exactly match the public class name including capitalization. If the class is 'MyProgram', the file must be 'MyProgram.java'. Java is case-sensitive."
+    },
+    {
+      "question": "Which method would you use to print text to the console WITHOUT moving to a new line?",
+      "options": ["A. System.out.println()", "B. System.out.print()", "C. System.out.newline()", "D. Console.write()"],
+      "answer": "B. System.out.print()",
+      "explanation": "System.out.print() outputs text without a trailing newline character. System.out.println() appends a newline after the output. System.out.newline() and Console.write() are not standard Java methods."
+    },
+    {
+      "question": "What is the JIT compiler in Java?",
+      "options": ["A. A compiler that converts Java to C++ code", "B. A tool for testing Java code automatically", "C. A compiler that translates bytecode to native machine code at runtime for performance", "D. A compiler that runs before javac to check syntax"],
+      "answer": "C. A compiler that translates bytecode to native machine code at runtime for performance",
+      "explanation": "The Just-In-Time (JIT) compiler is part of the JVM. It identifies frequently executed bytecode ('hot spots') and compiles them to native machine code at runtime, significantly improving Java application performance."
+    }
+  ]
+}

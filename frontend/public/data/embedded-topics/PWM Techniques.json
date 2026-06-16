@@ -1,0 +1,42 @@
+{
+    "title": "PWM Techniques",
+    "topic_overview": "Pulse Width Modulation (PWM) is a technique for getting analog results with digital means. Digital control is used to create a square wave, a signal switched between on and off.",
+    "core_concepts": [
+        "Duty Cycle: The percentage of one period in which a signal is active (high).",
+        "Frequency/Period: How often the PWM cycle repeats.",
+        "Resolution: The number of discrete steps the duty cycle can be divided into.",
+        "Average Voltage: The perceived analog voltage, calculated as (Duty Cycle * High Voltage)."
+    ],
+    "architecture_working_principle": "Hardware timers in the microcontroller are configured to count up to a period value and reset. A compare register is used to toggle the output pin state when the counter matches it. Changing the compare register value changes the duty cycle, thereby changing the average power delivered.",
+    "real_world_applications": [
+        "Dimming LEDs smoothly.",
+        "Controlling the speed of DC motors.",
+        "Positioning servo motors.",
+        "Generating audio signals or basic analog voltages (when passed through a low-pass filter)."
+    ],
+    "advantages": [
+        "Highly efficient power control; switching elements (like transistors) are either fully on or fully off, minimizing power dissipation.",
+        "Requires only digital output pins, saving expensive DAC components."
+    ],
+    "limitations": [
+        "Generates electromagnetic interference (EMI) due to rapid switching.",
+        "Not a true analog voltage; requires filtering if a smooth DC voltage is needed."
+    ],
+    "industry_use_cases": "PWM is the standard method for motor control in electric vehicles, drones, and industrial robotics due to its high power efficiency.",
+    "best_practices": [
+        "Choose a PWM frequency high enough to avoid flickering in LEDs or audible whining in motors, but low enough to minimize switching losses in power electronics.",
+        "Use hardware PWM peripherals rather than software 'bit-banging' for stable, jitter-free signals.",
+        "Be mindful of the timer resolution; lower frequencies allow for higher duty cycle resolution."
+    ],
+    "interview_questions": [
+        {
+            "q": "How does changing the duty cycle of a PWM signal affect the speed of a DC motor?",
+            "a": "The motor's speed is proportional to the average voltage applied to it. Increasing the duty cycle increases the average voltage, providing more power and thus increasing the speed."
+        }
+    ],
+    "learning_outcomes": [
+        "Configure a microcontroller timer to generate a PWM signal.",
+        "Understand the relationship between frequency, duty cycle, and average voltage.",
+        "Control motor speed and LED brightness using PWM."
+    ]
+}

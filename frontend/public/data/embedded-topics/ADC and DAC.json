@@ -1,0 +1,41 @@
+{
+    "title": "ADC and DAC",
+    "topic_overview": "Analog-to-Digital Converters (ADCs) and Digital-to-Analog Converters (DACs) are essential interfaces that bridge the physical continuous world (analog) with the discrete computational world (digital).",
+    "core_concepts": [
+        "Resolution: The number of bits used to represent the signal (e.g., 10-bit, 12-bit). Higher resolution means finer detail.",
+        "Sampling Rate: How frequently the analog signal is measured. Must obey the Nyquist theorem.",
+        "Reference Voltage: The maximum analog voltage that corresponds to the maximum digital value.",
+        "Conversion Time: The time it takes for the ADC to perform one conversion."
+    ],
+    "architecture_working_principle": "An ADC samples a continuous voltage and assigns it a binary value relative to a reference voltage. A DAC takes a binary value and generates a corresponding continuous voltage or current. Common ADC architectures include Successive Approximation Register (SAR) and Delta-Sigma.",
+    "real_world_applications": [
+        "ADC: Reading temperature sensors, recording audio via microphones, measuring battery voltage.",
+        "DAC: Generating audio signals for speakers, controlling analog motor drives, creating signal generators."
+    ],
+    "advantages": [
+        "Allows microcontrollers to interact with physical real-world phenomena.",
+        "High-resolution ADCs/DACs provide excellent precision for measurement and control."
+    ],
+    "limitations": [
+        "Quantization error: The inherent loss of information when converting continuous to discrete values.",
+        "Aliasing: High-frequency signals appearing as low frequencies if sampled too slowly.",
+        "Susceptible to electrical noise."
+    ],
+    "industry_use_cases": "In medical devices, ADCs convert tiny electrical signals from the heart (ECG) into digital data for analysis. In audio equipment, DACs convert digital audio files back into sound waves.",
+    "best_practices": [
+        "Use an anti-aliasing (low-pass) filter before an ADC to remove high frequencies.",
+        "Ensure a stable and clean reference voltage, as noise here directly affects measurement accuracy.",
+        "Use multiple samples and average them in software to reduce random noise."
+    ],
+    "interview_questions": [
+        {
+            "q": "What is the Nyquist sampling theorem?",
+            "a": "It states that to accurately reconstruct an analog signal, the sampling rate must be at least twice the highest frequency component present in the signal."
+        }
+    ],
+    "learning_outcomes": [
+        "Understand the concepts of sampling, quantization, and resolution.",
+        "Configure an ADC to read analog voltage values.",
+        "Calculate the physical voltage based on the digital ADC reading."
+    ]
+}

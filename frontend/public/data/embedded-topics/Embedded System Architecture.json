@@ -1,0 +1,42 @@
+{
+    "title": "Embedded System Architecture",
+    "topic_overview": "Embedded system architecture describes the structural organization of hardware and software components that make up an embedded system, detailing how they interact to achieve the system's goals.",
+    "core_concepts": [
+        "Von Neumann vs. Harvard Architecture.",
+        "Memory Hierarchy: Cache, RAM, ROM/Flash.",
+        "Buses: Address, Data, and Control buses.",
+        "Peripherals: Built-in hardware modules like timers, ADCs, and communication interfaces."
+    ],
+    "architecture_working_principle": "The central processing unit (CPU) fetches instructions from program memory via buses, executes them, and reads/writes data to data memory or peripherals. The architecture dictates the efficiency of this data flow.",
+    "real_world_applications": [
+        "Designing custom SoCs (System on Chip) for smartphones.",
+        "Architecting highly reliable flight control systems.",
+        "Developing low-power wearable devices."
+    ],
+    "advantages": [
+        "Provides a blueprint for system design and optimization.",
+        "Allows trade-offs between performance, power, and cost.",
+        "Facilitates hardware-software partitioning."
+    ],
+    "limitations": [
+        "Complex architectures increase design time and cost.",
+        "Choosing the wrong architecture can lead to performance bottlenecks."
+    ],
+    "industry_use_cases": "Semiconductor companies design specific architectures (like ARM Cortex-M) optimized for different tiers of embedded applications, from ultra-low power to high-performance.",
+    "best_practices": [
+        "Select architecture based on power, performance, and cost constraints.",
+        "Utilize hardware accelerators for computationally intensive tasks.",
+        "Ensure adequate memory bandwidth for required data throughput."
+    ],
+    "interview_questions": [
+        {
+            "q": "Explain the difference between Von Neumann and Harvard architectures.",
+            "a": "Von Neumann uses a single memory space and bus for both instructions and data, causing a bottleneck. Harvard uses separate memory spaces and buses, allowing simultaneous access to instructions and data."
+        }
+    ],
+    "learning_outcomes": [
+        "Describe the basic components of an embedded system architecture.",
+        "Compare different memory architectures.",
+        "Understand the role of buses and peripherals."
+    ]
+}

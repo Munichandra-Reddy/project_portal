@@ -1,0 +1,262 @@
+{
+  "title": "Conditional Statements",
+  "introduction": {
+    "what_it_is": "Conditional statements allow your program to make decisions. They evaluate a condition (a boolean expression) and execute a block of code only if that condition is true.",
+    "why_important": "Without conditionals, a program would execute the exact same sequence of instructions every single time it runs. Conditionals introduce logic, control flow, and intelligence into your applications.",
+    "real_world": [
+      "If a user provides the correct password, log them in; else, show an error message.",
+      "If the temperature drops below freezing, turn on the heater.",
+      "If a customer's cart total is over $50, apply free shipping."
+    ]
+  },
+  "detailed_theory": "Control flow in Python is achieved through conditional statements, primarily using the `if`, `elif`, and `else` keywords. \n\n1. **The `if` Statement:** The most fundamental building block. It checks a condition, and if the condition evaluates to `True`, the indented block of code underneath it is executed. If it evaluates to `False`, the block is skipped.\n\n2. **The `else` Statement:** Used in conjunction with `if`. It provides an alternative block of code to execute when the `if` condition is `False`. There can only be one `else` block for a given `if`, and it must come at the very end.\n\n3. **The `elif` Statement:** Short for 'else if'. It allows you to check multiple conditions sequentially. If the first `if` condition is `False`, it checks the `elif` condition. You can have as many `elif` blocks as needed between an `if` and an `else`.\n\nPython relies heavily on indentation (whitespace at the beginning of a line) to define the scope of these blocks. While other languages might use curly braces `{}` to group code, Python enforces structural readability through indentation (usually 4 spaces).\n\n**Nested Conditionals:** You can place an `if` statement inside another `if` statement. This is called nesting and is useful for checking further conditions once an initial condition is met.\n\n**Ternary Operator (Conditional Expression):** Python supports a concise, one-line syntax for simple if-else statements: `value_if_true if condition else value_if_false`. It is excellent for variable assignments based on a condition.\n\n**Match-Case (Python 3.10+):** Introduced recently, `match` and `case` provide structural pattern matching, similar to `switch` statements in C++ or Java, offering a cleaner syntax when comparing a single variable against multiple potential literal values or patterns.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Indentation-Based Scope",
+        "description": "Uses whitespace to define code blocks, enforcing readable formatting natively."
+      },
+      {
+        "name": "Sequential Evaluation",
+        "description": "`if...elif...else` chains evaluate conditions one by one, stopping at the first `True` condition."
+      },
+      {
+        "name": "Ternary Operator",
+        "description": "Allows for inline conditional variable assignment."
+      }
+    ],
+    "advantages": [
+      "Clear, readable syntax that resembles plain English.",
+      "Eliminates bracket clutter found in other programming languages.",
+      "Structural pattern matching (match-case) drastically simplifies complex branching."
+    ],
+    "limitations": [
+      "Strict indentation rules can cause subtle bugs (IndentationError) if spaces and tabs are mixed.",
+      "Deeply nested conditionals can quickly become hard to read and maintain (Spaghetti code)."
+    ]
+  },
+  "syntax": {
+    "explanation": "Conditionals follow a specific structure ending with a colon and followed by an indented block.",
+    "breakdown": [
+      "`if condition:`",
+      "    `# code to execute if True`",
+      "`elif another_condition:`",
+      "    `# code to execute if second condition is True`",
+      "`else:`",
+      "    `# code to execute if all above are False`"
+    ],
+    "rules": [
+      "The statement must end with a colon `:`.",
+      "The code block must be indented consistently.",
+      "Conditions must evaluate to a boolean truth value (True/False)."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple If-Else",
+      "code": "age = 18\nif age >= 18:\n    print('You are an adult.')\nelse:\n    print('You are a minor.')",
+      "output": "You are an adult.",
+      "explanation": "Checks if the age is 18 or older to determine the appropriate output."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Using Elif",
+      "code": "score = 85\nif score >= 90:\n    print('Grade: A')\nelif score >= 80:\n    print('Grade: B')\nelif score >= 70:\n    print('Grade: C')\nelse:\n    print('Grade: F')",
+      "output": "Grade: B",
+      "explanation": "Evaluates multiple conditions sequentially. Once a True condition is found, the rest are skipped."
+    },
+    {
+      "level": "Advanced",
+      "title": "Ternary Operator",
+      "code": "is_raining = True\nstatus = 'Take umbrella' if is_raining else 'Wear sunglasses'\nprint(status)",
+      "output": "Take umbrella",
+      "explanation": "Assigns a value to `status` in a single line based on the boolean `is_raining`."
+    },
+    {
+      "level": "Real-world",
+      "title": "Structural Pattern Matching",
+      "code": "status_code = 404\nmatch status_code:\n    case 200:\n        print('OK')\n    case 404:\n        print('Not Found')\n    case 500:\n        print('Server Error')\n    case _:\n        print('Unknown Status')",
+      "output": "Not Found",
+      "explanation": "Uses Python 3.10 match-case syntax for clean handling of specific HTTP status codes."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Truthy vs Falsy Values",
+        "headers": ["Type", "Evaluates to False (Falsy)", "Evaluates to True (Truthy)"],
+        "rows": [
+          ["Numeric", "0, 0.0", "Any non-zero number"],
+          ["Sequences", "Empty lists [], strings '', tuples ()", "Any non-empty sequence"],
+          ["Boolean", "False", "True"],
+          ["NoneType", "None", "N/A"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Nested If Statements",
+        "concept_b": "Logical Operators",
+        "explanation": "Instead of `if a:` followed by an indented `if b:`, it is often cleaner to write `if a and b:`."
+      }
+    ]
+  },
+  "methods": [],
+  "mistakes": [
+    {
+      "title": "Missing the Colon",
+      "description": "Forgetting to place a colon `:` at the end of the `if`, `elif`, or `else` line.",
+      "wrong_example": "if x > 5\n    print('Greater')",
+      "correct_example": "if x > 5:\n    print('Greater')",
+      "debugging_tip": "A SyntaxError on the line containing the `if` usually means the colon is missing."
+    },
+    {
+      "title": "Indentation Errors",
+      "description": "Failing to indent the code block properly, or mixing spaces with tabs.",
+      "wrong_example": "if x == 10:\nprint('Ten')",
+      "correct_example": "if x == 10:\n    print('Ten')",
+      "debugging_tip": "If Python throws an IndentationError, ensure all lines in the block are indented by the same number of spaces (4 is standard)."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the purpose of the `elif` statement?",
+        "answer": "`elif` allows you to check multiple expressions for True and execute a block of code as soon as one of the conditions evaluates to True."
+      },
+      {
+        "question": "How does Python define the scope of a conditional block?",
+        "answer": "Python uses indentation (whitespace) to define the scope of code blocks, rather than curly braces used in many other languages."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What are 'truthy' and 'falsy' values?",
+        "answer": "Falsy values evaluate to False in a boolean context (e.g., 0, empty string, empty list, None). Truthy values evaluate to True (e.g., non-zero numbers, non-empty strings/lists)."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain short-circuit evaluation in Python conditionals.",
+        "answer": "When evaluating logical expressions with `and` / `or`, Python stops evaluating as soon as the result is determined. For `A and B`, if `A` is False, `B` is never evaluated."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "1. Write an `if` statement to check if a variable `x` is greater than 10.",
+      "2. Add an `else` block to print 'Not greater' if `x` is 10 or less.",
+      "3. Use a conditional to check if a string is empty.",
+      "4. Write an `if` statement checking if a number is even (using the modulus operator).",
+      "5. Fix this code: `if True print('Yes')`."
+    ],
+    "medium": [
+      "1. Write an `if-elif-else` chain to categorize a person's age into child, teen, adult, and senior.",
+      "2. Create a nested conditional checking if a number is positive, and if so, whether it is even or odd.",
+      "3. Use the ternary operator to assign 'Pass' to a variable if `score >= 50`, else 'Fail'.",
+      "4. Write a conditional that uses the `in` operator to check if a letter is a vowel.",
+      "5. Use truthy/falsy evaluation to print 'Has items' if a list is not empty."
+    ],
+    "hard": [
+      "1. Refactor a complex nested if-else structure using early returns in a function.",
+      "2. Write a script that simulates a simple ATM logic using match-case for options (Withdraw, Deposit, Check Balance).",
+      "3. Demonstrate short-circuit evaluation by placing a function that prints a message inside an `or` condition.",
+      "4. Write a script to determine if a given year is a leap year using conditionals.",
+      "5. Combine logical `and`, `or`, and `not` in a single conditional statement managing user authentication logic."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a program that takes three numbers and prints the largest of the three.",
+      "input": "a = 15, b = 25, c = 10",
+      "output": "The largest number is 25",
+      "constraints": "Use `if-elif-else` and logical operators. Do not use the built-in `max()` function.",
+      "solution": "a, b, c = 15, 25, 10\nif (a >= b) and (a >= c):\n    largest = a\nelif (b >= a) and (b >= c):\n    largest = b\nelse:\n    largest = c\nprint(f'The largest number is {largest}')"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Form Validation",
+      "explanation": "Checking if user inputs meet specific criteria (e.g., password length > 8, email contains '@') before submitting data to a server."
+    },
+    {
+      "field": "Game AI",
+      "explanation": "If player is close, attack; elif player is far, patrol; else, stand idle."
+    }
+  ],
+  "best_practices": [
+    "Keep conditions simple and readable. If a condition is extremely long, assign it to a boolean variable first.",
+    "Avoid deep nesting (the 'arrow anti-pattern'). Try to return early or use logical operators to flatten the structure.",
+    "Rely on truthiness for emptiness checks. Use `if my_list:` instead of `if len(my_list) > 0:`.",
+    "Use the ternary operator sparingly; if the assignment logic is complex, a standard if-else is more readable."
+  ],
+  "summary": [
+    "Conditionals (`if`, `elif`, `else`) control the flow of execution based on boolean logic.",
+    "Python uses indentation to group code blocks under conditional statements.",
+    "Multiple conditions can be checked sequentially using `elif`.",
+    "Understanding truthy and falsy values allows for cleaner, more Pythonic condition checks."
+  ],
+  "quiz": [
+    {
+      "question": "What keyword is used to add an alternative condition if the first `if` fails?",
+      "options": ["else if", "elseif", "elif", "then"],
+      "answer": "elif",
+      "explanation": "Python uses the abbreviated keyword 'elif' for 'else if'."
+    },
+    {
+      "question": "Which punctuation mark must follow an `if` condition?",
+      "options": ["; (semicolon)", ": (colon)", "{ (curly brace)", "No punctuation needed"],
+      "answer": ": (colon)",
+      "explanation": "The condition line must end with a colon to indicate the start of an indented block."
+    },
+    {
+      "question": "How does Python know which lines of code belong to the `if` block?",
+      "options": ["They are enclosed in curly braces {}", "They are indented", "They are separated by semicolons", "It guesses based on syntax"],
+      "answer": "They are indented",
+      "explanation": "Python relies on consistent indentation to define the scope of control structures."
+    },
+    {
+      "question": "What is the output of: `if 0: print('A') else: print('B')` (ignoring line breaks)?",
+      "options": ["A", "B", "Error", "Nothing"],
+      "answer": "B",
+      "explanation": "In Python, 0 is a falsy value, so the condition evaluates to False and the else block runs."
+    },
+    {
+      "question": "Which of these is the correct syntax for a ternary operator in Python?",
+      "options": ["x = condition ? true_val : false_val", "x = true_val if condition else false_val", "x = if condition: true_val else false_val", "x = condition -> true_val | false_val"],
+      "answer": "x = true_val if condition else false_val",
+      "explanation": "Python's conditional expression reads like English: value if true else value."
+    },
+    {
+      "question": "Can you use an `else` statement without an `if` statement preceding it?",
+      "options": ["Yes", "No", "Only in functions", "Only in loops"],
+      "answer": "No",
+      "explanation": "An 'else' block serves as a catch-all and must be attached to an 'if' (or a loop/try block)."
+    },
+    {
+      "question": "Which statement evaluates to True?",
+      "options": ["if '':", "if []:", "if None:", "if -1:"],
+      "answer": "if -1:",
+      "explanation": "Non-zero numbers evaluate to True. Empty sequences and None evaluate to False."
+    },
+    {
+      "question": "What is a 'nested' if statement?",
+      "options": ["An if statement on a single line", "An if statement inside another if statement", "An if statement without an else", "An if statement with multiple conditions"],
+      "answer": "An if statement inside another if statement",
+      "explanation": "Nesting means placing one structure inside another, increasing the indentation level."
+    },
+    {
+      "question": "Which Python version introduced the structural pattern matching (match-case) syntax?",
+      "options": ["Python 2.7", "Python 3.5", "Python 3.8", "Python 3.10"],
+      "answer": "Python 3.10",
+      "explanation": "The match-case statement was added in Python 3.10 to simplify complex branching logic."
+    },
+    {
+      "question": "What happens if multiple `elif` conditions evaluate to True?",
+      "options": ["All of their blocks are executed", "Only the first True block is executed", "The last True block is executed", "It throws a SyntaxError"],
+      "answer": "Only the first True block is executed",
+      "explanation": "In an if-elif chain, execution stops as soon as the first True condition is found and its block executes."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+    "title": "RTOS Fundamentals",
+    "topic_overview": "A Real-Time Operating System (RTOS) is an OS intended to serve real-time applications that process data as it comes in, typically without buffering delays. Processing time requirements are measured in tenths of seconds or shorter increments of time.",
+    "core_concepts": [
+        "Task/Thread: A semi-independent segment of an application executing its own logic.",
+        "Scheduler: The core of the RTOS that decides which task runs at any given time (usually preemptive priority-based).",
+        "Context Switch: The process of saving the state of the currently running task and restoring the state of the next task to run.",
+        "Synchronization Primitives: Semaphores, Mutexes, and Queues used for task communication and resource management."
+    ],
+    "architecture_working_principle": "Instead of a single infinite `while(1)` loop, an RTOS divides the application into multiple tasks, each with an assigned priority. A hardware timer provides a 'tick' interrupt. On each tick, the scheduler evaluates task priorities. If a higher priority task is ready to run, it preempts the currently running lower priority task.",
+    "real_world_applications": [
+        "Complex industrial control systems requiring deterministic timing.",
+        "IoT gateways managing multiple network connections and sensor readings simultaneously.",
+        "Medical equipment where delays in processing can be life-threatening."
+    ],
+    "advantages": [
+        "Simplifies the design of complex applications by breaking them into manageable, isolated tasks.",
+        "Provides deterministic behavior; critical tasks are guaranteed execution time.",
+        "Provides built-in mechanisms for inter-task communication and synchronization."
+    ],
+    "limitations": [
+        "Overhead: Context switching and RTOS data structures consume CPU cycles and memory (RAM).",
+        "Complexity: Introduces risks like deadlocks, priority inversion, and race conditions if synchronization is not handled correctly.",
+        "Steep learning curve compared to bare-metal programming."
+    ],
+    "industry_use_cases": "FreeRTOS is widely used in IoT devices to manage Wi-Fi stacks, sensor reading, and cloud communication concurrently. VxWorks is used in aerospace (e.g., Mars rovers) for ultra-reliable hard real-time performance.",
+    "best_practices": [
+        "Keep critical sections (where interrupts are disabled or mutexes are held) as short as possible.",
+        "Avoid unbounded priority inversion by using Mutexes with Priority Inheritance.",
+        "Size task stacks appropriately to avoid stack overflows, a common RTOS crash cause."
+    ],
+    "interview_questions": [
+        {
+            "q": "What is Priority Inversion and how is it solved?",
+            "a": "Priority inversion happens when a high-priority task is blocked waiting for a resource held by a low-priority task, and a medium-priority task preempts the low-priority task. This delays the high-priority task indefinitely. It is solved using Priority Inheritance, where the low-priority task temporarily inherits the high priority until it releases the resource."
+        }
+    ],
+    "learning_outcomes": [
+        "Understand the difference between bare-metal programming and an RTOS.",
+        "Create and schedule tasks with different priorities.",
+        "Use queues and semaphores to communicate safely between tasks."
+    ]
+}

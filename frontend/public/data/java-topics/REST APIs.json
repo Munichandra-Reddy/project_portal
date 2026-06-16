@@ -1,0 +1,528 @@
+{
+  "title": "REST APIs in Java",
+  "introduction": {
+    "what_it_is": "REST (Representational State Transfer) APIs are architectural style-based web services that use HTTP protocol to enable communication between clients and servers. In Java, REST APIs are commonly built using frameworks like Spring Boot, JAX-RS (Jersey), and Micronaut, allowing developers to expose resources as endpoints accessible via standard HTTP methods.",
+    "why_important": "REST APIs are the backbone of modern web development, enabling communication between frontend applications, mobile apps, and backend services. Understanding how to design, build, and consume REST APIs in Java is a critical skill for backend and full-stack developers. They enable scalable, stateless, and platform-independent communication.",
+    "real_world": [
+      "Payment gateways like Stripe and PayPal expose REST APIs for processing transactions",
+      "Social media platforms like Twitter and Facebook use REST APIs for third-party integrations",
+      "E-commerce platforms use REST APIs to connect mobile apps, web frontends, and microservices",
+      "IoT devices communicate with cloud backends via REST APIs",
+      "Enterprise applications expose REST APIs for B2B integration"
+    ]
+  },
+  "detailed_theory": "REST (Representational State Transfer) is an architectural style for designing networked applications, introduced by Roy Fielding in his 2000 doctoral dissertation. RESTful web services use HTTP protocol and follow six key constraints: Client-Server architecture, Statelessness, Cacheability, Uniform Interface, Layered System, and Code on Demand (optional).\n\n**Core Concepts of REST**\n\nREST APIs work on resources, which are any identifiable piece of information — a user, a product, an order. Each resource is identified by a Uniform Resource Identifier (URI). For example, `/api/users/1` identifies the user with ID 1. Resources are manipulated using standard HTTP methods:\n\n- **GET**: Retrieve a resource or list of resources\n- **POST**: Create a new resource\n- **PUT**: Update an existing resource (full update)\n- **PATCH**: Partially update a resource\n- **DELETE**: Remove a resource\n\n**HTTP Status Codes**\n\nREST APIs communicate success or failure through HTTP status codes. The most important ones are:\n- 200 OK — Successful GET, PUT, PATCH\n- 201 Created — Successful POST\n- 204 No Content — Successful DELETE\n- 400 Bad Request — Invalid input\n- 401 Unauthorized — Authentication required\n- 403 Forbidden — Not authorized\n- 404 Not Found — Resource doesn't exist\n- 500 Internal Server Error — Server-side error\n\n**REST API Design Principles**\n\n1. **Use Nouns for URIs**: URIs should represent resources (nouns), not actions (verbs). Use `/users` instead of `/getUsers`.\n2. **Plural Nouns**: Use plural nouns for collections (`/users`, `/products`).\n3. **Hierarchical URIs**: Express relationships hierarchically (`/users/{id}/orders`).\n4. **Statelessness**: Each request must contain all the information needed to process it. No session state is stored on the server.\n5. **JSON as Data Format**: JSON is the standard data interchange format for REST APIs, though XML is also supported.\n6. **Versioning**: Version your APIs to support backward compatibility (`/api/v1/users`).\n\n**Building REST APIs with Spring Boot**\n\nSpring Boot is the most popular Java framework for building REST APIs. It provides auto-configuration, embedded servers (Tomcat, Jetty), and powerful annotation-based programming.\n\nKey Spring Boot annotations for REST APIs:\n- `@RestController`: Marks a class as a REST controller (combines `@Controller` and `@ResponseBody`)\n- `@RequestMapping`: Maps HTTP requests to handler methods\n- `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`: Shorthand mappings for HTTP methods\n- `@PathVariable`: Extracts values from URI path\n- `@RequestParam`: Extracts query parameters\n- `@RequestBody`: Deserializes the HTTP request body to a Java object\n- `@ResponseStatus`: Sets the HTTP response status\n\n**Spring Data JPA Integration**\n\nMost REST APIs interact with databases. Spring Data JPA simplifies database operations by providing repositories with built-in CRUD methods. Combined with Spring Boot, you can build a fully functional REST API with database persistence in minutes.\n\n**Request/Response Flow**\n\nWhen a client sends an HTTP request to a Spring Boot REST API:\n1. DispatcherServlet receives the request\n2. HandlerMapping maps the URL to the appropriate controller method\n3. The controller processes the request, potentially calling service and repository layers\n4. The response is serialized to JSON using Jackson (the default JSON library)\n5. The HTTP response is sent back to the client\n\n**Exception Handling**\n\nProper exception handling is crucial for REST APIs. Spring Boot provides `@ExceptionHandler` and `@ControllerAdvice` for global exception handling, allowing you to return meaningful error responses instead of stack traces.\n\n**Security**\n\nREST APIs need to be secured. Common approaches include:\n- **JWT (JSON Web Tokens)**: Stateless token-based authentication\n- **OAuth 2.0**: Delegated authorization framework\n- **Basic Authentication**: Base64-encoded credentials (use only over HTTPS)\n- **API Keys**: Simple key-based authentication for server-to-server communication\n\nSpring Security integrates seamlessly with Spring Boot to implement these security mechanisms.\n\n**Content Negotiation**\n\nREST APIs can support multiple response formats (JSON, XML) using content negotiation. The client specifies the desired format via the `Accept` header, and the server responds with the appropriate format using `Content-Type` header.\n\n**HATEOAS (Hypermedia as the Engine of Application State)**\n\nHATEOAS is a REST constraint where responses include links to related resources, making the API self-discoverable. Spring HATEOAS provides support for building hypermedia-driven REST APIs.\n\n**API Documentation**\n\nOpenAPI (Swagger) is the standard for documenting REST APIs. Springdoc-openapi library automatically generates interactive API documentation from your Spring Boot code, making it easy for developers to explore and test your API.\n\n**Testing REST APIs**\n\nSpring Boot provides `MockMvc` and `WebTestClient` for testing REST APIs. Tools like Postman, curl, and HTTPie are used for manual testing. Integration with WireMock allows mocking external REST API calls in tests.\n\n**Performance Considerations**\n\n- **Pagination**: Return large datasets in pages using query parameters (`?page=0&size=20`)\n- **Filtering and Sorting**: Allow clients to filter and sort data\n- **Caching**: Use HTTP cache headers (`Cache-Control`, `ETag`) to reduce server load\n- **Compression**: Enable GZIP compression for responses\n- **Connection Pooling**: Use connection pooling for database connections\n\n**Consuming REST APIs**\n\nJava applications consume REST APIs using:\n- **RestTemplate** (legacy, synchronous)\n- **WebClient** (modern, reactive, both sync and async)\n- **OpenFeign** (declarative HTTP client for microservices)\n- **HttpClient** (Java 11+, built-in)\n\nREST APIs form the foundation of microservices architecture, cloud-native applications, and modern distributed systems. Mastering REST API development in Java is an indispensable skill for any Java developer.",
+  "key_features": {
+    "features": [
+      {"name": "Stateless Communication", "description": "Each HTTP request is independent and contains all necessary information, improving scalability and reliability"},
+      {"name": "HTTP Methods", "description": "Uses standard HTTP methods (GET, POST, PUT, DELETE, PATCH) to perform CRUD operations on resources"},
+      {"name": "JSON/XML Data Format", "description": "REST APIs exchange data in JSON (most common) or XML format, making them language-agnostic"},
+      {"name": "Resource-Based URIs", "description": "Resources are identified by URIs, providing a uniform interface for accessing data"},
+      {"name": "Spring Boot Integration", "description": "Spring Boot makes building REST APIs fast with auto-configuration, embedded servers, and powerful annotations"},
+      {"name": "Exception Handling", "description": "Global exception handling via @ControllerAdvice provides consistent error responses"},
+      {"name": "Security", "description": "Supports JWT, OAuth 2.0, and Basic Auth for securing endpoints"},
+      {"name": "Content Negotiation", "description": "Supports multiple response formats based on client Accept headers"}
+    ],
+    "advantages": [
+      "Platform-independent — any client (browser, mobile, desktop) can consume REST APIs",
+      "Stateless design makes it highly scalable — servers don't need to maintain session state",
+      "Uses standard HTTP protocol, widely understood and supported",
+      "Easy to integrate with other systems and services",
+      "JSON format is lightweight and human-readable",
+      "Excellent Spring Boot tooling and ecosystem in Java",
+      "Enables microservices architecture and distributed systems"
+    ],
+    "limitations": [
+      "No built-in support for real-time communication (use WebSockets or SSE for that)",
+      "Can lead to over-fetching or under-fetching of data (GraphQL solves this)",
+      "Statelessness requires sending authentication credentials with every request",
+      "REST doesn't enforce strict standards, leading to inconsistent API designs",
+      "Versioning REST APIs can be complex and requires careful planning"
+    ]
+  },
+  "syntax": {
+    "explanation": "In Spring Boot, REST APIs are created using controller classes annotated with @RestController. Methods are mapped to HTTP endpoints using @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, and @PatchMapping annotations.",
+    "breakdown": [
+      "@RestController: Marks the class as a REST controller; combines @Controller + @ResponseBody",
+      "@RequestMapping(\"/api/users\"): Base URL mapping for all methods in the controller",
+      "@GetMapping(\"/{id}\"): Maps HTTP GET to a method; {id} is a path variable",
+      "@PathVariable Long id: Extracts the {id} value from the URL path",
+      "@RequestBody User user: Deserializes the JSON request body into a User object",
+      "@ResponseStatus(HttpStatus.CREATED): Sets the HTTP response status to 201",
+      "ResponseEntity<T>: Wrapper for HTTP response including status, headers, and body"
+    ],
+    "rules": [
+      "Always use @RestController instead of @Controller for REST APIs (avoids needing @ResponseBody on every method)",
+      "Use plural nouns for collection URIs (/users, /products, not /user, /product)",
+      "Return appropriate HTTP status codes (200, 201, 204, 404, 400, etc.)",
+      "Use @RequestBody for POST/PUT/PATCH requests that send JSON body",
+      "Use ResponseEntity when you need to control both the body and the status code",
+      "Always validate input with @Valid and Bean Validation annotations",
+      "Handle exceptions globally with @ControllerAdvice to avoid exposing stack traces"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple Hello World REST API",
+      "code": "import org.springframework.web.bind.annotation.GetMapping;\nimport org.springframework.web.bind.annotation.RequestMapping;\nimport org.springframework.web.bind.annotation.RestController;\n\n@RestController\n@RequestMapping(\"/api\")\npublic class HelloController {\n\n    @GetMapping(\"/hello\")\n    public String hello() {\n        return \"Hello, World from REST API!\";\n    }\n\n    @GetMapping(\"/greet/{name}\")\n    public String greet(@PathVariable String name) {\n        return \"Hello, \" + name + \"! Welcome to Spring Boot REST API.\";\n    }\n}",
+      "output": "GET /api/hello → \"Hello, World from REST API!\"\nGET /api/greet/Alice → \"Hello, Alice! Welcome to Spring Boot REST API.\"",
+      "explanation": "This basic example shows a REST controller with two endpoints. @RestController ensures responses are serialized directly as HTTP response body. @GetMapping maps HTTP GET requests to methods. @PathVariable extracts the name from the URL path."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Full CRUD REST API for User Management",
+      "code": "import org.springframework.http.HttpStatus;\nimport org.springframework.http.ResponseEntity;\nimport org.springframework.web.bind.annotation.*;\nimport java.util.*;\n\n// Model\nclass User {\n    private Long id;\n    private String name;\n    private String email;\n\n    public User() {}\n    public User(Long id, String name, String email) {\n        this.id = id; this.name = name; this.email = email;\n    }\n    // Getters and Setters\n    public Long getId() { return id; }\n    public void setId(Long id) { this.id = id; }\n    public String getName() { return name; }\n    public void setName(String name) { this.name = name; }\n    public String getEmail() { return email; }\n    public void setEmail(String email) { this.email = email; }\n}\n\n@RestController\n@RequestMapping(\"/api/users\")\npublic class UserController {\n\n    private Map<Long, User> userStore = new HashMap<>();\n    private long idCounter = 1;\n\n    // GET all users\n    @GetMapping\n    public List<User> getAllUsers() {\n        return new ArrayList<>(userStore.values());\n    }\n\n    // GET user by ID\n    @GetMapping(\"/{id}\")\n    public ResponseEntity<User> getUserById(@PathVariable Long id) {\n        User user = userStore.get(id);\n        if (user == null) {\n            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();\n        }\n        return ResponseEntity.ok(user);\n    }\n\n    // POST - Create user\n    @PostMapping\n    public ResponseEntity<User> createUser(@RequestBody User user) {\n        user.setId(idCounter++);\n        userStore.put(user.getId(), user);\n        return ResponseEntity.status(HttpStatus.CREATED).body(user);\n    }\n\n    // PUT - Update user\n    @PutMapping(\"/{id}\")\n    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {\n        if (!userStore.containsKey(id)) {\n            return ResponseEntity.notFound().build();\n        }\n        user.setId(id);\n        userStore.put(id, user);\n        return ResponseEntity.ok(user);\n    }\n\n    // DELETE - Remove user\n    @DeleteMapping(\"/{id}\")\n    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {\n        if (!userStore.containsKey(id)) {\n            return ResponseEntity.notFound().build();\n        }\n        userStore.remove(id);\n        return ResponseEntity.noContent().build();\n    }\n}",
+      "output": "POST /api/users {name:\"Alice\",email:\"alice@example.com\"} → 201 Created {id:1,name:\"Alice\",email:\"alice@example.com\"}\nGET /api/users/1 → 200 OK {id:1,name:\"Alice\",email:\"alice@example.com\"}\nGET /api/users/99 → 404 Not Found\nDELETE /api/users/1 → 204 No Content",
+      "explanation": "This example demonstrates a full CRUD REST controller using an in-memory HashMap as a data store. ResponseEntity allows setting both the HTTP status code and response body. Each HTTP method maps to the correct REST operation with proper status codes."
+    },
+    {
+      "level": "Advanced",
+      "title": "REST API with Global Exception Handling and Validation",
+      "code": "import org.springframework.http.HttpStatus;\nimport org.springframework.http.ResponseEntity;\nimport org.springframework.validation.FieldError;\nimport org.springframework.web.bind.MethodArgumentNotValidException;\nimport org.springframework.web.bind.annotation.*;\nimport jakarta.validation.Valid;\nimport jakarta.validation.constraints.Email;\nimport jakarta.validation.constraints.NotBlank;\nimport jakarta.validation.constraints.Size;\nimport java.time.LocalDateTime;\nimport java.util.*;\n\n// Request DTO with validation\nclass CreateUserRequest {\n    @NotBlank(message = \"Name is required\")\n    @Size(min = 2, max = 50, message = \"Name must be between 2 and 50 characters\")\n    private String name;\n\n    @NotBlank(message = \"Email is required\")\n    @Email(message = \"Invalid email format\")\n    private String email;\n\n    public String getName() { return name; }\n    public void setName(String name) { this.name = name; }\n    public String getEmail() { return email; }\n    public void setEmail(String email) { this.email = email; }\n}\n\n// Custom exception\nclass ResourceNotFoundException extends RuntimeException {\n    public ResourceNotFoundException(String message) { super(message); }\n}\n\n// Error response DTO\nclass ErrorResponse {\n    private LocalDateTime timestamp;\n    private int status;\n    private String error;\n    private Map<String, String> fieldErrors;\n\n    public ErrorResponse(int status, String error) {\n        this.timestamp = LocalDateTime.now();\n        this.status = status;\n        this.error = error;\n    }\n    // Getters\n    public LocalDateTime getTimestamp() { return timestamp; }\n    public int getStatus() { return status; }\n    public String getError() { return error; }\n    public Map<String, String> getFieldErrors() { return fieldErrors; }\n    public void setFieldErrors(Map<String, String> fieldErrors) { this.fieldErrors = fieldErrors; }\n}\n\n// Global Exception Handler\n@RestControllerAdvice\nclass GlobalExceptionHandler {\n\n    @ExceptionHandler(ResourceNotFoundException.class)\n    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {\n        ErrorResponse error = new ErrorResponse(404, ex.getMessage());\n        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);\n    }\n\n    @ExceptionHandler(MethodArgumentNotValidException.class)\n    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {\n        ErrorResponse error = new ErrorResponse(400, \"Validation failed\");\n        Map<String, String> fieldErrors = new HashMap<>();\n        ex.getBindingResult().getAllErrors().forEach(objError -> {\n            String fieldName = ((FieldError) objError).getField();\n            String message = objError.getDefaultMessage();\n            fieldErrors.put(fieldName, message);\n        });\n        error.setFieldErrors(fieldErrors);\n        return ResponseEntity.badRequest().body(error);\n    }\n}\n\n// Controller\n@RestController\n@RequestMapping(\"/api/v1/users\")\npublic class ValidatedUserController {\n    private Map<Long, CreateUserRequest> store = new HashMap<>();\n    private long idCounter = 1;\n\n    @PostMapping\n    public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody CreateUserRequest request) {\n        Long id = idCounter++;\n        store.put(id, request);\n        Map<String, Object> response = new LinkedHashMap<>();\n        response.put(\"id\", id);\n        response.put(\"name\", request.getName());\n        response.put(\"email\", request.getEmail());\n        response.put(\"createdAt\", LocalDateTime.now());\n        return ResponseEntity.status(HttpStatus.CREATED).body(response);\n    }\n\n    @GetMapping(\"/{id}\")\n    public ResponseEntity<CreateUserRequest> getUser(@PathVariable Long id) {\n        CreateUserRequest user = store.get(id);\n        if (user == null) throw new ResourceNotFoundException(\"User not found with id: \" + id);\n        return ResponseEntity.ok(user);\n    }\n}",
+      "output": "POST /api/v1/users {name:\"\", email:\"invalid\"} → 400 Bad Request\n{\n  \"timestamp\": \"2024-01-15T10:30:00\",\n  \"status\": 400,\n  \"error\": \"Validation failed\",\n  \"fieldErrors\": {\n    \"name\": \"Name is required\",\n    \"email\": \"Invalid email format\"\n  }\n}\nGET /api/v1/users/999 → 404 Not Found\n{\"timestamp\":\"...\",\"status\":404,\"error\":\"User not found with id: 999\"}",
+      "explanation": "This advanced example shows production-quality REST API patterns: Bean Validation with @Valid and constraint annotations, custom exceptions, and global exception handling with @RestControllerAdvice. The error responses are structured JSON objects, not raw stack traces."
+    },
+    {
+      "level": "Real-world",
+      "title": "Product Catalog REST API with Pagination and Filtering",
+      "code": "import org.springframework.http.ResponseEntity;\nimport org.springframework.web.bind.annotation.*;\nimport java.math.BigDecimal;\nimport java.util.*;\nimport java.util.stream.*;\n\nclass Product {\n    private Long id;\n    private String name;\n    private String category;\n    private BigDecimal price;\n    private boolean inStock;\n\n    public Product(Long id, String name, String category, BigDecimal price, boolean inStock) {\n        this.id = id; this.name = name; this.category = category;\n        this.price = price; this.inStock = inStock;\n    }\n    public Long getId() { return id; }\n    public String getName() { return name; }\n    public String getCategory() { return category; }\n    public BigDecimal getPrice() { return price; }\n    public boolean isInStock() { return inStock; }\n}\n\nclass PagedResponse<T> {\n    private List<T> content;\n    private int page;\n    private int size;\n    private long totalElements;\n    private int totalPages;\n\n    public PagedResponse(List<T> content, int page, int size, long totalElements) {\n        this.content = content; this.page = page; this.size = size;\n        this.totalElements = totalElements;\n        this.totalPages = (int) Math.ceil((double) totalElements / size);\n    }\n    public List<T> getContent() { return content; }\n    public int getPage() { return page; }\n    public int getSize() { return size; }\n    public long getTotalElements() { return totalElements; }\n    public int getTotalPages() { return totalPages; }\n}\n\n@RestController\n@RequestMapping(\"/api/v1/products\")\npublic class ProductController {\n\n    private List<Product> products = Arrays.asList(\n        new Product(1L, \"Laptop Pro\", \"Electronics\", new BigDecimal(\"1299.99\"), true),\n        new Product(2L, \"Wireless Mouse\", \"Electronics\", new BigDecimal(\"29.99\"), true),\n        new Product(3L, \"Office Chair\", \"Furniture\", new BigDecimal(\"399.99\"), false),\n        new Product(4L, \"Standing Desk\", \"Furniture\", new BigDecimal(\"799.99\"), true),\n        new Product(5L, \"USB-C Hub\", \"Electronics\", new BigDecimal(\"49.99\"), true)\n    );\n\n    @GetMapping\n    public ResponseEntity<PagedResponse<Product>> getProducts(\n            @RequestParam(required = false) String category,\n            @RequestParam(required = false) Boolean inStock,\n            @RequestParam(defaultValue = \"0\") int page,\n            @RequestParam(defaultValue = \"10\") int size,\n            @RequestParam(defaultValue = \"name\") String sortBy) {\n\n        // Filtering\n        List<Product> filtered = products.stream()\n            .filter(p -> category == null || p.getCategory().equalsIgnoreCase(category))\n            .filter(p -> inStock == null || p.isInStock() == inStock)\n            .sorted(Comparator.comparing(p -> {\n                if (\"price\".equals(sortBy)) return p.getPrice().toPlainString();\n                return p.getName();\n            }))\n            .collect(Collectors.toList());\n\n        // Pagination\n        int start = page * size;\n        int end = Math.min(start + size, filtered.size());\n        List<Product> pageContent = start >= filtered.size() ?\n            Collections.emptyList() : filtered.subList(start, end);\n\n        return ResponseEntity.ok(new PagedResponse<>(pageContent, page, size, filtered.size()));\n    }\n\n    @GetMapping(\"/{id}\")\n    public ResponseEntity<Product> getProduct(@PathVariable Long id) {\n        return products.stream()\n            .filter(p -> p.getId().equals(id))\n            .findFirst()\n            .map(ResponseEntity::ok)\n            .orElse(ResponseEntity.notFound().build());\n    }\n}",
+      "output": "GET /api/v1/products?category=Electronics&inStock=true&page=0&size=2\n{\n  \"content\": [\n    {\"id\":5,\"name\":\"USB-C Hub\",\"category\":\"Electronics\",\"price\":49.99,\"inStock\":true},\n    {\"id\":1,\"name\":\"Laptop Pro\",\"category\":\"Electronics\",\"price\":1299.99,\"inStock\":true}\n  ],\n  \"page\": 0,\n  \"size\": 2,\n  \"totalElements\": 3,\n  \"totalPages\": 2\n}",
+      "explanation": "This real-world example shows a product catalog API with filtering by category and stock status, pagination using page/size parameters, and sorting. PagedResponse wraps the result with metadata. This pattern is used in e-commerce platforms for product listings."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "HTTP Methods and Their Usage in REST APIs",
+        "headers": ["HTTP Method", "CRUD Operation", "URI Example", "Request Body", "Response Code"],
+        "rows": [
+          ["GET", "Read", "/api/users or /api/users/1", "None", "200 OK"],
+          ["POST", "Create", "/api/users", "JSON body", "201 Created"],
+          ["PUT", "Update (Full)", "/api/users/1", "JSON body", "200 OK"],
+          ["PATCH", "Update (Partial)", "/api/users/1", "Partial JSON", "200 OK"],
+          ["DELETE", "Delete", "/api/users/1", "None", "204 No Content"]
+        ]
+      },
+      {
+        "title": "Common HTTP Status Codes",
+        "headers": ["Status Code", "Meaning", "When to Use"],
+        "rows": [
+          ["200 OK", "Success", "Successful GET, PUT, PATCH"],
+          ["201 Created", "Resource Created", "Successful POST"],
+          ["204 No Content", "Success, No Body", "Successful DELETE"],
+          ["400 Bad Request", "Invalid Input", "Validation failure"],
+          ["401 Unauthorized", "Not Authenticated", "Missing or invalid token"],
+          ["403 Forbidden", "Not Authorized", "Insufficient permissions"],
+          ["404 Not Found", "Resource Missing", "ID doesn't exist"],
+          ["409 Conflict", "Conflict", "Duplicate resource"],
+          ["500 Internal Server Error", "Server Error", "Unhandled exception"]
+        ]
+      },
+      {
+        "title": "Spring Boot REST Annotations",
+        "headers": ["Annotation", "Purpose", "Example"],
+        "rows": [
+          ["@RestController", "Mark class as REST controller", "@RestController"],
+          ["@RequestMapping", "Map base URI to controller", "@RequestMapping(\"/api/users\")"],
+          ["@GetMapping", "Map HTTP GET", "@GetMapping(\"/{id}\")"],
+          ["@PostMapping", "Map HTTP POST", "@PostMapping"],
+          ["@PutMapping", "Map HTTP PUT", "@PutMapping(\"/{id}\")"],
+          ["@DeleteMapping", "Map HTTP DELETE", "@DeleteMapping(\"/{id}\")"],
+          ["@PathVariable", "Extract path variable", "@PathVariable Long id"],
+          ["@RequestParam", "Extract query parameter", "@RequestParam String name"],
+          ["@RequestBody", "Deserialize request body", "@RequestBody User user"],
+          ["@ResponseStatus", "Set response status", "@ResponseStatus(HttpStatus.CREATED)"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "GET Request",
+        "concept_b": "POST Request",
+        "explanation": "GET retrieves data without modifying server state (idempotent, safe). POST creates new resources and modifies server state (not idempotent). GET parameters go in the URL; POST data goes in the request body."
+      },
+      {
+        "concept_a": "PUT vs PATCH",
+        "concept_b": "Partial vs Full Update",
+        "explanation": "PUT replaces the entire resource with the provided data (full update). PATCH applies partial modifications to a resource. Use PUT when you have the full resource, PATCH when updating specific fields."
+      },
+      {
+        "concept_a": "RestTemplate",
+        "concept_b": "WebClient",
+        "explanation": "RestTemplate is the classic synchronous HTTP client (being deprecated). WebClient is the modern reactive client that supports both synchronous and asynchronous calls. Prefer WebClient for new applications."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "ResponseEntity.ok(body)",
+      "description": "Creates a ResponseEntity with 200 OK status and the given body",
+      "parameters": "T body - the response body object",
+      "return_value": "ResponseEntity<T>",
+      "example_usage": "return ResponseEntity.ok(user);"
+    },
+    {
+      "name": "ResponseEntity.status(status).body(body)",
+      "description": "Creates a ResponseEntity with a custom HTTP status and body",
+      "parameters": "HttpStatus status, T body",
+      "return_value": "ResponseEntity<T>",
+      "example_usage": "return ResponseEntity.status(HttpStatus.CREATED).body(newUser);"
+    },
+    {
+      "name": "ResponseEntity.notFound().build()",
+      "description": "Creates a ResponseEntity with 404 Not Found status and no body",
+      "parameters": "None",
+      "return_value": "ResponseEntity<Void>",
+      "example_usage": "return ResponseEntity.notFound().build();"
+    },
+    {
+      "name": "ResponseEntity.noContent().build()",
+      "description": "Creates a ResponseEntity with 204 No Content status",
+      "parameters": "None",
+      "return_value": "ResponseEntity<Void>",
+      "example_usage": "return ResponseEntity.noContent().build();"
+    },
+    {
+      "name": "ResponseEntity.badRequest().body(error)",
+      "description": "Creates a ResponseEntity with 400 Bad Request status and error body",
+      "parameters": "T error - error response body",
+      "return_value": "ResponseEntity<T>",
+      "example_usage": "return ResponseEntity.badRequest().body(errorResponse);"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using Verbs in URI Instead of Nouns",
+      "description": "REST URIs should identify resources (nouns), not actions (verbs). Actions are expressed through HTTP methods.",
+      "wrong_example": "@GetMapping(\"/getUser/{id}\")\n@PostMapping(\"/createUser\")\n@DeleteMapping(\"/deleteUser/{id}\")",
+      "correct_example": "@GetMapping(\"/users/{id}\")\n@PostMapping(\"/users\")\n@DeleteMapping(\"/users/{id}\")",
+      "debugging_tip": "Always ask: 'What resource does this URI identify?' Use HTTP methods to express the action (GET=read, POST=create, DELETE=delete)."
+    },
+    {
+      "title": "Returning Wrong HTTP Status Codes",
+      "description": "Returning 200 OK for all responses, even errors and creations, violates REST conventions and confuses API clients.",
+      "wrong_example": "@PostMapping(\"/users\")\npublic User createUser(@RequestBody User user) {\n    return userService.save(user); // Returns 200, should be 201\n}\n\n@GetMapping(\"/users/{id}\")\npublic User getUser(@PathVariable Long id) {\n    User user = userService.findById(id);\n    return user; // Returns 200 even if user is null (NullPointerException or wrong behavior)\n}",
+      "correct_example": "@PostMapping(\"/users\")\n@ResponseStatus(HttpStatus.CREATED) // 201\npublic User createUser(@RequestBody User user) {\n    return userService.save(user);\n}\n\n@GetMapping(\"/users/{id}\")\npublic ResponseEntity<User> getUser(@PathVariable Long id) {\n    return userService.findById(id)\n        .map(ResponseEntity::ok)\n        .orElse(ResponseEntity.notFound().build()); // 404 if not found\n}",
+      "debugging_tip": "Always return 201 for POST (create), 204 for DELETE, 404 when resource not found, 400 for validation errors. Use ResponseEntity for fine-grained control."
+    },
+    {
+      "title": "Exposing Stack Traces in Error Responses",
+      "description": "Spring Boot by default returns stack traces in error responses. This exposes internal implementation details and is a security risk.",
+      "wrong_example": "// Without @ControllerAdvice:\n@GetMapping(\"/users/{id}\")\npublic User getUser(@PathVariable Long id) {\n    // If user not found, throws exception with stack trace exposed\n    return userService.findById(id).orElseThrow(RuntimeException::new);\n}",
+      "correct_example": "// With @RestControllerAdvice:\n@RestControllerAdvice\npublic class GlobalExceptionHandler {\n    @ExceptionHandler(ResourceNotFoundException.class)\n    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {\n        return ResponseEntity.status(HttpStatus.NOT_FOUND)\n            .body(new ErrorResponse(404, ex.getMessage()));\n    }\n}\n// In application.properties:\n// server.error.include-stacktrace=never",
+      "debugging_tip": "Always create a @RestControllerAdvice class to handle exceptions globally. Set server.error.include-stacktrace=never in application.properties."
+    },
+    {
+      "title": "Missing Input Validation",
+      "description": "Accepting and processing user input without validation leads to corrupt data, null pointer exceptions, and security vulnerabilities.",
+      "wrong_example": "@PostMapping(\"/users\")\npublic User createUser(@RequestBody User user) {\n    // No validation - user.name could be null, empty, or malicious\n    return userService.save(user);\n}",
+      "correct_example": "@PostMapping(\"/users\")\npublic ResponseEntity<User> createUser(@Valid @RequestBody User user) {\n    return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));\n}\n\n// User DTO with validation:\nclass User {\n    @NotBlank @Size(min=2, max=50)\n    private String name;\n    @NotBlank @Email\n    private String email;\n}",
+      "debugging_tip": "Always add @Valid before @RequestBody and annotate DTO fields with Bean Validation constraints (@NotNull, @NotBlank, @Email, @Size, etc.)."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is REST and what are its key principles?",
+        "answer": "REST (Representational State Transfer) is an architectural style for distributed systems. Key principles: 1) Client-Server separation, 2) Statelessness (each request is independent), 3) Cacheability, 4) Uniform Interface (consistent URIs and methods), 5) Layered System, 6) Code on Demand (optional). It uses HTTP methods (GET, POST, PUT, DELETE) and resources identified by URIs."
+      },
+      {
+        "question": "What is the difference between @Controller and @RestController?",
+        "answer": "@Controller is a Spring MVC annotation that marks a class as a web controller and returns view names (for server-side rendering). @RestController is a combination of @Controller + @ResponseBody — it automatically serializes return values to JSON/XML and writes them directly to the HTTP response body, without needing a view resolver. Use @RestController for REST APIs."
+      },
+      {
+        "question": "What HTTP methods are used in REST and what operations do they represent?",
+        "answer": "GET: Retrieve resource(s) — safe and idempotent. POST: Create a new resource — not idempotent. PUT: Replace/update a resource fully — idempotent. PATCH: Partially update a resource. DELETE: Remove a resource — idempotent. OPTIONS: Get supported methods. HEAD: Like GET but only returns headers."
+      },
+      {
+        "question": "What is the difference between @PathVariable and @RequestParam?",
+        "answer": "@PathVariable extracts values from the URI path itself: /users/{id} with @PathVariable Long id extracts the id from the URL. @RequestParam extracts query string parameters: /users?page=0&size=10 with @RequestParam int page. Use @PathVariable for resource identifiers and @RequestParam for optional filtering/pagination parameters."
+      },
+      {
+        "question": "What is @RequestBody and when is it used?",
+        "answer": "@RequestBody is used to deserialize the HTTP request body (typically JSON) into a Java object. It's used with POST, PUT, and PATCH requests that send data in the request body. Spring uses Jackson to automatically convert JSON to the Java object. Example: @PostMapping public User create(@RequestBody User user) {}."
+      },
+      {
+        "question": "What are the common HTTP status codes in REST APIs?",
+        "answer": "200 OK (success), 201 Created (resource created), 204 No Content (success, no body), 400 Bad Request (invalid input), 401 Unauthorized (authentication needed), 403 Forbidden (access denied), 404 Not Found (resource missing), 409 Conflict (duplicate), 422 Unprocessable Entity (validation failed), 500 Internal Server Error (server exception)."
+      },
+      {
+        "question": "What is ResponseEntity in Spring Boot?",
+        "answer": "ResponseEntity is a Spring class that represents the entire HTTP response: status code, headers, and body. It gives you full control over the response. Example: ResponseEntity.status(HttpStatus.CREATED).header(\"Location\", \"/users/1\").body(user). It's the preferred way to return different status codes and headers from REST controllers."
+      },
+      {
+        "question": "What does stateless mean in REST?",
+        "answer": "Stateless means the server does not store any client session state between requests. Each HTTP request must contain all the information needed to process it (authentication tokens, session data, etc.). This makes REST APIs highly scalable because any server instance can handle any request without needing shared session storage."
+      },
+      {
+        "question": "What is the difference between PUT and PATCH?",
+        "answer": "PUT replaces the entire resource with the new data provided. If a field is missing in the PUT request, it gets set to null or default. PATCH applies partial updates — only the provided fields are updated. Use PUT when you have all fields of a resource, use PATCH when updating specific fields (e.g., updating just the email without touching other fields)."
+      },
+      {
+        "question": "What is @RequestMapping and how does it differ from @GetMapping?",
+        "answer": "@RequestMapping is the general-purpose annotation for mapping HTTP requests to controller methods. It can specify method type: @RequestMapping(value=\"/users\", method=RequestMethod.GET). @GetMapping is a shorthand/composed annotation equivalent to @RequestMapping(method=RequestMethod.GET). Similarly, @PostMapping, @PutMapping, @DeleteMapping are shortcuts. Use the shorthand annotations for cleaner code."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How do you handle exceptions globally in a Spring Boot REST API?",
+        "answer": "Use @RestControllerAdvice (or @ControllerAdvice) with @ExceptionHandler methods. The class handles exceptions thrown by any controller. Example: @RestControllerAdvice class GlobalExceptionHandler { @ExceptionHandler(ResourceNotFoundException.class) public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) { return ResponseEntity.status(404).body(new ErrorResponse(ex.getMessage())); } }. This prevents stack trace exposure and provides consistent error format."
+      },
+      {
+        "question": "How do you validate request bodies in Spring Boot REST APIs?",
+        "answer": "Use Bean Validation (Jakarta Validation): 1) Add spring-boot-starter-validation dependency. 2) Annotate DTO fields with constraints (@NotBlank, @Email, @Size, @Min, @Max, @NotNull). 3) Add @Valid before @RequestBody in controller method. 4) Handle MethodArgumentNotValidException in @RestControllerAdvice to return structured validation errors."
+      },
+      {
+        "question": "What is content negotiation in REST APIs?",
+        "answer": "Content negotiation is the mechanism by which the client and server agree on the format of data exchanged. The client sends the Accept header specifying desired format (Accept: application/json or Accept: application/xml). The server responds with Content-Type header indicating the format used. Spring Boot uses HttpMessageConverters (Jackson for JSON, JAXB for XML) to handle serialization/deserialization."
+      },
+      {
+        "question": "How do you implement pagination in a Spring Boot REST API?",
+        "answer": "Use Spring Data's Pageable interface: @GetMapping public Page<User> getUsers(@RequestParam int page, @RequestParam int size) { return userRepository.findAll(PageRequest.of(page, size)); }. Alternatively, use Pageable directly as a parameter with @PageableDefault. The Page<T> response includes content, totalElements, totalPages, and currentPage metadata."
+      },
+      {
+        "question": "What is the difference between RestTemplate and WebClient?",
+        "answer": "RestTemplate is the classic synchronous HTTP client for consuming REST APIs. WebClient is the modern reactive HTTP client introduced in Spring 5, supporting both synchronous and asynchronous (non-blocking) calls. RestTemplate is being deprecated in favor of WebClient. For blocking calls: webClient.get().uri(url).retrieve().bodyToMono(User.class).block(). WebClient is preferred for microservices to avoid thread blocking."
+      },
+      {
+        "question": "How do you secure a REST API with JWT in Spring Boot?",
+        "answer": "1) Add spring-security and jjwt dependencies. 2) Create JwtUtil class to generate and validate tokens. 3) Create JwtAuthenticationFilter extending OncePerRequestFilter to validate token on each request. 4) Configure SecurityFilterChain to permit public endpoints and require auth for protected ones. 5) Create /auth/login endpoint that returns JWT on successful authentication. 6) Client sends JWT in Authorization: Bearer <token> header."
+      },
+      {
+        "question": "What is CORS and how do you configure it in Spring Boot?",
+        "answer": "CORS (Cross-Origin Resource Sharing) is a browser security mechanism that blocks requests from different origins. To allow cross-origin requests: 1) Add @CrossOrigin on controller/method. 2) Configure globally: @Bean public WebMvcConfigurer corsConfigurer() { return new WebMvcConfigurer() { public void addCorsMappings(CorsRegistry registry) { registry.addMapping(\"/api/**\").allowedOrigins(\"http://localhost:3000\").allowedMethods(\"GET\",\"POST\",\"PUT\",\"DELETE\"); }; }; }."
+      },
+      {
+        "question": "How do you implement API versioning in Spring Boot?",
+        "answer": "Three approaches: 1) URI versioning: /api/v1/users, /api/v2/users (most common). 2) Request parameter: /api/users?version=1. 3) Header versioning: Accept: application/vnd.company.v1+json. URI versioning is clearest and most visible. Use separate controller classes or @RequestMapping with version prefix. Maintain backward compatibility when introducing new versions."
+      },
+      {
+        "question": "How do you write integration tests for REST APIs in Spring Boot?",
+        "answer": "Use @SpringBootTest with MockMvc: @SpringBootTest @AutoConfigureMockMvc class UserControllerTest { @Autowired MockMvc mockMvc; @Test void testGetUser() throws Exception { mockMvc.perform(get(\"/api/users/1\").contentType(APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath(\"$.name\").value(\"Alice\")); } }. Use @WebMvcTest for lightweight controller-only tests. Use MockBean to mock service dependencies."
+      },
+      {
+        "question": "What is HATEOAS and how is it used in Spring Boot?",
+        "answer": "HATEOAS (Hypermedia as the Engine of Application State) is a REST constraint where responses include links to related resources, making the API self-discoverable. Spring HATEOAS provides EntityModel and WebMvcLinkBuilder. Example: EntityModel<User> model = EntityModel.of(user, linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel(), linkTo(methodOn(UserController.class).getAllUsers()).withRel(\"users\")); This adds _links to the response JSON."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you implement rate limiting in a Spring Boot REST API?",
+        "answer": "Options: 1) Use Bucket4j library with Spring Boot to implement token bucket algorithm. 2) Use Spring Cloud Gateway filter for API gateway-level rate limiting. 3) Use Redis-based rate limiting with Spring Data Redis. Example with Bucket4j: create a Bucket per IP/user, configure capacity and refill rate, check bucket before processing request, return 429 Too Many Requests if bucket empty. Store bucket in ConcurrentHashMap or Redis for distributed systems."
+      },
+      {
+        "question": "How do you handle long-running operations in REST APIs?",
+        "answer": "Use asynchronous processing: 1) Accept the request, return 202 Accepted immediately with a job ID. 2) Process the task asynchronously using @Async or a message queue (RabbitMQ, Kafka). 3) Provide a status polling endpoint: GET /api/jobs/{jobId}/status returning PENDING, PROCESSING, COMPLETED, FAILED. 4) When complete, client retrieves results from GET /api/jobs/{jobId}/result. This prevents timeout issues for operations taking more than 30 seconds."
+      },
+      {
+        "question": "How do you implement idempotency in REST APIs?",
+        "answer": "Idempotency ensures identical requests have the same effect. GET, PUT, DELETE are naturally idempotent; POST is not. To make POST idempotent: 1) Client generates a unique Idempotency-Key header (UUID) for each request. 2) Server stores processed idempotency keys in Redis/DB with their responses. 3) If the same key arrives again, return the stored response without reprocessing. 4) Keys expire after a period. This prevents duplicate payments, duplicate orders, etc."
+      },
+      {
+        "question": "What are the strategies for handling distributed transactions in microservices REST APIs?",
+        "answer": "Since microservices don't share databases, distributed transactions are managed with: 1) Saga Pattern: chain of local transactions coordinated via events or orchestration. 2) Two-Phase Commit (2PC): distributed coordination, but heavy and not recommended. 3) Eventual Consistency: accept temporary inconsistency, use compensating transactions. 4) Outbox Pattern: write events to an outbox table atomically, then publish. Tools: Axon Framework, Eventuate Tram for saga orchestration."
+      },
+      {
+        "question": "How do you design a REST API for event-driven real-time updates?",
+        "answer": "Options: 1) Server-Sent Events (SSE): client subscribes to EventStream via GET, server pushes events unidirectionally. Spring: @GetMapping(produces=MediaType.TEXT_EVENT_STREAM_VALUE) SseEmitter. 2) WebSockets: full-duplex communication for bidirectional real-time. 3) Long Polling: client holds connection until event occurs. 4) Webhooks: server calls back registered client URL on event. SSE is simplest for one-way updates (notifications, progress); WebSockets for chat/games."
+      },
+      {
+        "question": "How do you implement circuit breaker pattern in REST API clients?",
+        "answer": "Circuit Breaker prevents cascading failures when downstream services fail. States: CLOSED (normal), OPEN (failing, reject calls), HALF_OPEN (testing recovery). Using Resilience4j: @CircuitBreaker(name=\"userService\", fallbackMethod=\"getUserFallback\") public User getUser(Long id) { return restTemplate.getForObject(url, User.class); } public User getUserFallback(Long id, Exception e) { return new User(id, \"Unknown\", \"N/A\"); }. Configure thresholds, wait duration in application.yml."
+      },
+      {
+        "question": "How do you handle API backward compatibility when making breaking changes?",
+        "answer": "Strategies: 1) Add new version (v2) while keeping v1 running. 2) Deprecation policy: mark v1 as deprecated via Sunset header, give 6-12 months notice. 3) Use @deprecated in OpenAPI docs. 4) Additive changes (new fields, new endpoints) are non-breaking and don't need new version. 5) Consumer-Driven Contract Testing (Pact) to ensure changes don't break consumers. 6) Hypermedia (HATEOAS) reduces coupling and enables evolution."
+      },
+      {
+        "question": "What is the difference between REST and GraphQL? When would you choose each?",
+        "answer": "REST: resource-based, multiple endpoints, over-fetching/under-fetching common, easier caching, widely understood. GraphQL: single endpoint, client specifies exact data needed, eliminates over/under-fetching, flexible queries, complex caching, steeper learning curve. Choose REST for: simple CRUD APIs, public APIs, microservices. Choose GraphQL for: complex data graphs, mobile apps (bandwidth), frontend-driven data requirements, when clients need varying data shapes."
+      },
+      {
+        "question": "How do you implement request/response logging and tracing in a REST API?",
+        "answer": "1) Use Spring AOP @Around aspect to log all controller methods. 2) Implement CommonsRequestLoggingFilter or custom OncePerRequestFilter to log request/response. 3) Use MDC (Mapped Diagnostic Context) with correlation ID (X-Correlation-ID header) propagated through all logs. 4) Integrate with distributed tracing: Spring Cloud Sleuth + Zipkin. 5) Use Logback or Log4j2 structured JSON logging for log aggregation (ELK Stack). Never log sensitive data (passwords, tokens, PII)."
+      },
+      {
+        "question": "How do you optimize REST API performance for high-traffic applications?",
+        "answer": "1) Caching: HTTP cache headers (Cache-Control, ETag), Spring Cache with Redis. 2) Pagination: limit response size. 3) Connection pooling: HikariCP for database, Apache HttpClient pool for HTTP clients. 4) Async processing: @Async, CompletableFuture, or reactive (WebFlux). 5) Database optimization: proper indexing, N+1 query prevention. 6) Response compression: spring.mvc.pathmatch.use-suffix-pattern=true, server.compression.enabled=true. 7) CDN for static resources. 8) Load balancing with Spring Cloud LoadBalancer."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a simple Spring Boot REST controller with a GET endpoint that returns a list of strings",
+      "Create a REST endpoint that accepts a name as a path variable and returns a personalized greeting",
+      "Write a POST endpoint that accepts a JSON body with 'title' and 'content' fields and returns it back with a generated ID",
+      "Create a GET endpoint that accepts optional query parameters 'page' and 'size' with default values",
+      "Write a DELETE endpoint that returns 204 No Content on success and 404 if the resource doesn't exist",
+      "Create a REST controller that maps different HTTP methods to the same URI (/api/products/{id})",
+      "Write a Spring Boot endpoint that returns a ResponseEntity with a custom header",
+      "Create an endpoint that accepts a request body and validates that the 'email' field is not blank",
+      "Write a REST endpoint that returns different HTTP status codes based on conditions",
+      "Create a simple in-memory CRUD REST API for a Todo item with id, title, and completed fields"
+    ],
+    "medium": [
+      "Implement a Spring Boot REST API for a bookstore with endpoints to add, get, update, and delete books, with proper validation",
+      "Create a paginated endpoint that filters a list of employees by department and salary range",
+      "Build a REST API with global exception handling using @RestControllerAdvice for at least three different exception types",
+      "Implement JWT authentication for a REST API with login endpoint that returns a token and a protected endpoint",
+      "Create a REST client using WebClient to consume an external API and transform the response",
+      "Implement an API versioning strategy where /api/v1/users and /api/v2/users return different response structures",
+      "Build a file upload REST endpoint that accepts multipart/form-data and validates file type and size",
+      "Create a REST API with CORS configuration allowing specific origins and methods",
+      "Implement a rate-limiting filter that limits each IP to 10 requests per minute",
+      "Write integration tests for a CRUD REST API using MockMvc with positive and negative test cases"
+    ],
+    "hard": [
+      "Design and implement a distributed REST API system using circuit breaker pattern with Resilience4j",
+      "Build a real-time notification system using Server-Sent Events (SSE) in Spring Boot",
+      "Implement an idempotent payment processing REST API that prevents duplicate transactions",
+      "Create a REST API with OAuth 2.0 authorization server integration for third-party authentication",
+      "Design a hypermedia-driven (HATEOAS) REST API that includes navigation links in responses",
+      "Implement a REST API gateway with request routing, load balancing, and centralized authentication",
+      "Build a multi-tenant REST API that isolates data based on tenant ID from the request header",
+      "Implement optimistic locking in a REST API to handle concurrent update conflicts",
+      "Create a REST API with request/response transformation using custom HttpMessageConverters",
+      "Design a backward-compatible REST API migration from v1 to v2 with automated contract testing"
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Implement a URL Shortener REST API with two endpoints: POST /api/shorten (accepts a long URL and returns a short code) and GET /api/{shortCode} (redirects to the original URL). Use an in-memory HashMap to store mappings.",
+      "input": "POST /api/shorten {\"url\": \"https://www.example.com/very/long/path/to/resource\"}\nGET /api/abc123",
+      "output": "POST → 201 Created {\"shortCode\": \"abc123\", \"shortUrl\": \"http://localhost:8080/api/abc123\", \"originalUrl\": \"https://www.example.com/very/long/path/to/resource\"}\nGET → 302 Redirect to original URL",
+      "constraints": "Short codes must be unique (6 alphanumeric characters). Return 404 if short code doesn't exist. Validate URL format on input.",
+      "solution": "import org.springframework.http.*;\nimport org.springframework.web.bind.annotation.*;\nimport java.net.URI;\nimport java.util.*;\nimport java.util.concurrent.ConcurrentHashMap;\n\n@RestController\n@RequestMapping(\"/api\")\npublic class UrlShortenerController {\n\n    private Map<String, String> urlStore = new ConcurrentHashMap<>();\n    private static final String CHARS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\";\n    private Random random = new Random();\n\n    private String generateCode() {\n        StringBuilder sb = new StringBuilder(6);\n        for (int i = 0; i < 6; i++) {\n            sb.append(CHARS.charAt(random.nextInt(CHARS.length())));\n        }\n        return sb.toString();\n    }\n\n    @PostMapping(\"/shorten\")\n    public ResponseEntity<Map<String, String>> shorten(@RequestBody Map<String, String> request) {\n        String url = request.get(\"url\");\n        if (url == null || !url.startsWith(\"http\")) {\n            return ResponseEntity.badRequest().body(Map.of(\"error\", \"Invalid URL\"));\n        }\n        String code;\n        do { code = generateCode(); } while (urlStore.containsKey(code));\n        urlStore.put(code, url);\n        String shortUrl = \"http://localhost:8080/api/\" + code;\n        Map<String, String> response = new LinkedHashMap<>();\n        response.put(\"shortCode\", code);\n        response.put(\"shortUrl\", shortUrl);\n        response.put(\"originalUrl\", url);\n        return ResponseEntity.status(HttpStatus.CREATED).body(response);\n    }\n\n    @GetMapping(\"/{shortCode}\")\n    public ResponseEntity<Void> redirect(@PathVariable String shortCode) {\n        String originalUrl = urlStore.get(shortCode);\n        if (originalUrl == null) {\n            return ResponseEntity.notFound().build();\n        }\n        return ResponseEntity.status(HttpStatus.FOUND)\n            .location(URI.create(originalUrl)).build();\n    }\n}"
+    },
+    {
+      "statement": "Build a simple REST API for managing a student grade book. Implement: POST /api/students (create student), POST /api/students/{id}/grades (add a grade), GET /api/students/{id}/report (get student with all grades and calculated GPA).",
+      "input": "POST /api/students {\"name\": \"Alice\", \"studentId\": \"S001\"}\nPOST /api/students/1/grades {\"subject\": \"Math\", \"score\": 92}\nPOST /api/students/1/grades {\"subject\": \"Science\", \"score\": 88}\nGET /api/students/1/report",
+      "output": "{\n  \"id\": 1,\n  \"name\": \"Alice\",\n  \"studentId\": \"S001\",\n  \"grades\": [\n    {\"subject\": \"Math\", \"score\": 92, \"letterGrade\": \"A\"},\n    {\"subject\": \"Science\", \"score\": 88, \"letterGrade\": \"B+\"}\n  ],\n  \"gpa\": 4.0,\n  \"averageScore\": 90.0\n}",
+      "constraints": "Scores must be between 0 and 100. Calculate letter grade: 90-100=A, 80-89=B, 70-79=C, 60-69=D, below 60=F. Return 404 if student not found.",
+      "solution": "import org.springframework.http.*;\nimport org.springframework.web.bind.annotation.*;\nimport java.util.*;\n\nclass Student {\n    Long id; String name; String studentId;\n    List<Grade> grades = new ArrayList<>();\n    public Student(Long id, String name, String studentId) {\n        this.id = id; this.name = name; this.studentId = studentId;\n    }\n}\n\nclass Grade {\n    String subject; int score; String letterGrade;\n    public Grade(String subject, int score) {\n        this.subject = subject; this.score = score;\n        if (score >= 90) letterGrade = \"A\";\n        else if (score >= 80) letterGrade = \"B+\";\n        else if (score >= 70) letterGrade = \"C\";\n        else if (score >= 60) letterGrade = \"D\";\n        else letterGrade = \"F\";\n    }\n}\n\n@RestController\n@RequestMapping(\"/api/students\")\npublic class GradeBookController {\n    private Map<Long, Student> students = new HashMap<>();\n    private long idCounter = 1;\n\n    @PostMapping\n    public ResponseEntity<Student> createStudent(@RequestBody Map<String, String> body) {\n        Student s = new Student(idCounter++, body.get(\"name\"), body.get(\"studentId\"));\n        students.put(s.id, s);\n        return ResponseEntity.status(201).body(s);\n    }\n\n    @PostMapping(\"/{id}/grades\")\n    public ResponseEntity<?> addGrade(@PathVariable Long id, @RequestBody Map<String, Object> body) {\n        Student s = students.get(id);\n        if (s == null) return ResponseEntity.notFound().build();\n        int score = (Integer) body.get(\"score\");\n        if (score < 0 || score > 100) return ResponseEntity.badRequest().body(\"Score must be 0-100\");\n        s.grades.add(new Grade((String) body.get(\"subject\"), score));\n        return ResponseEntity.status(201).body(s);\n    }\n\n    @GetMapping(\"/{id}/report\")\n    public ResponseEntity<?> getReport(@PathVariable Long id) {\n        Student s = students.get(id);\n        if (s == null) return ResponseEntity.notFound().build();\n        double avg = s.grades.stream().mapToInt(g -> g.score).average().orElse(0);\n        Map<String, Object> report = new LinkedHashMap<>();\n        report.put(\"id\", s.id); report.put(\"name\", s.name);\n        report.put(\"studentId\", s.studentId); report.put(\"grades\", s.grades);\n        report.put(\"averageScore\", avg);\n        report.put(\"gpa\", avg >= 90 ? 4.0 : avg >= 80 ? 3.5 : avg >= 70 ? 3.0 : 2.0);\n        return ResponseEntity.ok(report);\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Applications",
+      "explanation": "Large enterprises use REST APIs to integrate disparate systems — ERP, CRM, HRM — enabling data exchange between business modules without tight coupling"
+    },
+    {
+      "field": "Banking Systems",
+      "explanation": "Banks expose REST APIs for payment processing, account management, and fund transfers. APIs are secured with OAuth 2.0 and enforce strict rate limiting and idempotency"
+    },
+    {
+      "field": "Android Development",
+      "explanation": "Android apps consume REST APIs to fetch data from backend servers. Retrofit library makes it easy to call REST endpoints and deserialize JSON responses to Java/Kotlin objects"
+    },
+    {
+      "field": "Web Applications",
+      "explanation": "Single Page Applications (React, Angular, Vue) communicate with Java Spring Boot backends exclusively through REST APIs, separating frontend and backend concerns"
+    },
+    {
+      "field": "Microservices",
+      "explanation": "Microservices communicate with each other via REST APIs (synchronous) or message queues (asynchronous). Spring Boot with Spring Cloud provides service discovery, load balancing, and API gateway"
+    },
+    {
+      "field": "Cloud Applications",
+      "explanation": "Cloud platforms (AWS, GCP, Azure) expose REST APIs for managing cloud resources. Java applications use their SDKs (which internally use REST) to provision servers, databases, and storage"
+    }
+  ],
+  "best_practices": [
+    "Use meaningful, resource-based URIs with plural nouns (/api/v1/users, /api/v1/products) — never use verbs in URIs",
+    "Always return appropriate HTTP status codes — 201 for creation, 204 for deletion, 404 for not found, 400 for validation errors",
+    "Implement global exception handling with @RestControllerAdvice to return consistent, structured error responses",
+    "Validate all input using Bean Validation (@Valid, @NotBlank, @Email, @Size) before processing requests",
+    "Version your APIs from the start (/api/v1/) to ensure backward compatibility as your API evolves",
+    "Implement pagination for endpoints returning collections — never return unbounded lists",
+    "Secure REST APIs with JWT or OAuth 2.0 — always use HTTPS in production and never log sensitive data",
+    "Document your API with OpenAPI/Swagger (springdoc-openapi) for developer-friendly interactive documentation"
+  ],
+  "summary": [
+    "REST is an architectural style using HTTP methods (GET, POST, PUT, DELETE, PATCH) to perform CRUD operations on resources identified by URIs",
+    "Spring Boot simplifies REST API development with @RestController, @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, and @RequestBody annotations",
+    "ResponseEntity gives full control over HTTP response — status code, headers, and body — essential for correct REST semantics",
+    "Global exception handling with @RestControllerAdvice ensures consistent error responses across the entire API",
+    "Bean Validation with @Valid and constraint annotations prevents invalid data from reaching business logic",
+    "Proper REST API design includes resource-based URIs, correct HTTP status codes, versioning, pagination, and security",
+    "REST APIs are foundational for microservices, mobile apps, single-page applications, and enterprise system integration"
+  ],
+  "quiz": [
+    {
+      "question": "Which annotation combines @Controller and @ResponseBody in Spring Boot?",
+      "options": ["A. @RestController", "B. @JsonController", "C. @ApiController", "D. @WebController"],
+      "answer": "A. @RestController",
+      "explanation": "@RestController is a composed annotation that combines @Controller (marking the class as a Spring MVC controller) and @ResponseBody (serializing return values directly to HTTP response body as JSON/XML)."
+    },
+    {
+      "question": "What HTTP status code should be returned when a new resource is successfully created?",
+      "options": ["A. 200 OK", "B. 202 Accepted", "C. 201 Created", "D. 204 No Content"],
+      "answer": "C. 201 Created",
+      "explanation": "201 Created is the correct HTTP status code for a successful POST request that creates a new resource. 200 OK is for successful GET/PUT/PATCH, 204 No Content is for successful DELETE."
+    },
+    {
+      "question": "Which annotation is used to extract a value from the URI path in Spring Boot?",
+      "options": ["A. @RequestParam", "B. @PathVariable", "C. @RequestBody", "D. @RequestHeader"],
+      "answer": "B. @PathVariable",
+      "explanation": "@PathVariable extracts values from URI template variables. For a mapping of /users/{id}, @PathVariable Long id captures the id value from the URL. @RequestParam extracts query string parameters."
+    },
+    {
+      "question": "What does REST stand for?",
+      "options": ["A. Remote Execution Service Technology", "B. Representational State Transfer", "C. Resource-based Entity Service Technology", "D. Remote Entity State Transfer"],
+      "answer": "B. Representational State Transfer",
+      "explanation": "REST stands for Representational State Transfer, an architectural style introduced by Roy Fielding in 2000 for designing distributed networked applications using HTTP."
+    },
+    {
+      "question": "Which Spring Boot annotation is used for global exception handling in REST APIs?",
+      "options": ["A. @ExceptionHandler", "B. @ErrorHandler", "C. @RestControllerAdvice", "D. @GlobalHandler"],
+      "answer": "C. @RestControllerAdvice",
+      "explanation": "@RestControllerAdvice (or @ControllerAdvice) marks a class as a global exception handler. Methods annotated with @ExceptionHandler inside this class handle specific exception types from all controllers."
+    },
+    {
+      "question": "What is the difference between PUT and PATCH HTTP methods?",
+      "options": [
+        "A. PUT is for creating, PATCH is for updating",
+        "B. PUT replaces the entire resource, PATCH applies partial updates",
+        "C. PATCH is idempotent, PUT is not",
+        "D. They are identical in behavior"
+      ],
+      "answer": "B. PUT replaces the entire resource, PATCH applies partial updates",
+      "explanation": "PUT is used for full resource replacement — all fields are replaced with the new data. PATCH applies partial modifications — only the provided fields are updated, leaving other fields unchanged."
+    },
+    {
+      "question": "Which class provides full control over HTTP response including status, headers, and body?",
+      "options": ["A. HttpResponse", "B. ResponseBody", "C. ResponseEntity", "D. HttpResult"],
+      "answer": "C. ResponseEntity",
+      "explanation": "ResponseEntity<T> wraps the entire HTTP response and allows setting the status code, headers, and response body. It's the preferred way to return custom status codes from Spring Boot REST controllers."
+    },
+    {
+      "question": "What HTTP status code indicates that the client is not authenticated?",
+      "options": ["A. 400 Bad Request", "B. 403 Forbidden", "C. 401 Unauthorized", "D. 404 Not Found"],
+      "answer": "C. 401 Unauthorized",
+      "explanation": "401 Unauthorized means the client has not provided valid authentication credentials. 403 Forbidden means the client is authenticated but doesn't have permission to access the resource."
+    },
+    {
+      "question": "What is the purpose of @RequestBody annotation?",
+      "options": [
+        "A. To serialize the response body to JSON",
+        "B. To deserialize the HTTP request body to a Java object",
+        "C. To extract query parameters from the request",
+        "D. To set the content type of the response"
+      ],
+      "answer": "B. To deserialize the HTTP request body to a Java object",
+      "explanation": "@RequestBody maps the HTTP request body to a Java object. Spring uses Jackson to automatically deserialize JSON from the request body into the annotated Java parameter type."
+    },
+    {
+      "question": "Which of the following is a characteristic of REST's statelessness constraint?",
+      "options": [
+        "A. Server maintains user session state between requests",
+        "B. Each request must contain all information needed to process it",
+        "C. Clients cache responses to reduce server load",
+        "D. Servers communicate with each other to share state"
+      ],
+      "answer": "B. Each request must contain all information needed to process it",
+      "explanation": "REST statelessness means the server stores no client session state between requests. Each request is independent and self-contained, containing all necessary information (auth tokens, session data) to be processed."
+    }
+  ]
+}

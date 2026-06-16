@@ -1,0 +1,41 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#f4f4f4" />
+      <text x="400" y="40" font-family="monospace" font-size="24" font-weight="bold" text-anchor="middle">5-Stage Pipelined Processor Architecture</text>
+
+      <rect x="50" y="150" width="100" height="100" fill="#e2e8f0" stroke="#475569" stroke-width="2" rx="4"/>
+      <text x="100" y="205" font-family="monospace" font-size="16" text-anchor="middle">IF</text>
+
+      <rect x="200" y="150" width="100" height="100" fill="#cbd5e1" stroke="#475569" stroke-width="2" rx="4"/>
+      <text x="250" y="205" font-family="monospace" font-size="16" text-anchor="middle">ID</text>
+
+      <rect x="350" y="150" width="100" height="100" fill="#94a3b8" stroke="#475569" stroke-width="2" rx="4"/>
+      <text x="400" y="205" font-family="monospace" font-size="16" text-anchor="middle">EX</text>
+
+      <rect x="500" y="150" width="100" height="100" fill="#64748b" stroke="#475569" stroke-width="2" rx="4"/>
+      <text x="550" y="205" font-family="monospace" font-size="16" fill="white" text-anchor="middle">MEM</text>
+
+      <rect x="650" y="150" width="100" height="100" fill="#475569" stroke="#0f172a" stroke-width="2" rx="4"/>
+      <text x="700" y="205" font-family="monospace" font-size="16" fill="white" text-anchor="middle">WB</text>
+
+      <!-- Pipeline Registers -->
+      <rect x="170" y="130" width="10" height="140" fill="#b91c1c"/>
+      <rect x="320" y="130" width="10" height="140" fill="#b91c1c"/>
+      <rect x="470" y="130" width="10" height="140" fill="#b91c1c"/>
+      <rect x="620" y="130" width="10" height="140" fill="#b91c1c"/>
+
+      <!-- Data Paths -->
+      <path d="M 150 200 L 170 200" stroke="#000" stroke-width="2"/>
+      <path d="M 180 200 L 200 200" stroke="#000" stroke-width="2"/>
+      
+      <path d="M 300 200 L 320 200" stroke="#000" stroke-width="2"/>
+      <path d="M 330 200 L 350 200" stroke="#000" stroke-width="2"/>
+      
+      <path d="M 450 200 L 470 200" stroke="#000" stroke-width="2"/>
+      <path d="M 480 200 L 500 200" stroke="#000" stroke-width="2"/>
+      
+      <path d="M 600 200 L 620 200" stroke="#000" stroke-width="2"/>
+      <path d="M 630 200 L 650 200" stroke="#000" stroke-width="2"/>
+
+      <path d="M 750 200 L 780 200 L 780 100 L 250 100 L 250 150" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="5"/>
+      <text x="500" y="90" font-family="monospace" font-size="14" fill="#2563eb" text-anchor="middle">Data Hazard / Forwarding</text>
+    </svg>

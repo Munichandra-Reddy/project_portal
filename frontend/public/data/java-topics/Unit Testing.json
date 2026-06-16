@@ -1,0 +1,275 @@
+{
+  "title": "Unit Testing",
+  "introduction": {
+    "what_it_is": "Unit testing is a software development practice where individual units or components of a software are tested in isolation. In Java, a unit is typically a method or a class. Frameworks like JUnit and TestNG are used to automate the execution and validation of these tests.",
+    "why_important": "It helps catch bugs early in the development lifecycle, makes code refactoring safer, serves as living documentation for developers, and encourages building modular and loosely coupled code.",
+    "real_world": [
+      "Verifying that a banking application correctly calculates interest rates for different account types.",
+      "Ensuring that an e-commerce shopping cart accurately applies discount codes and calculates the final price."
+    ]
+  },
+  "detailed_theory": "Unit testing is foundational to building robust Java applications. The core philosophy is to test the smallest testable parts of an application independently. The standard structure for a unit test follows the Arrange-Act-Assert (AAA) pattern: 'Arrange' sets up the necessary preconditions and inputs, 'Act' invokes the method or unit being tested, and 'Assert' verifies that the actual outcome matches the expected outcome. JUnit is the de facto standard testing framework for Java. JUnit 5, the latest major version, introduced a modular architecture with three sub-projects: JUnit Platform (the foundation), JUnit Jupiter (the new programming model and extension model), and JUnit Vintage (for backward compatibility with JUnit 4). To test units in true isolation, dependencies of the class under test are often replaced with 'mocks' or 'stubs'. Mocking frameworks like Mockito allow developers to simulate the behavior of complex, external, or unavailable dependencies (like databases or web services) to focus solely on the logic within the target unit.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Test Automation",
+        "description": "Tests can be executed automatically using build tools like Maven or Gradle, and integrated into CI/CD pipelines."
+      },
+      {
+        "name": "Annotations",
+        "description": "Frameworks like JUnit use annotations (e.g., @Test, @BeforeEach) to intuitively mark test methods and manage the test lifecycle."
+      },
+      {
+        "name": "Assertions",
+        "description": "Built-in methods (e.g., assertEquals, assertTrue) compare the expected results with the actual execution results."
+      },
+      {
+        "name": "Mocking Integration",
+        "description": "Seamless integration with frameworks like Mockito to mock dependencies and isolate the unit being tested."
+      }
+    ],
+    "advantages": [
+      "Detects bugs early in the software development lifecycle, significantly reducing debugging costs.",
+      "Acts as a safety net that allows developers to refactor code confidently without breaking existing functionality.",
+      "Provides up-to-date, executable documentation of how the code is supposed to behave.",
+      "Encourages better software design by forcing developers to write decoupled and modular code."
+    ],
+    "limitations": [
+      "Unit tests cannot catch integration errors, system-level issues, or performance bottlenecks.",
+      "Requires significant upfront time investment to write and maintain tests as the codebase evolves.",
+      "Testing complex interactions or legacy code with tight coupling can be extremely difficult."
+    ]
+  },
+  "syntax": {
+    "explanation": "JUnit 5 uses specific annotations to define the test lifecycle and assertions to validate outcomes.",
+    "breakdown": [
+      "`@Test`: Denotes that a method is a test method.",
+      "`@BeforeEach`: Executed before each `@Test` method in the current class.",
+      "`@AfterEach`: Executed after each `@Test` method.",
+      "`Assertions.assertEquals(expected, actual)`: Checks if two values are equal."
+    ],
+    "rules": [
+      "Test methods must not be `private` or return a value (must be `void`).",
+      "Test classes should not be `abstract` and must have a single constructor (usually a no-arg constructor).",
+      "Tests should be fully independent; the outcome of one test should not affect another."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple Calculator Test",
+      "code": "import org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\n\nclass Calculator {\n    int add(int a, int b) {\n        return a + b;\n    }\n}\n\npublic class CalculatorTest {\n    @Test\n    void testAddition() {\n        Calculator calc = new Calculator();\n        int result = calc.add(2, 3);\n        assertEquals(5, result, \"2 + 3 should equal 5\");\n    }\n}",
+      "output": "Test passed.",
+      "explanation": "This basic example demonstrates the AAA pattern. We instantiate the Calculator (Arrange), call the add method (Act), and verify the result using assertEquals (Assert)."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Using Lifecycle Annotations and Exception Testing",
+      "code": "import org.junit.jupiter.api.*;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass BankAccount {\n    private double balance;\n    public BankAccount(double balance) { this.balance = balance; }\n    public void withdraw(double amount) {\n        if (amount > balance) throw new IllegalArgumentException(\"Insufficient funds\");\n        balance -= amount;\n    }\n}\n\npublic class BankAccountTest {\n    private BankAccount account;\n\n    @BeforeEach\n    void setUp() {\n        account = new BankAccount(100.0);\n    }\n\n    @Test\n    void testWithdrawalSuccess() {\n        account.withdraw(40.0);\n        // Assuming a getter exists, or we test behavior\n    }\n\n    @Test\n    void testWithdrawalExceedsBalanceThrowsException() {\n        Exception exception = assertThrows(IllegalArgumentException.class, () -> {\n            account.withdraw(150.0);\n        });\n        assertEquals(\"Insufficient funds\", exception.getMessage());\n    }\n}",
+      "output": "Tests passed.",
+      "explanation": "@BeforeEach ensures a fresh BankAccount instance is created before every test. assertThrows is used to verify that the method throws the correct exception under invalid conditions."
+    },
+    {
+      "level": "Advanced",
+      "title": "Mocking Dependencies with Mockito",
+      "code": "import org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\nimport static org.mockito.Mockito.*;\n\ninterface PaymentGateway {\n    boolean processPayment(double amount);\n}\n\nclass OrderService {\n    private PaymentGateway gateway;\n    public OrderService(PaymentGateway gateway) { this.gateway = gateway; }\n    public String checkout(double amount) {\n        if (gateway.processPayment(amount)) return \"Success\";\n        else return \"Failed\";\n    }\n}\n\npublic class OrderServiceTest {\n    @Test\n    void testCheckoutSuccess() {\n        // Create a mock of the dependency\n        PaymentGateway mockGateway = mock(PaymentGateway.class);\n        \n        // Define the behavior of the mock\n        when(mockGateway.processPayment(50.0)).thenReturn(true);\n        \n        // Inject the mock into the class under test\n        OrderService service = new OrderService(mockGateway);\n        \n        // Act & Assert\n        assertEquals(\"Success\", service.checkout(50.0));\n        \n        // Verify interaction (optional but good practice)\n        verify(mockGateway, times(1)).processPayment(50.0);\n    }\n}",
+      "output": "Test passed.",
+      "explanation": "Mockito is used to create a mock instance of PaymentGateway. We define its behavior using 'when...thenReturn'. This isolates OrderService, allowing us to test it without making actual payment network calls."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "JUnit 4 vs JUnit 5 Annotations",
+        "headers": ["JUnit 4", "JUnit 5", "Description"],
+        "rows": [
+          ["@Before", "@BeforeEach", "Executed before each test method."],
+          ["@After", "@AfterEach", "Executed after each test method."],
+          ["@BeforeClass", "@BeforeAll", "Executed once before all tests in the class (must be static)."],
+          ["@AfterClass", "@AfterAll", "Executed once after all tests in the class (must be static)."],
+          ["@Ignore", "@Disabled", "Disables a test method or class."],
+          ["@Test(expected = Exception.class)", "assertThrows(Exception.class, () -> {})", "Verifies that an exception is thrown."]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Unit Testing",
+        "concept_b": "Integration Testing",
+        "explanation": "Unit testing verifies individual components in isolation, usually using mocks for dependencies. Integration testing verifies that multiple components or systems work correctly together."
+      },
+      {
+        "concept_a": "Mock",
+        "concept_b": "Stub",
+        "explanation": "A stub simply returns pre-programmed responses to method calls. A mock is more sophisticated; it can return responses but also allows you to verify that specific methods were called with specific arguments."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "assertEquals(expected, actual)",
+      "description": "Asserts that two values are equal. If not, the test fails.",
+      "parameters": "Object expected, Object actual",
+      "return_value": "void",
+      "example_usage": "assertEquals(10, calculator.multiply(2, 5));"
+    },
+    {
+      "name": "assertTrue(condition)",
+      "description": "Asserts that the supplied boolean condition is true.",
+      "parameters": "boolean condition",
+      "return_value": "void",
+      "example_usage": "assertTrue(list.isEmpty());"
+    },
+    {
+      "name": "assertThrows(expectedType, executable)",
+      "description": "Asserts that execution of the supplied executable throws an exception of the expected type.",
+      "parameters": "Class<T> expectedType, Executable executable",
+      "return_value": "T (the thrown exception)",
+      "example_usage": "assertThrows(NullPointerException.class, () -> obj.method(null));"
+    },
+    {
+      "name": "Mockito.mock(classToMock)",
+      "description": "Creates a mock object of a given class or interface.",
+      "parameters": "Class<T> classToMock",
+      "return_value": "T (mock instance)",
+      "example_usage": "List<String> mockList = Mockito.mock(List.class);"
+    },
+    {
+      "name": "Mockito.when(methodCall)",
+      "description": "Enables stubbing methods. Use `.thenReturn()` to specify the return value.",
+      "parameters": "T methodCall",
+      "return_value": "OngoingStubbing<T>",
+      "example_usage": "Mockito.when(mockList.get(0)).thenReturn(\"first\");"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Testing Multiple Behaviors in One Test",
+      "description": "Writing massive test methods that check everything about an object. This makes tests hard to read and makes it difficult to pinpoint the cause of a failure.",
+      "wrong_example": "@Test void testUser() { User u = new User(); u.setName(\"A\"); assertEquals(\"A\", u.getName()); u.setAge(20); assertEquals(20, u.getAge()); }",
+      "correct_example": "@Test void testSetName() { ... }\n@Test void testSetAge() { ... }",
+      "debugging_tip": "If a test name contains 'And' (e.g., testNameAndAge), it's a sign you should split it into multiple, smaller tests."
+    },
+    {
+      "title": "Interdependent Tests",
+      "description": "Relying on the state modified by a previous test. JUnit does not guarantee test execution order by default.",
+      "wrong_example": "static int sharedCounter = 0;\n@Test void test1() { sharedCounter++; }\n@Test void test2() { assertEquals(1, sharedCounter); } // Fails if test2 runs before test1",
+      "correct_example": "Use @BeforeEach to initialize state for every test independently.",
+      "debugging_tip": "Run your tests in a random order to easily spot state leakage and inter-test dependencies."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is unit testing and why is it important?",
+        "answer": "Unit testing involves testing individual, isolated pieces of code (units) to ensure they work as intended. It's important because it catches bugs early, acts as documentation, and provides a safety net during refactoring."
+      },
+      {
+        "question": "What is the Arrange-Act-Assert (AAA) pattern?",
+        "answer": "It is a standard way to structure unit tests. Arrange: Set up inputs and state. Act: Call the method being tested. Assert: Verify the results."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What is the difference between `@BeforeEach` and `@BeforeAll` in JUnit 5?",
+        "answer": "`@BeforeEach` executes before every single `@Test` method, ensuring a fresh setup for each test. `@BeforeAll` runs only once before any test in the class runs and must be a static method (typically used for expensive setup like DB connections)."
+      },
+      {
+        "question": "Why do we need Mockito when we have JUnit?",
+        "answer": "JUnit is a framework for defining and running tests and making assertions. Mockito is a mocking framework used alongside JUnit to create dummy implementations (mocks) of complex dependencies, allowing you to test a class in true isolation."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you test a private method in Java?",
+        "answer": "Generally, private methods should not be tested directly; you should test them indirectly through the public methods that call them. If you absolutely must, you can use Reflection to bypass access control, but this usually indicates a design flaw that could be fixed by extracting the private logic into a new, testable class."
+      },
+      {
+        "question": "What is code coverage, and is 100% coverage the ultimate goal?",
+        "answer": "Code coverage measures the percentage of your source code executed by your test suite. While high coverage (e.g., 80-90%) is good, 100% is rarely the ultimate goal. Reaching 100% often involves writing useless tests for getters/setters or edge cases that don't add value. It's a metric, not a guarantee of code quality or bug-free software."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a JUnit 5 test for a method `boolean isEven(int number)`.",
+      "Explain the purpose of the `@Disabled` annotation."
+    ],
+    "medium": [
+      "Write a parameterized test in JUnit 5 that tests an `isPalindrome` method with multiple valid and invalid strings.",
+      "Create a Mockito test for a `UserService` that depends on a `UserRepository` to find a user by ID."
+    ],
+    "hard": [
+      "Write a test suite that verifies custom Exception handling logic, utilizing Mockito's `doThrow()` for mocking void methods.",
+      "Explain and demonstrate how to use Mockito's `ArgumentCaptor` to verify the specific values passed to a mocked dependency."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "You have a class `StringManipulator` with a method `public String reverse(String input)`. Write a comprehensive JUnit 5 test class for it. The method should return null if the input is null, and it should correctly reverse any string, including empty strings.",
+      "input": "Various strings: \"hello\", \"\", null, \"a\"",
+      "output": "Test cases passing for \"olleh\", \"\", null, \"a\"",
+      "constraints": "Use JUnit 5. Ensure all edge cases (null, empty) are tested in separate test methods.",
+      "solution": "import org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass StringManipulator {\n    public String reverse(String input) {\n        if (input == null) return null;\n        return new StringBuilder(input).reverse().toString();\n    }\n}\n\nclass StringManipulatorTest {\n    private final StringManipulator manipulator = new StringManipulator();\n\n    @Test\n    void testReverseNormalString() {\n        assertEquals(\"olleh\", manipulator.reverse(\"hello\"));\n    }\n\n    @Test\n    void testReverseEmptyString() {\n        assertEquals(\"\", manipulator.reverse(\"\"));\n    }\n\n    @Test\n    void testReverseNull() {\n        assertNull(manipulator.reverse(null));\n    }\n\n    @Test\n    void testReverseSingleCharacter() {\n        assertEquals(\"a\", manipulator.reverse(\"a\"));\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Test-Driven Development (TDD)",
+      "explanation": "In TDD, developers write the failing unit test before writing the actual production code. This ensures that the code is written specifically to satisfy requirements and remains highly testable."
+    },
+    {
+      "field": "Continuous Integration (CI)",
+      "explanation": "CI servers (like Jenkins, GitHub Actions) automatically run the unit test suite every time code is pushed to a repository. If any test fails, the build fails, preventing broken code from being merged."
+    }
+  ],
+  "best_practices": [
+    "Follow the Arrange-Act-Assert (AAA) pattern for readable and structured tests.",
+    "Name your tests descriptively. A test name should explain what is being tested, under what conditions, and the expected outcome (e.g., `calculateDiscount_PremiumUser_Returns20Percent()`).",
+    "Keep tests fast. Unit tests should not connect to real databases, file systems, or network services.",
+    "Test one logical concept per test method. Avoid putting multiple asserts for different behaviors in a single test.",
+    "Never use `@Disabled` or ignore failing tests without providing a valid reason or creating a task to fix them."
+  ],
+  "summary": [
+    "Unit testing is the practice of validating individual units of source code independently.",
+    "JUnit is the most widely used framework for writing and running unit tests in Java, providing annotations and assertions.",
+    "Mockito is used to mock dependencies, ensuring that the unit under test is truly isolated.",
+    "Good unit tests are fast, reliable, automated, and act as living documentation for your software.",
+    "Adopting unit testing improves code design, reduces bugs, and gives developers confidence when refactoring."
+  ],
+  "quiz": [
+    {
+      "question": "Which JUnit 5 annotation is used to execute a method before each test method in a class?",
+      "options": [
+        "@Before",
+        "@BeforeAll",
+        "@BeforeEach",
+        "@SetUp"
+      ],
+      "answer": "@BeforeEach",
+      "explanation": "@BeforeEach runs before every single test method. @Before is from JUnit 4, and @BeforeAll runs only once per class."
+    },
+    {
+      "question": "What is the primary purpose of a mocking framework like Mockito?",
+      "options": [
+        "To run tests in parallel.",
+        "To simulate the behavior of complex or external dependencies.",
+        "To measure code coverage.",
+        "To compile the Java code faster."
+      ],
+      "answer": "To simulate the behavior of complex or external dependencies.",
+      "explanation": "Mockito creates mock objects that simulate real dependencies, allowing developers to test a class in isolation without hitting real databases or APIs."
+    },
+    {
+      "question": "Which assertion method would you use in JUnit 5 to check if a specific exception is thrown?",
+      "options": [
+        "assertException()",
+        "assertThrows()",
+        "assertEquals()",
+        "expectThrows()"
+      ],
+      "answer": "assertThrows()",
+      "explanation": "In JUnit 5, assertThrows(ExpectedException.class, () -> { /* code that throws */ }) is used to verify exception scenarios."
+    }
+  ]
+}

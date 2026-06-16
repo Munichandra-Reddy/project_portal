@@ -1,0 +1,275 @@
+{
+  "title": "Java Program Structure",
+  "introduction": {
+    "what_it_is": "A Java program is a collection of objects that communicate via invoking each other's methods. At its core, the Java Program Structure refers to the standard hierarchical organization of code in a Java source file, consisting of a documentation section, package declaration, import statements, interface statements, class definitions, and the main method.",
+    "why_important": "Understanding the structure is essential because Java is a strictly object-oriented language. A well-organized structure ensures code readability, maintainability, and strict adherence to the compiler's requirements. Every Java program must have at least one class and a main method as the entry point.",
+    "real_world": [
+      "Building large-scale enterprise applications where code needs to be modularized using packages and imported across different files.",
+      "Developing open-source libraries where documentation, clear class boundaries, and structural consistency are critical for contributors."
+    ]
+  },
+  "detailed_theory": "A typical Java program file (usually ending with a `.java` extension) is logically divided into several sections. The recommended order is:\n\n1. **Documentation Section**: Contains comments (single-line, multi-line, or Javadoc) that describe the program, author, version, etc.\n2. **Package Statement**: Defines a namespace for the class, helping in avoiding name conflicts (e.g., `package com.example.app;`). This must be the first executable line.\n3. **Import Statements**: Used to bring in classes or entire packages from other namespaces (e.g., `import java.util.Scanner;`).\n4. **Interface Statements**: Declarations of interfaces, which are blueprints for classes.\n5. **Class Definitions**: The core building blocks of Java. A program can have multiple classes, but only one public class per file. The file name must match the public class name.\n6. **Main Method Class**: The entry point of the application, defined as `public static void main(String[] args)`. The JVM starts execution from this method.\n\nJava's structure enforces encapsulation and modularity. Everything must be inside a class, ensuring that the object-oriented paradigm is strictly followed.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Strictly Object-Oriented",
+        "description": "Everything must be enclosed within a class or interface. No standalone methods or variables exist outside a class."
+      },
+      {
+        "name": "Case-Sensitive",
+        "description": "Java is highly case-sensitive. `MyClass` and `myclass` are considered different identifiers."
+      },
+      {
+        "name": "Mandatory Main Method",
+        "description": "For an application to be executable, it must contain a `main` method with a very specific signature."
+      },
+      {
+        "name": "Single Public Class per File",
+        "description": "A `.java` file can contain multiple classes, but only one can be declared `public`, and its name must match the file name."
+      }
+    ],
+    "advantages": [
+      "High Readability: The rigid structure makes Java code uniform and easy to read across different projects.",
+      "Modularity: Packages and import statements allow code to be neatly organized into reusable modules.",
+      "Prevents Name Clashes: The package system inherently prevents naming conflicts even in massive codebases."
+    ],
+    "limitations": [
+      "Verbosity: Java requires a significant amount of boilerplate code just to write a simple program.",
+      "Rigid Rules: Strict naming conventions for files and public classes can sometimes be annoying for small scripts."
+    ]
+  },
+  "syntax": {
+    "explanation": "A standard Java program structure consists of optional package and import declarations followed by a mandatory class containing a main method.",
+    "breakdown": [
+      "`package com.example;`: Declares the directory structure/namespace.",
+      "`import java.util.*;`: Imports required libraries.",
+      "`public class MyProgram { ... }`: The primary public class definition.",
+      "`public static void main(String[] args) { ... }`: The starting point for JVM execution.",
+      "`System.out.println(...);`: Standard statement to output data to the console."
+    ],
+    "rules": [
+      "The `package` statement (if present) must be the first line of code (excluding comments).",
+      "`import` statements must appear after the package statement and before any class definition.",
+      "Only one `public` class is allowed per `.java` file.",
+      "The name of the `.java` file must exactly match the name of the `public` class, including case.",
+      "Execution strictly begins at `public static void main(String[] args)`."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Hello World Program",
+      "code": "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
+      "output": "Hello, World!",
+      "explanation": "This is the simplest Java program. It consists of a single public class `HelloWorld`. Inside it is the `main` method, which is the entry point. `System.out.println` prints text to the console."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Program with Package and Imports",
+      "code": "package com.example.math;\n\nimport java.util.Scanner;\n\npublic class Calculator {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.print(\"Enter a number: \");\n        int num = scanner.nextInt();\n        System.out.println(\"You entered: \" + num);\n        scanner.close();\n    }\n}",
+      "output": "Enter a number: 5\nYou entered: 5",
+      "explanation": "This example shows the use of the `package` statement to group the class, and `import` to bring in the `Scanner` class from the `java.util` package for reading user input."
+    },
+    {
+      "level": "Advanced",
+      "title": "Multiple Classes in a Single File",
+      "code": "package com.example.advanced;\n\nclass Helper {\n    void showMessage() {\n        System.out.println(\"Message from Helper class\");\n    }\n}\n\npublic class MainApp {\n    public static void main(String[] args) {\n        Helper helper = new Helper();\n        helper.showMessage();\n    }\n}",
+      "output": "Message from Helper class",
+      "explanation": "Here we define multiple classes in one file. `MainApp` is the public class, so the file must be named `MainApp.java`. The `Helper` class has default access and is used within the `main` method."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Sections of a Java Program",
+        "headers": [
+          "Section",
+          "Mandatory/Optional",
+          "Purpose"
+        ],
+        "rows": [
+          [
+            "Documentation Section",
+            "Optional",
+            "Comments to document code"
+          ],
+          [
+            "Package Statement",
+            "Optional",
+            "Groups related classes"
+          ],
+          [
+            "Import Statements",
+            "Optional",
+            "Imports classes from other packages"
+          ],
+          [
+            "Interface Statements",
+            "Optional",
+            "Defines interfaces"
+          ],
+          [
+            "Class Definitions",
+            "Mandatory",
+            "Contains logic and data"
+          ],
+          [
+            "Main Method",
+            "Mandatory (for execution)",
+            "Entry point for JVM"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Public Class",
+        "concept_b": "Non-Public (Default) Class",
+        "explanation": "A file can have only one public class, which must match the filename. It can have multiple non-public classes. Public classes are accessible from other packages, while default classes are only accessible within the same package."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "main",
+      "description": "The core method where Java application execution begins. It must be declared as public, static, and void.",
+      "parameters": "String[] args - Command line arguments passed to the program.",
+      "return_value": "void - It does not return any value.",
+      "example_usage": "public static void main(String[] args) { ... }"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Filename and Class Name Mismatch",
+      "description": "Naming the file something different from the public class name.",
+      "wrong_example": "// File named MyApp.java\npublic class MyApplication { ... }",
+      "correct_example": "// File named MyApplication.java\npublic class MyApplication { ... }",
+      "debugging_tip": "The Java compiler will throw an error: 'class MyApplication is public, should be declared in a file named MyApplication.java'."
+    },
+    {
+      "title": "Missing 'static' in main method",
+      "description": "Declaring the main method without the 'static' keyword.",
+      "wrong_example": "public void main(String[] args) { ... }",
+      "correct_example": "public static void main(String[] args) { ... }",
+      "debugging_tip": "The code will compile, but running it will throw: 'Main method is not static in class ...'."
+    },
+    {
+      "title": "Package statement not at the top",
+      "description": "Placing the package statement after imports or class declarations.",
+      "wrong_example": "import java.util.*;\npackage mypack;\npublic class Test { ... }",
+      "correct_example": "package mypack;\nimport java.util.*;\npublic class Test { ... }",
+      "debugging_tip": "Compiler error: 'class, interface, or enum expected'."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the standard structure of a Java program?",
+        "answer": "A Java program typically consists of (in order): Documentation, Package declaration, Import statements, Interfaces, and Classes. At least one class with a main method is required for execution."
+      },
+      {
+        "question": "Can a Java file have multiple classes?",
+        "answer": "Yes, a Java file can contain multiple classes, but only one of them can be declared public. The filename must match the name of the public class."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Why is the main method declared as `public static void main`?",
+        "answer": "`public` makes it accessible everywhere. `static` allows JVM to invoke it without instantiating the class. `void` means it doesn't return anything. `main` is the specific name JVM looks for."
+      },
+      {
+        "question": "What happens if a Java file does not have a public class?",
+        "answer": "If there is no public class, the file can be named anything (with a `.java` extension), as long as it's a valid identifier. However, it's a best practice to match the filename with the class containing the main method."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How does the package structure correspond to the physical directory structure in Java?",
+        "answer": "In Java, the package name dictates the folder structure where the compiled `.class` files must reside. For example, `package com.mycompany.app;` requires the compiled class to be in a directory path `com/mycompany/app/`."
+      },
+      {
+        "question": "Can we overload the main method in Java?",
+        "answer": "Yes, the main method can be overloaded just like any other method. However, the JVM will only call the one with the exact signature `public static void main(String[] args)` as the entry point."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a simple Java program that prints 'Hello Java' to the console. Save it in a file named `Hello.java`.",
+      "Create a Java program containing two classes (none public) and verify what `.class` files are generated upon compilation."
+    ],
+    "medium": [
+      "Write a Java program that defines a package `org.test` and imports `java.time.LocalDate` to print the current date.",
+      "Write a program with an overloaded main method and demonstrate that only the standard main method is called by the JVM."
+    ],
+    "hard": [
+      "Create a directory structure representing a package `com.bank.core`. Write a class in this package, compile it from the root directory, and run it using the fully qualified class name."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a program named `GreeterApp` that takes a command-line argument representing a name and prints 'Hello, [name]!'. If no argument is provided, print 'Hello, Guest!'.",
+      "input": "Execution: `java GreeterApp Alice`",
+      "output": "Hello, Alice!",
+      "constraints": "The program must handle empty command line arguments without throwing an `ArrayIndexOutOfBoundsException`.",
+      "solution": "public class GreeterApp {\n    public static void main(String[] args) {\n        if (args.length > 0) {\n            System.out.println(\"Hello, \" + args[0] + \"!\");\n        } else {\n            System.out.println(\"Hello, Guest!\");\n        }\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Software Architecture",
+      "explanation": "Large Java applications use rigid package structures (e.g., `com.company.controller`, `com.company.service`, `com.company.model`) to enforce separation of concerns and maintainability."
+    },
+    {
+      "field": "Open Source Libraries",
+      "explanation": "Well-structured Java libraries use the documentation section extensively (Javadoc) and export specific packages to define a clear public API, heavily relying on Java's access modifiers and structural rules."
+    }
+  ],
+  "best_practices": [
+    "Always keep the file name exactly the same as the public class name.",
+    "Group related classes into packages to avoid naming collisions and improve project structure.",
+    "Put the `main` method in a dedicated entry-point class to separate startup logic from business logic.",
+    "Use descriptive Javadoc comments at the top of every file to explain its overall purpose and author details."
+  ],
+  "summary": [
+    "The Java program structure dictates the required and optional sections of a Java source file.",
+    "Order matters: Package declarations first, followed by imports, and then class declarations.",
+    "Every Java application needs an entry point: `public static void main(String[] args)`.",
+    "Strict adherence to the structure ensures modularity, encapsulation, and seamless compilation."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is the correct order of elements in a Java file?",
+      "options": [
+        "Import, Package, Class",
+        "Class, Import, Package",
+        "Package, Import, Class",
+        "Package, Class, Import"
+      ],
+      "answer": "Package, Import, Class",
+      "explanation": "In Java, if a package is defined, it must be the first line. Imports follow the package, and finally the class declarations."
+    },
+    {
+      "question": "How many public classes can exist in a single Java file?",
+      "options": [
+        "Zero or one",
+        "Exactly one",
+        "Two",
+        "Any number"
+      ],
+      "answer": "Zero or one",
+      "explanation": "A Java file can have at most one public class, and if it does, the filename must match the name of that public class."
+    },
+    {
+      "question": "What is the mandatory signature of the method where execution begins?",
+      "options": [
+        "public void main(String[] args)",
+        "static void main(String[] args)",
+        "public static void main(String args)",
+        "public static void main(String[] args)"
+      ],
+      "answer": "public static void main(String[] args)",
+      "explanation": "The JVM strictly looks for the public, static, and void method named main taking an array of Strings as its argument."
+    }
+  ]
+}

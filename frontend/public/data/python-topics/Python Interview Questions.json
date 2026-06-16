@@ -1,0 +1,302 @@
+{
+  "title": "Python Interview Questions",
+  "introduction": {
+    "what_it_is": "A curated collection of common and challenging interview questions asked during Python developer job interviews. It covers core language concepts, data structures, OOP, and popular frameworks.",
+    "why_important": "Preparing for these questions helps candidates solidify their understanding of Python's underlying mechanics and demonstrates their proficiency to potential employers.",
+    "real_world": [
+      "Technical phone screens where quick conceptual answers are required.",
+      "Whiteboard coding sessions focusing on algorithms and data structures.",
+      "System design interviews discussing Python's role in larger architectures."
+    ]
+  },
+  "detailed_theory": "Python interviews generally assess a candidate across multiple dimensions. \n\n**1. Core Language Mechanics:** Interviewers want to know if you understand how Python works under the hood. Topics include memory management (reference counting and garbage collection), the Global Interpreter Lock (GIL) and its implications on multithreading versus multiprocessing, and the differences between Python 2 and Python 3.\n\n**2. Data Structures:** You must be intimately familiar with Python's built-in data types: lists, tuples, dictionaries, and sets. Questions often focus on the time complexity (Big O notation) of operations. For example, why looking up an item in a dictionary is O(1) while finding an item in a list is O(N).\n\n**3. Advanced Syntax and Idioms:** 'Pythonic' code is a common buzzword. Interviewers look for the use of list comprehensions, generator expressions, decorators, context managers (`with` statement), and lambda functions. They want to see that you can write clean, concise, and efficient Python code.\n\n**4. Object-Oriented Programming (OOP):** Understanding classes, inheritance (including multiple inheritance and the Method Resolution Order/MRO), polymorphism, and encapsulation. You may be asked about magic methods (dunder methods like `__init__`, `__str__`, `__call__`) and how they enable operator overloading.\n\n**5. Frameworks and Ecosystem:** Depending on the role, questions will delve into specific libraries. For web development, Django or Flask concepts. For data science, Pandas, NumPy, and Scikit-learn. You should also understand virtual environments, package management (`pip`), and testing (`pytest`).\n\n**6. Problem Solving/Coding:** Theoretical knowledge is tested practically through coding challenges. These often involve string manipulation, array traversals, or implementing basic algorithms. The key here is not just getting the right answer, but communicating your thought process, considering edge cases, and optimizing for time and space complexity.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Core Concepts Assessment",
+        "description": "Evaluates understanding of memory, GIL, and dynamic typing."
+      },
+      {
+        "name": "Data Structure Proficiency",
+        "description": "Tests knowledge of lists, dicts, sets, and their performance characteristics."
+      },
+      {
+        "name": "OOP Principles",
+        "description": "Assesses knowledge of classes, inheritance, and Python's unique OOP features."
+      },
+      {
+        "name": "Algorithmic Thinking",
+        "description": "Evaluates problem-solving skills through live coding exercises."
+      }
+    ],
+    "advantages": [
+      "Helps candidates identify knowledge gaps before the actual interview.",
+      "Builds confidence in answering technical questions clearly.",
+      "Provides a structured way to review a vast language."
+    ],
+    "limitations": [
+      "Memorizing answers without understanding the underlying concepts is ineffective.",
+      "Interviews vary wildly; no single list covers every possible question.",
+      "Whiteboard coding under pressure requires separate practice beyond reading."
+    ]
+  },
+  "syntax": {
+    "explanation": "In an interview, you may be asked to write code snippets on a whiteboard or shared editor. Clarity and 'Pythonic' style are crucial.",
+    "breakdown": [
+      "Use descriptive variable names.",
+      "Utilize list comprehensions for concise mapping/filtering.",
+      "Use `enumerate()` instead of maintaining manual counters in loops."
+    ],
+    "rules": [
+      "Always consider edge cases (empty lists, None values, very large inputs).",
+      "Think out loud. Communication is as important as the code.",
+      "Don't optimize prematurely, but be aware of the Big O complexity of your solution."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Reverse a String",
+      "code": "def reverse_string(s):\n    return s[::-1]",
+      "output": "reverse_string('hello') -> 'olleh'",
+      "explanation": "A very common introductory question. Using Python's slice notation `[::-1]` is the most Pythonic and efficient way to reverse a sequence."
+    },
+    {
+      "level": "Intermediate",
+      "title": "List Comprehension vs. Map",
+      "code": "# Using map\nsquares_map = list(map(lambda x: x**2, range(5)))\n\n# Using list comprehension\nsquares_comp = [x**2 for x in range(5)]",
+      "output": "[0, 1, 4, 9, 16]",
+      "explanation": "Interviewers look for preference. List comprehensions are generally preferred in Python as they are more readable and often slightly faster than `map` with a `lambda`."
+    },
+    {
+      "level": "Advanced",
+      "title": "Writing a Decorator",
+      "code": "import time\nfrom functools import wraps\n\ndef timer_decorator(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        end = time.time()\n        print(f\"{func.__name__} took {end-start}s\")\n        return result\n    return wrapper\n\n@timer_decorator\ndef slow_function():\n    time.sleep(1)",
+      "output": "slow_function took 1.001s",
+      "explanation": "Demonstrates understanding of first-class functions, closures, and the `*args, **kwargs` syntax to accept arbitrary arguments."
+    },
+    {
+      "level": "Real-world",
+      "title": "Finding Duplicates in a List",
+      "code": "def find_duplicates(lst):\n    seen = set()\n    duplicates = set()\n    for item in lst:\n        if item in seen:\n            duplicates.add(item)\n        else:\n            seen.add(item)\n    return list(duplicates)",
+      "output": "find_duplicates([1, 2, 3, 2, 4, 5, 1]) -> [1, 2]",
+      "explanation": "Tests knowledge of data structures. Using Sets provides O(1) lookup time, making this solution O(N) overall, compared to O(N^2) if checking list membership."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Time Complexity of Python Operations",
+        "headers": ["Data Structure", "Operation", "Average Case Complexity"],
+        "rows": [
+          ["List", "Index Access (lst[i])", "O(1)"],
+          ["List", "Append (lst.append(x))", "O(1)"],
+          ["List", "Membership (x in lst)", "O(N)"],
+          ["Dictionary", "Key Lookup (dict[key])", "O(1)"],
+          ["Set", "Membership (x in set)", "O(1)"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "is",
+        "concept_b": "==",
+        "explanation": "`==` checks for value equality (do these two objects have the same value?). `is` checks for reference equality (do these two variables point to the exact same object in memory?)."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "id()",
+      "description": "Returns the identity (memory address) of an object. Useful when discussing 'is' vs '=='.",
+      "parameters": "object",
+      "return_value": "Integer representing memory address.",
+      "example_usage": "id(my_variable)"
+    },
+    {
+      "name": "dir()",
+      "description": "Without arguments, returns the list of names in the current local scope. With an argument, returns a list of valid attributes for that object.",
+      "parameters": "object (optional)",
+      "return_value": "List of strings.",
+      "example_usage": "dir(list)"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Mutable Default Arguments",
+      "description": "Using a list or dictionary as a default argument in a function. The default object is created once when the function is defined, not each time it is called.",
+      "wrong_example": "def append_to(element, lst=[]):\n    lst.append(element)\n    return lst",
+      "correct_example": "def append_to(element, lst=None):\n    if lst is None:\n        lst = []\n    lst.append(element)\n    return lst",
+      "debugging_tip": "This is a classic trap in Python interviews. Always use `None` for default mutable arguments."
+    },
+    {
+      "title": "Modifying a list while iterating over it",
+      "description": "Removing items from a list while iterating over it with a `for` loop causes unexpected behavior because the indexes shift.",
+      "wrong_example": "for item in lst:\n    if item == 'bad': lst.remove(item)",
+      "correct_example": "lst = [item for item in lst if item != 'bad']",
+      "debugging_tip": "Iterate over a copy of the list `for item in lst[:]:` or use a list comprehension to create a new list."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What are the key differences between Python 2 and Python 3?",
+        "answer": "Python 3 introduced `print()` as a function, integer division `3/2` returns `1.5` (not `1`), strings are Unicode by default, and `xrange()` was replaced by `range()`."
+      },
+      {
+        "question": "What is the difference between a list and a tuple?",
+        "answer": "Lists are mutable, meaning their contents can be changed after creation. Tuples are immutable; once created, they cannot be modified. Tuples are slightly faster and can be used as keys in dictionaries."
+      },
+      {
+        "question": "What is PEP 8?",
+        "answer": "PEP 8 is the official style guide for Python code. It provides guidelines on indentation (4 spaces), naming conventions (snake_case for variables/functions, CamelCase for classes), and other formatting rules to ensure code readability and consistency."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain how Python manages memory.",
+        "answer": "Python uses a private heap containing all objects and data structures. Memory management is handled by the Python memory manager. It primarily uses Reference Counting (keeping track of how many references point to an object) and a Garbage Collector to detect and resolve cyclic references."
+      },
+      {
+        "question": "What is a decorator and how is it used?",
+        "answer": "A decorator is a design pattern in Python that allows a user to add new functionality to an existing object without modifying its structure. It is essentially a function that takes another function as an argument, extends its behavior, and returns a new function. They are applied using the `@decorator_name` syntax."
+      },
+      {
+        "question": "What is the difference between `@staticmethod` and `@classmethod`?",
+        "answer": "A `@classmethod` takes the class itself as its first argument (usually named `cls`) and can modify class state that applies across all instances. A `@staticmethod` takes neither `self` nor `cls` as a first argument; it behaves like a regular function but belongs to the class's namespace."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What is the Global Interpreter Lock (GIL) and how does it affect concurrency?",
+        "answer": "The GIL is a mutex that protects access to Python objects, preventing multiple native threads from executing Python bytecodes at once. This means multithreading in CPython does not achieve true parallelism for CPU-bound tasks. To utilize multiple cores for CPU-bound tasks, the `multiprocessing` module must be used instead."
+      },
+      {
+        "question": "Explain generators and the `yield` keyword.",
+        "answer": "Generators are functions that return an iterable set of items, one at a time, in a special way. Instead of `return`, they use `yield`. When called, they don't run the function body but return a generator object. They are highly memory-efficient for large datasets because they generate values on the fly rather than storing them all in memory."
+      },
+      {
+        "question": "What are metaclasses?",
+        "answer": "Metaclasses are the 'classes of classes'. Just as an object is an instance of a class, a class is an instance of a metaclass. By default, Python uses the `type` metaclass. Metaclasses allow you to intercept class creation, modify class definitions dynamically, or enforce coding standards across subclasses."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "What is the output of `type(lambda: None)`?",
+      "How do you convert a string '123' to an integer?",
+      "Explain the purpose of the `pass` statement.",
+      "What is the difference between `.append()` and `.extend()` on a list?",
+      "How do you swap the values of two variables `a` and `b` without a temporary variable?"
+    ],
+    "medium": [
+      "Write a one-liner to flatten a list of lists: `[[1, 2], [3, 4]]` -> `[1, 2, 3, 4]`.",
+      "Explain the `*args` and `**kwargs` syntax in function definitions.",
+      "What happens when a Python script imports a module that has already been imported?",
+      "How do you implement a Singleton pattern in Python?",
+      "Explain the difference between deep copy and shallow copy."
+    ],
+    "hard": [
+      "Implement a custom context manager using `__enter__` and `__exit__` magic methods.",
+      "Write a thread-safe singleton.",
+      "Explain how the `__new__` method differs from `__init__`.",
+      "Describe how you would debug a memory leak in a Python web application.",
+      "Write a generator function that yields the Fibonacci sequence infinitely."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a function to check if a given string is a palindrome (reads the same forwards and backwards). Ignore spaces and casing.",
+      "input": "\"A man a plan a canal Panama\"",
+      "output": "True",
+      "constraints": "Do it without using extra memory for a reversed string if possible (O(1) space).",
+      "solution": "def is_palindrome(s):\n    cleaned = ''.join(char.lower() for char in s if char.isalnum())\n    left, right = 0, len(cleaned) - 1\n    while left < right:\n        if cleaned[left] != cleaned[right]: return False\n        left += 1; right -= 1\n    return True"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Hiring and Recruitment",
+      "explanation": "These questions are standardized tests used by tech companies to filter candidates and assess technical competency."
+    },
+    {
+      "field": "Code Review and Quality",
+      "explanation": "Understanding interview concepts like Big O complexity and Pythonic idioms directly translates to writing better, more efficient code in daily work."
+    }
+  ],
+  "best_practices": [
+    "Practice coding on a whiteboard or paper to get used to writing without IDE auto-completion.",
+    "Always clarify the problem statement and constraints before writing code.",
+    "Think out loud. Let the interviewer know your thought process, even if you are stuck.",
+    "Know the time and space complexity of the standard operations of Python's data structures.",
+    "Be prepared to discuss your past projects and the specific technical challenges you overcame."
+  ],
+  "summary": [
+    "Python interviews test core language mechanics, data structures, and problem-solving skills.",
+    "Understanding the difference between mutable and immutable types is fundamental.",
+    "Knowledge of advanced features like decorators, generators, and context managers demonstrates maturity.",
+    "Be prepared to explain the GIL and memory management.",
+    "Coding challenges require not just correct code, but efficient and 'Pythonic' code."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is an immutable data type in Python?",
+      "options": ["List", "Dictionary", "Tuple", "Set"],
+      "answer": "Tuple",
+      "explanation": "Tuples cannot be modified after they are created, unlike Lists, Dictionaries, and Sets."
+    },
+    {
+      "question": "What is the time complexity of checking if an item exists in a Python Set?",
+      "options": ["O(1)", "O(log N)", "O(N)", "O(N^2)"],
+      "answer": "O(1)",
+      "explanation": "Sets are implemented using hash tables, allowing for constant average time complexity for lookups."
+    },
+    {
+      "question": "Which keyword is used to create a generator function?",
+      "options": ["return", "generate", "yield", "produce"],
+      "answer": "yield",
+      "explanation": "The yield keyword pauses the function saving its state, returning a value, and later continues from there on successive calls."
+    },
+    {
+      "question": "What does the Global Interpreter Lock (GIL) prevent?",
+      "options": ["Multiple processes running concurrently", "Memory leaks", "Multiple threads executing Python bytecodes at once", "Deadlocks in database queries"],
+      "answer": "Multiple threads executing Python bytecodes at once",
+      "explanation": "The GIL is a mutex that prevents multiple native threads from executing Python bytecodes simultaneously in CPython."
+    },
+    {
+      "question": "What will `print([1, 2, 3] * 2)` output?",
+      "options": ["Error", "[2, 4, 6]", "[[1, 2, 3], [1, 2, 3]]", "[1, 2, 3, 1, 2, 3]"],
+      "answer": "[1, 2, 3, 1, 2, 3]",
+      "explanation": "Multiplying a list by an integer n creates a new list by repeating the original list n times."
+    },
+    {
+      "question": "What is the purpose of `__init__` in a Python class?",
+      "options": ["To create a new instance", "To initialize the object's state", "To destroy the object", "To return a string representation"],
+      "answer": "To initialize the object's state",
+      "explanation": "__init__ is the initializer method called after the instance has been created by __new__."
+    },
+    {
+      "question": "How do you correctly handle a mutable default argument in a function?",
+      "options": ["def func(lst=[]):", "def func(lst=list()):", "def func(lst=None): if lst is None: lst = []", "It is impossible in Python"],
+      "answer": "def func(lst=None): if lst is None: lst = []",
+      "explanation": "Default arguments are evaluated only once. Using None and creating the list inside the function prevents sharing the list across calls."
+    },
+    {
+      "question": "Which built-in function returns a list of attributes and methods of an object?",
+      "options": ["attributes()", "dir()", "list_methods()", "help()"],
+      "answer": "dir()",
+      "explanation": "dir() attempts to return a list of valid attributes for the object passed to it."
+    },
+    {
+      "question": "What does the `pass` statement do?",
+      "options": ["Exits the loop", "Skips to the next iteration", "Raises an exception", "Nothing, it's a null operation"],
+      "answer": "Nothing, it's a null operation",
+      "explanation": "pass is used as a placeholder when a statement is syntactically required but no code needs to be executed."
+    },
+    {
+      "question": "What is the difference between `.append()` and `.extend()`?",
+      "options": ["There is no difference", "append adds its argument as a single element; extend iterates over its argument and adds each element", "extend is for strings, append is for lists", "append adds to the beginning, extend adds to the end"],
+      "answer": "append adds its argument as a single element; extend iterates over its argument and adds each element",
+      "explanation": "lst.append([1,2]) makes the list end with a sublist [1,2]. lst.extend([1,2]) adds 1 and 2 as separate elements."
+    }
+  ]
+}

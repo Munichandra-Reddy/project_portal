@@ -1,0 +1,237 @@
+{
+  "title": "Java Operators",
+  "introduction": {
+    "what_it_is": "Operators in Java are special symbols that perform specific operations on one, two, or three operands, and then return a result. They are the foundation of any programming language used to manipulate variables and values.",
+    "why_important": "Understanding operators is crucial because they allow you to perform mathematical, relational, and logical computations. Without operators, a program cannot process data or make decisions.",
+    "real_world": [
+      "Calculating the total price of items in an e-commerce cart (Arithmetic).",
+      "Checking if a user is over 18 years old to allow access (Relational).",
+      "Verifying both username and password are correct for login (Logical)."
+    ]
+  },
+  "detailed_theory": "Java provides a rich set of operators to manipulate variables. Operators can be classified based on the number of operands they take: Unary (one operand), Binary (two operands), and Ternary (three operands). Furthermore, based on their functionality, they are categorized into Arithmetic, Relational, Logical, Bitwise, Assignment, and Shift operators. Each operator has a specific precedence and associativity rule which dictates the order of evaluation in an expression.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Precedence",
+        "description": "Determines the order in which operators in an expression are evaluated (e.g., multiplication before addition)."
+      },
+      {
+        "name": "Associativity",
+        "description": "Determines the direction of evaluation (left-to-right or right-to-left) when operators of the same precedence appear in an expression."
+      },
+      {
+        "name": "Overloading",
+        "description": "In Java, operators cannot be overloaded by the user, unlike in C++. However, the '+' operator is overloaded internally for string concatenation."
+      }
+    ],
+    "advantages": [
+      "Simplifies mathematical and logical computations.",
+      "Provides concise syntax for complex operations (e.g., ternary operator).",
+      "Bitwise operators allow low-level data manipulation, increasing performance for specific tasks."
+    ],
+    "limitations": [
+      "Lack of operator overloading can make custom mathematical classes (like Matrices or Complex numbers) verbose.",
+      "Incorrect use of precedence can lead to logical errors that are hard to debug.",
+      "Bitwise operations can be difficult to read and maintain for beginners."
+    ]
+  },
+  "syntax": {
+    "explanation": "Operators are typically placed between operands (binary), before or after an operand (unary), or involve three parts separated by '?' and ':' (ternary).",
+    "breakdown": [
+      "operand1 operator operand2 (e.g., a + b)",
+      "operator operand (e.g., ++a)",
+      "condition ? valueIfTrue : valueIfFalse"
+    ],
+    "rules": [
+      "Operands must be of compatible types.",
+      "Division by integer zero throws ArithmeticException.",
+      "Logical operators (&&, ||) support short-circuiting, meaning the second operand is only evaluated if necessary."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Arithmetic Operators",
+      "code": "public class Arithmetic {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 5;\n        System.out.println(\"Addition: \" + (a + b));\n        System.out.println(\"Subtraction: \" + (a - b));\n        System.out.println(\"Multiplication: \" + (a * b));\n        System.out.println(\"Division: \" + (a / b));\n        System.out.println(\"Modulo: \" + (a % b));\n    }\n}",
+      "output": "Addition: 15\nSubtraction: 5\nMultiplication: 50\nDivision: 2\nModulo: 0",
+      "explanation": "Demonstrates basic arithmetic operations including modulo which gives the remainder."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Relational and Logical Operators",
+      "code": "public class RelationalLogical {\n    public static void main(String[] args) {\n        int age = 20;\n        boolean hasLicense = true;\n        \n        if (age >= 18 && hasLicense) {\n            System.out.println(\"Eligible to drive.\");\n        } else {\n            System.out.println(\"Not eligible.\");\n        }\n    }\n}",
+      "output": "Eligible to drive.",
+      "explanation": "Uses the >= relational operator to check age and the && logical operator to combine two conditions. Both must be true."
+    },
+    {
+      "level": "Advanced",
+      "title": "Bitwise and Shift Operators",
+      "code": "public class BitwiseShift {\n    public static void main(String[] args) {\n        int x = 5;  // 0101 in binary\n        int y = 3;  // 0011 in binary\n        System.out.println(\"Bitwise AND: \" + (x & y));\n        System.out.println(\"Bitwise OR: \" + (x | y));\n        System.out.println(\"Bitwise XOR: \" + (x ^ y));\n        System.out.println(\"Left Shift x by 1: \" + (x << 1));\n    }\n}",
+      "output": "Bitwise AND: 1\nBitwise OR: 7\nBitwise XOR: 6\nLeft Shift x by 1: 10",
+      "explanation": "Bitwise operators work on individual bits. 5 & 3 is 0101 & 0011 = 0001 (1). Left shifting 5 by 1 multiplies it by 2 (5 * 2^1 = 10)."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Operator Categories",
+        "headers": [
+          "Category",
+          "Operators",
+          "Description"
+        ],
+        "rows": [
+          [
+            "Arithmetic",
+            "+, -, *, /, %",
+            "Mathematical computations"
+          ],
+          [
+            "Relational",
+            "==, !=, >, <, >=, <=",
+            "Compare two values"
+          ],
+          [
+            "Logical",
+            "&&, ||, !",
+            "Combine conditional statements"
+          ],
+          [
+            "Assignment",
+            "=, +=, -=, *=, /=, %=",
+            "Assign values to variables"
+          ],
+          [
+            "Unary",
+            "++, --, +, -, !",
+            "Operate on a single operand"
+          ],
+          [
+            "Bitwise",
+            "&, |, ^, ~",
+            "Bit-level operations"
+          ],
+          [
+            "Shift",
+            "<<, >>, >>>",
+            "Shift bits left or right"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Bitwise AND (&)",
+        "concept_b": "Logical AND (&&)",
+        "explanation": "Bitwise AND operates on bits and evaluates both sides regardless. Logical AND operates on booleans and short-circuits (skips evaluating the right side if the left side is false)."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "Ternary Operator (?:)",
+      "description": "A shorthand for if-else statements.",
+      "parameters": "booleanCondition ? expression1 : expression2",
+      "return_value": "Returns expression1 if true, else expression2.",
+      "example_usage": "int max = (a > b) ? a : b;"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using '=' instead of '=='",
+      "description": "Confusing the assignment operator (=) with the equality relational operator (==) in conditions.",
+      "wrong_example": "if (a = 5) { ... }",
+      "correct_example": "if (a == 5) { ... }",
+      "debugging_tip": "Java compiler will throw a 'type mismatch' error if you assign an int inside an if condition, but it compiles if it's a boolean variable. Always double-check equality checks."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between ++a and a++?",
+        "answer": "++a (pre-increment) increments the value first, then uses it in the expression. a++ (post-increment) uses the current value in the expression, then increments it."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain short-circuit logical operators.",
+        "answer": "&& and || are short-circuit operators. For &&, if the left operand is false, the overall result must be false, so the right operand is not evaluated. For ||, if the left operand is true, the overall result must be true, so the right operand is not evaluated."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What is the unsigned right shift operator (>>>)?",
+        "answer": "The >>> operator shifts the bits to the right and always fills the leftmost bits with zero, regardless of the sign bit. The >> operator (signed right shift) preserves the sign bit (fills with 1 for negative numbers, 0 for positive)."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a program to calculate the area of a rectangle using arithmetic operators.",
+      "Use relational operators to compare two numbers and print the larger one."
+    ],
+    "medium": [
+      "Write a program to check if a year is a leap year using logical operators.",
+      "Use the ternary operator to find the maximum of three numbers."
+    ],
+    "hard": [
+      "Swap two numbers without using a third variable, using bitwise XOR (^).",
+      "Write a program to count the number of set bits (1s) in an integer using bitwise operators."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given an integer `n`, determine if it is a power of two using a single line of code and bitwise operators.",
+      "input": "n = 16",
+      "output": "true",
+      "constraints": "n > 0",
+      "solution": "boolean isPowerOfTwo = (n > 0) && ((n & (n - 1)) == 0);"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Cryptography",
+      "explanation": "Bitwise XOR is extensively used in encryption algorithms to scramble data."
+    },
+    {
+      "field": "Embedded Systems",
+      "explanation": "Bitwise shift operators are used to set, clear, or toggle specific bits in hardware registers."
+    }
+  ],
+  "best_practices": [
+    "Use parentheses to explicitly define the order of evaluation if you are unsure of operator precedence.",
+    "Prefer logical short-circuit operators (&&, ||) over bitwise (&, |) for boolean conditions to avoid NullPointerExceptions.",
+    "Keep expressions simple; do not chain too many operators in a single line."
+  ],
+  "summary": [
+    "Operators are fundamental symbols used to perform operations on operands.",
+    "They are categorized into Arithmetic, Relational, Logical, Assignment, Bitwise, Unary, and Ternary.",
+    "Understanding operator precedence and associativity is critical for writing bug-free expressions.",
+    "Short-circuit operators improve efficiency and prevent runtime errors in certain scenarios."
+  ],
+  "quiz": [
+    {
+      "question": "What is the output of `System.out.println(10 + 20 + \"J\");`?",
+      "options": [
+        "1020J",
+        "30J",
+        "Error",
+        "J30"
+      ],
+      "answer": "30J",
+      "explanation": "Evaluation is from left to right. 10 + 20 is evaluated mathematically to 30. Then 30 + \"J\" becomes string concatenation, resulting in \"30J\"."
+    },
+    {
+      "question": "Which operator is used to perform unsigned right shift?",
+      "options": [
+        ">>",
+        "<<",
+        ">>>",
+        "<<<"
+      ],
+      "answer": ">>>",
+      "explanation": "The unsigned right shift operator `>>>` shifts zero into the leftmost position regardless of the sign."
+    }
+  ]
+}

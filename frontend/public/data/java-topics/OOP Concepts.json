@@ -1,0 +1,432 @@
+{
+  "title": "OOP Concepts",
+  "introduction": {
+    "what_it_is": "Object-Oriented Programming (OOP) is a programming paradigm that organizes software design around objects, which are instances of classes that bundle data (fields) and behavior (methods) together. Java is fundamentally an object-oriented language, and virtually every program you write in Java revolves around OOP principles. The four main pillars of OOP are Encapsulation, Inheritance, Polymorphism, and Abstraction, and they are supported through constructs such as classes, objects, interfaces, and abstract classes. These principles promote modularity, reusability, and maintainability in software development, making Java one of the most popular languages for building large-scale enterprise systems.",
+    "why_important": "OOP concepts are the backbone of Java programming and are essential for designing scalable, maintainable, and reusable software. By modeling real-world entities as objects, developers can break complex problems into smaller, more manageable pieces. OOP enables code reuse through inheritance, data protection through encapsulation, flexible behavior through polymorphism, and simplified interfaces through abstraction. Mastering these concepts is critical for Java developers, as virtually all Java frameworks (Spring, Hibernate, JavaFX) are built on OOP principles. Understanding OOP is also a fundamental requirement for technical interviews and professional Java development.",
+    "real_world": [
+      "Banking systems model accounts, customers, and transactions as objects with encapsulated data and behavior",
+      "E-commerce platforms use inheritance hierarchies for different product types (Electronics, Clothing, Books) sharing common attributes",
+      "Game development uses polymorphism to handle different character types through a common interface (move, attack, defend)",
+      "Android applications rely heavily on OOP with Activities, Fragments, and Views as objects in an inheritance hierarchy",
+      "Hospital management systems use abstraction to define common operations for different types of medical staff (doctors, nurses, technicians)"
+    ]
+  },
+  "detailed_theory": "**Object-Oriented Programming (OOP) in Java — A Comprehensive Guide**\\n\\nObject-Oriented Programming (OOP) is a programming paradigm that models software around real-world entities using **objects** and **classes**. Java was designed from the ground up as an object-oriented language (with the exception of primitive types), and understanding OOP is absolutely fundamental to becoming a proficient Java developer. In this section, we explore every major OOP concept in depth: Classes, Objects, Encapsulation, Inheritance, Polymorphism, Abstraction, and Interfaces.\\n\\n**Classes and Objects**\\n\\nA **class** is a blueprint or template that defines the structure and behavior of objects. It specifies what data (fields/attributes) an object will hold and what operations (methods) it can perform. A class itself does not occupy memory for its instance data — it is merely a definition. An **object** is a concrete instance of a class, created at runtime using the `new` keyword. When an object is created, memory is allocated on the heap for its instance variables, and a reference to that memory is returned. Every object has three characteristics: **state** (the values of its fields), **behavior** (the methods it exposes), and **identity** (a unique reference, typically the memory address managed by the JVM). Java supports having multiple objects of the same class, each with its own independent state. Classes can also contain **constructors** (special methods invoked during object creation), **static members** (shared across all instances), and **nested classes** (classes defined within another class).\\n\\n**Encapsulation**\\n\\nEncapsulation is the OOP principle of bundling data and the methods that operate on that data within a single unit (a class) while restricting direct access to the internal state. In Java, encapsulation is achieved primarily through **access modifiers**: `private`, `protected`, `default` (package-private), and `public`. The standard practice is to declare fields as `private` and provide `public` getter and setter methods to control access. This approach is often called **data hiding** because the internal representation is hidden from outside classes. Encapsulation provides several benefits: it protects data integrity by allowing validation in setters, it reduces coupling between classes because internal changes don't affect external code, and it makes the class easier to test and maintain. A well-encapsulated class is like a capsule — you interact with it through a well-defined interface without worrying about its internal workings. The JavaBeans convention, which is foundational to frameworks like Spring and Hibernate, relies entirely on encapsulation patterns with private fields and public getters/setters.\\n\\n**Inheritance**\\n\\nInheritance is the mechanism by which one class (the **subclass** or **child class**) acquires the properties and behaviors of another class (the **superclass** or **parent class**). In Java, inheritance is declared using the `extends` keyword for classes and `implements` for interfaces. Java supports **single inheritance** for classes (a class can extend only one class) to avoid the diamond problem, but supports **multiple inheritance of type** through interfaces. Inheritance establishes an **IS-A relationship** — for example, a `Dog` IS-A `Animal`. The subclass inherits all non-private members of the superclass and can **override** methods to provide specialized behavior. The `super` keyword is used to refer to the parent class's constructor or methods. Java has several types of inheritance: **single** (one parent, one child), **multilevel** (a chain of inheritance like Animal → Mammal → Dog), and **hierarchical** (one parent, multiple children like Shape → Circle, Rectangle, Triangle). The `Object` class is the root of the Java class hierarchy — every class implicitly extends `Object`, inheriting methods like `toString()`, `equals()`, `hashCode()`, and `clone()`. Inheritance promotes code reuse and establishes a natural hierarchy, but should be used judiciously — the principle of **composition over inheritance** suggests that using composition (HAS-A) is often more flexible than deep inheritance hierarchies.\\n\\n**Polymorphism**\\n\\nPolymorphism, meaning \"many forms,\" is the ability of an object to take on different forms or for a single interface to represent different underlying types. Java supports two types of polymorphism: **compile-time (static) polymorphism** and **runtime (dynamic) polymorphism**. Compile-time polymorphism is achieved through **method overloading**, where multiple methods in the same class share the same name but differ in parameter lists (number, type, or order of parameters). The compiler determines which method to call based on the arguments passed. Runtime polymorphism is achieved through **method overriding**, where a subclass provides a specific implementation of a method already defined in its superclass. The JVM determines which method to call at runtime based on the actual object type, not the reference type — this is called **dynamic method dispatch**. For example, if a `Shape` reference points to a `Circle` object, calling `draw()` will execute `Circle`'s version of the method. Polymorphism is the foundation of many design patterns, including Strategy, Template Method, and Factory patterns. It enables writing code that is open for extension but closed for modification (the Open/Closed Principle). The `@Override` annotation is a best practice to indicate overridden methods, as it triggers compile-time checking.\\n\\n**Abstraction**\\n\\nAbstraction is the process of hiding implementation details and showing only essential features to the user. It answers the question \"what does it do?\" rather than \"how does it do it?\" In Java, abstraction is achieved through **abstract classes** and **interfaces**. An **abstract class** is declared with the `abstract` keyword and can contain both abstract methods (without a body) and concrete methods (with implementation). Abstract classes cannot be instantiated directly — they must be subclassed, and the subclass must provide implementations for all abstract methods (unless the subclass is also abstract). Abstract classes are ideal when you want to provide a common base with some shared implementation. For example, an abstract `Vehicle` class might have a concrete `startEngine()` method but an abstract `calculateFuelEfficiency()` method that varies by vehicle type. Abstraction reduces complexity by allowing developers to work with high-level concepts rather than low-level implementation details. It is closely related to encapsulation but operates at a higher level — encapsulation hides data, while abstraction hides complexity.\\n\\n**Interfaces**\\n\\nAn **interface** in Java is a reference type that defines a contract — a set of abstract methods that implementing classes must provide. Before Java 8, interfaces could only contain abstract methods and constants. Java 8 introduced **default methods** (with the `default` keyword, providing a body) and **static methods** in interfaces, and Java 9 added **private methods**. Interfaces are declared using the `interface` keyword and implemented using `implements`. A class can implement multiple interfaces, which is Java's mechanism for achieving multiple inheritance of behavior. Interfaces establish a **CAN-DO** or **behaves-as** relationship — for example, a class that implements `Serializable` CAN be serialized. Key Java interfaces include `Comparable`, `Iterable`, `Runnable`, `Callable`, and the collection interfaces (`List`, `Set`, `Map`). **Functional interfaces** (interfaces with exactly one abstract method) are the foundation of Java's lambda expressions and the Stream API, introduced in Java 8. The `@FunctionalInterface` annotation is used to mark such interfaces. Interfaces promote loose coupling because code can depend on the interface rather than a specific implementation, making it easy to swap implementations.\\n\\n**Comparing Abstract Classes and Interfaces**\\n\\nA common interview question is when to use an abstract class versus an interface. Abstract classes are best when you want to share code among closely related classes, when you need non-public members, or when you need to declare non-static, non-final fields. Interfaces are ideal for defining a contract that unrelated classes can implement, for achieving multiple inheritance, and for enabling functional programming with lambdas. Since Java 8, the distinction has blurred somewhat, but the general rule remains: use abstract classes for IS-A relationships with shared state, and interfaces for capability contracts.\\n\\n**How OOP Works at the JVM Level**\\n\\nWhen you create an object with `new`, the JVM allocates memory on the heap. The object's metadata (class pointer, synchronization info) is stored in the **object header**, and instance fields follow. The JVM uses a **vtable** (virtual method table) for each class to support dynamic dispatch — when a method is called on an object, the JVM looks up the actual method implementation in the vtable of the object's runtime class. This is how polymorphism works under the hood. Static methods are resolved at compile time and do not participate in dynamic dispatch. The JVM's garbage collector reclaims memory from objects that are no longer referenced.\\n\\n**Evolution Across Java Versions**\\n\\nJava's OOP capabilities have evolved significantly. Java 1.0 introduced the core OOP model. Java 5 added generics and enums. Java 8 was a watershed with default methods in interfaces and lambda expressions, enabling a blend of OOP and functional programming. Java 14 introduced **records** (immutable data carriers), Java 15 added **sealed classes** (restricting which classes can extend a class), and Java 16 brought **pattern matching for instanceof**, further enriching OOP. These additions show Java's commitment to evolving OOP while maintaining backward compatibility.\\n\\n**Design Principles Built on OOP**\\n\\nThe SOLID principles are built on OOP: **Single Responsibility** (a class should have one reason to change), **Open/Closed** (open for extension, closed for modification — enabled by polymorphism), **Liskov Substitution** (subclasses should be substitutable for their parent), **Interface Segregation** (prefer small, specific interfaces), and **Dependency Inversion** (depend on abstractions, not concretions). Mastering these principles alongside OOP concepts is essential for writing clean, professional Java code.",
+  "key_features": {
+    "features": [
+      {"name": "Classes and Objects", "description": "Classes serve as blueprints defining state and behavior, while objects are runtime instances created using the new keyword. Every Java program is structured around classes."},
+      {"name": "Encapsulation", "description": "Bundles data and methods into a single unit with controlled access via access modifiers (private, protected, public). Achieved through private fields with public getters/setters."},
+      {"name": "Inheritance", "description": "Allows a class to inherit fields and methods from another class using the extends keyword, promoting code reuse. Java supports single class inheritance and multiple interface implementation."},
+      {"name": "Polymorphism", "description": "Enables objects to take multiple forms. Compile-time polymorphism uses method overloading, while runtime polymorphism uses method overriding with dynamic dispatch."},
+      {"name": "Abstraction", "description": "Hides implementation complexity and exposes only essential features through abstract classes and interfaces. Reduces complexity by focusing on what an object does rather than how."},
+      {"name": "Interfaces", "description": "Define contracts that classes must implement. Support multiple inheritance of type, default methods (Java 8+), static methods, and private methods (Java 9+)."},
+      {"name": "Constructors", "description": "Special methods invoked during object creation to initialize state. Support overloading, constructor chaining with this() and super(), and can be made private for singleton patterns."},
+      {"name": "Access Modifiers", "description": "Four levels of access control — private (class only), default (package), protected (package + subclasses), and public (everywhere) — enabling fine-grained encapsulation."}
+    ],
+    "advantages": [
+      "Promotes code reusability through inheritance, reducing code duplication across the application",
+      "Improves maintainability by organizing code into modular, self-contained classes and objects",
+      "Enhances data security through encapsulation, preventing unauthorized access to internal state",
+      "Provides flexibility through polymorphism, allowing the same interface to work with different types",
+      "Simplifies complex systems through abstraction, hiding implementation details from the user",
+      "Models real-world entities naturally, making code easier to understand and design",
+      "Supports design patterns and SOLID principles for scalable, professional-grade software",
+      "Enables team collaboration by defining clear interfaces between modules and components"
+    ],
+    "limitations": [
+      "Java supports only single class inheritance, which can limit reuse in certain design scenarios",
+      "OOP can add unnecessary complexity for simple programs that don't require object modeling",
+      "Deep inheritance hierarchies can become fragile and difficult to maintain (fragile base class problem)",
+      "Object creation incurs overhead in memory allocation and garbage collection compared to procedural approaches",
+      "Over-engineering with too many classes, interfaces, and abstractions can reduce readability and performance"
+    ]
+  },
+  "syntax": {
+    "explanation": "Java OOP syntax revolves around class declarations, object instantiation, inheritance with extends/implements, and access control with modifiers. Methods, constructors, and fields form the building blocks of class definitions.",
+    "breakdown": [
+      "class ClassName { } — Declares a new class, the fundamental unit of OOP in Java",
+      "ClassName obj = new ClassName(); — Creates an object (instance) of the class on the heap",
+      "class Child extends Parent { } — Child class inherits from Parent class (single inheritance)",
+      "class MyClass implements MyInterface { } — Class implements an interface contract",
+      "abstract class Shape { abstract void draw(); } — Abstract class with abstract method",
+      "interface Drawable { void draw(); default void fill() { } } — Interface with abstract and default methods"
+    ],
+    "rules": [
+      "A Java source file can contain only one public class, and its name must match the file name",
+      "Use the extends keyword for class inheritance (single only) and implements for interface implementation",
+      "Abstract classes cannot be instantiated directly; they must be subclassed with all abstract methods implemented",
+      "Method overriding requires the same method signature in the subclass; use @Override annotation for safety",
+      "Constructors are not inherited; subclass constructors must call super() explicitly or implicitly",
+      "Interfaces cannot contain instance fields — only public static final constants are allowed"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Classes, Objects, and Encapsulation",
+      "code": "public class Student {\n    private String name;\n    private int age;\n    private double gpa;\n\n    // Constructor\n    public Student(String name, int age, double gpa) {\n        this.name = name;\n        this.age = age;\n        this.gpa = gpa;\n    }\n\n    // Getter methods\n    public String getName() { return name; }\n    public int getAge() { return age; }\n    public double getGpa() { return gpa; }\n\n    // Setter with validation (encapsulation benefit)\n    public void setGpa(double gpa) {\n        if (gpa >= 0.0 && gpa <= 4.0) {\n            this.gpa = gpa;\n        } else {\n            System.out.println(\"Invalid GPA. Must be between 0.0 and 4.0\");\n        }\n    }\n\n    @Override\n    public String toString() {\n        return \"Student{name='\" + name + \"', age=\" + age + \", gpa=\" + gpa + \"}\";\n    }\n\n    public static void main(String[] args) {\n        Student s1 = new Student(\"Alice\", 20, 3.8);\n        Student s2 = new Student(\"Bob\", 22, 3.5);\n\n        System.out.println(s1);\n        System.out.println(s2);\n\n        s1.setGpa(3.9);\n        System.out.println(\"Updated: \" + s1);\n\n        s2.setGpa(5.0); // Invalid\n    }\n}",
+      "output": "Student{name='Alice', age=20, gpa=3.8}\nStudent{name='Bob', age=22, gpa=3.5}\nUpdated: Student{name='Alice', age=20, gpa=3.9}\nInvalid GPA. Must be between 0.0 and 4.0",
+      "explanation": "This example demonstrates classes, objects, and encapsulation. The Student class has private fields (encapsulation), a constructor for initialization, getters for controlled access, and a setter with validation that prevents invalid GPA values. Two objects are created using the new keyword, each with its own independent state. The toString() method is overridden from Object class to provide a meaningful string representation."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Inheritance and Method Overriding",
+      "code": "// Base class\nclass Animal {\n    protected String name;\n    protected int age;\n\n    public Animal(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n\n    public void eat() {\n        System.out.println(name + \" is eating.\");\n    }\n\n    public void makeSound() {\n        System.out.println(name + \" makes a generic sound.\");\n    }\n\n    @Override\n    public String toString() {\n        return name + \" (age: \" + age + \")\";\n    }\n}\n\n// Subclass - inherits from Animal\nclass Dog extends Animal {\n    private String breed;\n\n    public Dog(String name, int age, String breed) {\n        super(name, age); // Call parent constructor\n        this.breed = breed;\n    }\n\n    @Override\n    public void makeSound() {\n        System.out.println(name + \" barks: Woof! Woof!\");\n    }\n\n    public void fetch() {\n        System.out.println(name + \" is fetching the ball!\");\n    }\n\n    @Override\n    public String toString() {\n        return name + \" (\" + breed + \", age: \" + age + \")\";\n    }\n}\n\n// Another subclass\nclass Cat extends Animal {\n    private boolean isIndoor;\n\n    public Cat(String name, int age, boolean isIndoor) {\n        super(name, age);\n        this.isIndoor = isIndoor;\n    }\n\n    @Override\n    public void makeSound() {\n        System.out.println(name + \" meows: Meow! Meow!\");\n    }\n}\n\npublic class InheritanceDemo {\n    public static void main(String[] args) {\n        Animal animal = new Animal(\"Generic Animal\", 5);\n        Dog dog = new Dog(\"Buddy\", 3, \"Golden Retriever\");\n        Cat cat = new Cat(\"Whiskers\", 2, true);\n\n        // Inherited method\n        dog.eat();\n        cat.eat();\n\n        // Overridden methods (polymorphism)\n        animal.makeSound();\n        dog.makeSound();\n        cat.makeSound();\n\n        // Dog-specific method\n        dog.fetch();\n\n        // Polymorphic reference\n        Animal polyRef = new Dog(\"Rex\", 4, \"Labrador\");\n        polyRef.makeSound(); // Calls Dog's version at runtime\n\n        System.out.println(\"\\nAll animals:\");\n        System.out.println(animal);\n        System.out.println(dog);\n        System.out.println(cat);\n    }\n}",
+      "output": "Buddy is eating.\nWhiskers is eating.\nGeneric Animal makes a generic sound.\nBuddy barks: Woof! Woof!\nWhiskers meows: Meow! Meow!\nBuddy is fetching the ball!\nRex barks: Woof! Woof!\n\nAll animals:\nGeneric Animal (age: 5)\nBuddy (Golden Retriever, age: 3)\nWhiskers (age: 2)",
+      "explanation": "This example demonstrates inheritance and method overriding. Dog and Cat extend Animal, inheriting fields (name, age) and methods (eat). Both subclasses override makeSound() to provide specific implementations. The super keyword calls the parent constructor. When an Animal reference holds a Dog object, calling makeSound() invokes Dog's version at runtime — this is dynamic method dispatch (runtime polymorphism). Dog also defines a unique method fetch() not available in the parent class."
+    },
+    {
+      "level": "Advanced",
+      "title": "Abstraction with Abstract Classes and Interfaces",
+      "code": "// Interface defining a contract\ninterface Payable {\n    double calculatePay();\n    default String getPaymentMethod() {\n        return \"Direct Deposit\";\n    }\n}\n\ninterface Reportable {\n    String generateReport();\n}\n\n// Abstract class with shared implementation\nabstract class Employee implements Payable, Reportable {\n    protected String name;\n    protected String id;\n    protected double baseSalary;\n\n    public Employee(String name, String id, double baseSalary) {\n        this.name = name;\n        this.id = id;\n        this.baseSalary = baseSalary;\n    }\n\n    // Concrete method shared by all employees\n    public void displayInfo() {\n        System.out.println(\"ID: \" + id + \" | Name: \" + name + \" | Base Salary: $\" + baseSalary);\n    }\n\n    // Abstract method - each employee type calculates differently\n    public abstract String getRole();\n\n    @Override\n    public String generateReport() {\n        return \"Employee Report: \" + name + \" [\" + getRole() + \"] - Pay: $\" + String.format(\"%.2f\", calculatePay());\n    }\n}\n\n// Concrete class\nclass FullTimeEmployee extends Employee {\n    private double bonus;\n\n    public FullTimeEmployee(String name, String id, double baseSalary, double bonus) {\n        super(name, id, baseSalary);\n        this.bonus = bonus;\n    }\n\n    @Override\n    public double calculatePay() {\n        return baseSalary + bonus;\n    }\n\n    @Override\n    public String getRole() {\n        return \"Full-Time\";\n    }\n}\n\n// Another concrete class\nclass ContractEmployee extends Employee {\n    private int hoursWorked;\n    private double hourlyRate;\n\n    public ContractEmployee(String name, String id, double hourlyRate, int hoursWorked) {\n        super(name, id, 0);\n        this.hourlyRate = hourlyRate;\n        this.hoursWorked = hoursWorked;\n    }\n\n    @Override\n    public double calculatePay() {\n        return hourlyRate * hoursWorked;\n    }\n\n    @Override\n    public String getRole() {\n        return \"Contractor\";\n    }\n\n    @Override\n    public String getPaymentMethod() {\n        return \"Invoice Payment\";\n    }\n}\n\npublic class AbstractionDemo {\n    public static void main(String[] args) {\n        Employee[] employees = {\n            new FullTimeEmployee(\"Alice\", \"FT001\", 5000, 1200),\n            new FullTimeEmployee(\"Bob\", \"FT002\", 6000, 1500),\n            new ContractEmployee(\"Charlie\", \"CT001\", 75, 160),\n            new ContractEmployee(\"Diana\", \"CT002\", 100, 120)\n        };\n\n        System.out.println(\"=== Employee Payroll System ===\");\n        double totalPayroll = 0;\n\n        for (Employee emp : employees) {\n            emp.displayInfo();\n            System.out.println(\"  Role: \" + emp.getRole());\n            System.out.println(\"  Pay: $\" + String.format(\"%.2f\", emp.calculatePay()));\n            System.out.println(\"  Payment Method: \" + emp.getPaymentMethod());\n            System.out.println(\"  \" + emp.generateReport());\n            System.out.println();\n            totalPayroll += emp.calculatePay();\n        }\n\n        System.out.println(\"Total Payroll: $\" + String.format(\"%.2f\", totalPayroll));\n    }\n}",
+      "output": "=== Employee Payroll System ===\nID: FT001 | Name: Alice | Base Salary: $5000.0\n  Role: Full-Time\n  Pay: $6200.00\n  Payment Method: Direct Deposit\n  Employee Report: Alice [Full-Time] - Pay: $6200.00\n\nID: FT002 | Name: Bob | Base Salary: $6000.0\n  Role: Full-Time\n  Pay: $7500.00\n  Payment Method: Direct Deposit\n  Employee Report: Bob [Full-Time] - Pay: $7500.00\n\nID: CT001 | Name: Charlie | Base Salary: $0.0\n  Role: Contractor\n  Pay: $12000.00\n  Payment Method: Invoice Payment\n  Employee Report: Charlie [Contractor] - Pay: $12000.00\n\nID: CT002 | Name: Diana | Base Salary: $0.0\n  Role: Contractor\n  Pay: $12000.00\n  Payment Method: Invoice Payment\n  Employee Report: Diana [Contractor] - Pay: $12000.00\n\nTotal Payroll: $37700.00",
+      "explanation": "This example showcases abstraction using both abstract classes and interfaces. The Payable interface defines a contract with calculatePay() and a default method getPaymentMethod(). The abstract Employee class implements two interfaces and provides shared code (displayInfo, generateReport) while leaving getRole() abstract. FullTimeEmployee and ContractEmployee provide concrete implementations. ContractEmployee overrides the default interface method. The for-each loop demonstrates polymorphism — the same Employee reference seamlessly handles different employee types."
+    },
+    {
+      "level": "Real-world",
+      "title": "Complete OOP Design — Online Shopping System",
+      "code": "import java.util.ArrayList;\nimport java.util.List;\n\n// Interface for discountable items\ninterface Discountable {\n    double applyDiscount(double discountPercent);\n}\n\n// Abstract product class\nabstract class Product implements Discountable {\n    private String productId;\n    private String name;\n    private double price;\n\n    public Product(String productId, String name, double price) {\n        this.productId = productId;\n        this.name = name;\n        this.price = price;\n    }\n\n    public String getProductId() { return productId; }\n    public String getName() { return name; }\n    public double getPrice() { return price; }\n    protected void setPrice(double price) { this.price = price; }\n\n    public abstract String getCategory();\n\n    @Override\n    public double applyDiscount(double discountPercent) {\n        return price * (1 - discountPercent / 100);\n    }\n\n    @Override\n    public String toString() {\n        return String.format(\"[%s] %s - $%.2f (%s)\", productId, name, price, getCategory());\n    }\n}\n\n// Concrete product types\nclass Electronics extends Product {\n    private int warrantyMonths;\n\n    public Electronics(String id, String name, double price, int warrantyMonths) {\n        super(id, name, price);\n        this.warrantyMonths = warrantyMonths;\n    }\n\n    @Override\n    public String getCategory() { return \"Electronics\"; }\n\n    @Override\n    public String toString() {\n        return super.toString() + \" | Warranty: \" + warrantyMonths + \" months\";\n    }\n}\n\nclass Clothing extends Product {\n    private String size;\n\n    public Clothing(String id, String name, double price, String size) {\n        super(id, name, price);\n        this.size = size;\n    }\n\n    @Override\n    public String getCategory() { return \"Clothing\"; }\n\n    @Override\n    public double applyDiscount(double discountPercent) {\n        // Clothing gets an extra 5% off during sales\n        return getPrice() * (1 - (discountPercent + 5) / 100);\n    }\n}\n\n// Shopping Cart using composition (HAS-A relationship)\nclass ShoppingCart {\n    private List<Product> items;\n\n    public ShoppingCart() {\n        this.items = new ArrayList<>();\n    }\n\n    public void addItem(Product product) {\n        items.add(product);\n        System.out.println(\"Added: \" + product.getName());\n    }\n\n    public double calculateTotal() {\n        double total = 0;\n        for (Product item : items) {\n            total += item.getPrice();\n        }\n        return total;\n    }\n\n    public double calculateDiscountedTotal(double discountPercent) {\n        double total = 0;\n        for (Product item : items) {\n            total += item.applyDiscount(discountPercent); // Polymorphism!\n        }\n        return total;\n    }\n\n    public void displayCart() {\n        System.out.println(\"\\n=== Shopping Cart ===\");\n        for (Product item : items) {\n            System.out.println(\"  \" + item);\n        }\n        System.out.printf(\"  Total: $%.2f%n\", calculateTotal());\n    }\n}\n\npublic class ShoppingSystem {\n    public static void main(String[] args) {\n        // Create products (polymorphic creation)\n        Product laptop = new Electronics(\"E001\", \"Laptop Pro\", 1299.99, 24);\n        Product phone = new Electronics(\"E002\", \"SmartPhone X\", 799.99, 12);\n        Product shirt = new Clothing(\"C001\", \"Cotton Shirt\", 49.99, \"L\");\n        Product jacket = new Clothing(\"C002\", \"Winter Jacket\", 149.99, \"M\");\n\n        // Create cart and add items\n        ShoppingCart cart = new ShoppingCart();\n        cart.addItem(laptop);\n        cart.addItem(phone);\n        cart.addItem(shirt);\n        cart.addItem(jacket);\n\n        // Display cart\n        cart.displayCart();\n\n        // Apply 10% discount — polymorphism in action\n        double discounted = cart.calculateDiscountedTotal(10);\n        System.out.printf(\"%nAfter 10%% discount: $%.2f%n\", discounted);\n        System.out.printf(\"You save: $%.2f%n\", cart.calculateTotal() - discounted);\n    }\n}",
+      "output": "Added: Laptop Pro\nAdded: SmartPhone X\nAdded: Cotton Shirt\nAdded: Winter Jacket\n\n=== Shopping Cart ===\n  [E001] Laptop Pro - $1299.99 (Electronics) | Warranty: 24 months\n  [E002] SmartPhone X - $799.99 (Electronics) | Warranty: 12 months\n  [C001] Cotton Shirt - $49.99 (Clothing)\n  [C002] Winter Jacket - $149.99 (Clothing)\n  Total: $2299.96\n\nAfter 10% discount: $2039.97\nYou save: $259.99",
+      "explanation": "This real-world example combines all OOP concepts in an online shopping system. Product is an abstract class implementing the Discountable interface (abstraction). Electronics and Clothing extend Product with specific attributes and override methods (inheritance and polymorphism). Clothing overrides applyDiscount() to add an extra 5% off. ShoppingCart uses composition (HAS-A) to manage products. The calculateDiscountedTotal method demonstrates polymorphism — each product type calculates its discount differently through the same interface call. Fields are private with public getters (encapsulation)."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Access Modifiers in Java",
+        "headers": ["Modifier", "Same Class", "Same Package", "Subclass (Different Package)", "Everywhere"],
+        "rows": [
+          ["private", "Yes", "No", "No", "No"],
+          ["default (no modifier)", "Yes", "Yes", "No", "No"],
+          ["protected", "Yes", "Yes", "Yes", "No"],
+          ["public", "Yes", "Yes", "Yes", "Yes"]
+        ]
+      },
+      {
+        "title": "OOP Pillars Summary",
+        "headers": ["Pillar", "Purpose", "Java Mechanism", "Key Benefit"],
+        "rows": [
+          ["Encapsulation", "Hide internal state", "private fields + getters/setters", "Data protection and validation"],
+          ["Inheritance", "Reuse and extend", "extends keyword", "Code reuse and hierarchy"],
+          ["Polymorphism", "Multiple forms", "Overloading and overriding", "Flexibility and extensibility"],
+          ["Abstraction", "Hide complexity", "abstract classes and interfaces", "Simplified interface"]
+        ]
+      },
+      {
+        "title": "Method Overloading vs Overriding",
+        "headers": ["Feature", "Overloading (Compile-time)", "Overriding (Runtime)"],
+        "rows": [
+          ["Binding", "Compile-time (static)", "Runtime (dynamic)"],
+          ["Method signature", "Same name, different parameters", "Same name and parameters"],
+          ["Classes involved", "Same class or subclass", "Superclass and subclass"],
+          ["Return type", "Can differ", "Must be same or covariant"],
+          ["Access modifier", "No restriction", "Cannot be more restrictive"],
+          ["Static methods", "Can be overloaded", "Cannot be overridden (hidden)"],
+          ["Annotation", "None required", "@Override recommended"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Abstract Class",
+        "concept_b": "Interface",
+        "explanation": "Abstract classes can have constructors, instance fields, and a mix of abstract and concrete methods; a class can extend only one abstract class. Interfaces cannot have constructors or instance fields (only constants), but a class can implement multiple interfaces. Since Java 8, interfaces can have default and static methods, and since Java 9, private methods. Use abstract classes when sharing state among related classes; use interfaces to define a contract for potentially unrelated classes."
+      },
+      {
+        "concept_a": "Inheritance (IS-A)",
+        "concept_b": "Composition (HAS-A)",
+        "explanation": "Inheritance creates a tight coupling between parent and child classes — changes to the parent can break children (fragile base class problem). Composition involves a class containing references to other objects, which is more flexible and easier to change. Modern Java best practice favors 'composition over inheritance': use inheritance only for true IS-A relationships, and prefer composition for code reuse. For example, a Car HAS-A Engine (composition) is more flexible than Engine extends Car (inheritance)."
+      },
+      {
+        "concept_a": "Compile-time Polymorphism",
+        "concept_b": "Runtime Polymorphism",
+        "explanation": "Compile-time polymorphism (method overloading) is resolved by the compiler based on method signatures. It is faster because the method to call is determined at compile time. Runtime polymorphism (method overriding) is resolved by the JVM at runtime using dynamic method dispatch, based on the actual object type. Runtime polymorphism enables flexible, extensible code but has a slight performance overhead due to vtable lookups."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "toString()",
+      "description": "Returns a string representation of the object. Inherited from Object class and commonly overridden in custom classes.",
+      "parameters": "None",
+      "return_value": "String — a textual representation of the object",
+      "example_usage": "System.out.println(student.toString());"
+    },
+    {
+      "name": "equals(Object obj)",
+      "description": "Compares this object with another for logical equality. Should be overridden to compare field values instead of default reference comparison.",
+      "parameters": "Object obj — the object to compare with",
+      "return_value": "boolean — true if objects are logically equal, false otherwise",
+      "example_usage": "if (student1.equals(student2)) { /* equal */ }"
+    },
+    {
+      "name": "hashCode()",
+      "description": "Returns an integer hash code for the object. Must be overridden whenever equals() is overridden to maintain the contract.",
+      "parameters": "None",
+      "return_value": "int — hash code value for the object",
+      "example_usage": "int hash = student.hashCode();"
+    },
+    {
+      "name": "getClass()",
+      "description": "Returns the runtime class of the object. Useful for reflection and runtime type checking.",
+      "parameters": "None",
+      "return_value": "Class<?> — the Class object representing the runtime class",
+      "example_usage": "System.out.println(obj.getClass().getName());"
+    },
+    {
+      "name": "instanceof operator",
+      "description": "Checks if an object is an instance of a specific class or interface at runtime. Essential for safe type casting.",
+      "parameters": "Type to check against",
+      "return_value": "boolean — true if the object is an instance of the specified type",
+      "example_usage": "if (animal instanceof Dog) { Dog d = (Dog) animal; }"
+    },
+    {
+      "name": "clone()",
+      "description": "Creates and returns a shallow copy of the object. The class must implement Cloneable interface; otherwise CloneNotSupportedException is thrown.",
+      "parameters": "None",
+      "return_value": "Object — a shallow copy of the object",
+      "example_usage": "Student copy = (Student) student.clone();"
+    },
+    {
+      "name": "finalize()",
+      "description": "Called by the garbage collector before an object is destroyed. Deprecated since Java 9; use try-with-resources or Cleaner instead.",
+      "parameters": "None",
+      "return_value": "void",
+      "example_usage": "@Override protected void finalize() throws Throwable { /* cleanup */ }"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting to Call super() in Subclass Constructor",
+      "description": "When a parent class doesn't have a no-argument constructor, the subclass must explicitly call super() with appropriate arguments. The compiler inserts a no-arg super() call by default, which fails if the parent lacks one.",
+      "wrong_example": "class Animal {\n    String name;\n    Animal(String name) { this.name = name; }\n}\nclass Dog extends Animal {\n    Dog() {\n        // ERROR: no suitable constructor found\n        // Compiler tries to insert super() which doesn't exist\n    }\n}",
+      "correct_example": "class Animal {\n    String name;\n    Animal(String name) { this.name = name; }\n}\nclass Dog extends Animal {\n    Dog() {\n        super(\"Unknown Dog\"); // Explicitly call parent constructor\n    }\n}",
+      "debugging_tip": "If you see 'constructor not found' errors, check if the parent class has the required constructor. Always explicitly call super() with proper arguments when the parent lacks a no-arg constructor."
+    },
+    {
+      "title": "Confusing Method Overloading with Overriding",
+      "description": "Accidentally changing the parameter list when intending to override a method creates an overloaded method instead. The parent's method is never overridden, leading to unexpected behavior with polymorphism.",
+      "wrong_example": "class Animal {\n    void makeSound() { System.out.println(\"Generic sound\"); }\n}\nclass Dog extends Animal {\n    // This OVERLOADS, not overrides! Different parameter.\n    void makeSound(String sound) {\n        System.out.println(sound);\n    }\n}\n// Animal a = new Dog(); a.makeSound(); // Still prints \"Generic sound\"",
+      "correct_example": "class Animal {\n    void makeSound() { System.out.println(\"Generic sound\"); }\n}\nclass Dog extends Animal {\n    @Override  // Compiler checks the override is correct\n    void makeSound() {\n        System.out.println(\"Woof!\");\n    }\n}",
+      "debugging_tip": "Always use the @Override annotation when overriding methods. It causes a compile-time error if the method doesn't actually override a parent method, catching mistakes early."
+    },
+    {
+      "title": "Not Overriding equals() and hashCode() Together",
+      "description": "Overriding equals() without hashCode() (or vice versa) breaks the contract that equal objects must have equal hash codes. This causes issues with HashMap, HashSet, and other hash-based collections.",
+      "wrong_example": "class Student {\n    String name;\n    int id;\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Student)) return false;\n        Student s = (Student) o;\n        return id == s.id && name.equals(s.name);\n    }\n    // hashCode() NOT overridden!\n    // HashSet may store duplicate Students\n}",
+      "correct_example": "class Student {\n    String name;\n    int id;\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Student)) return false;\n        Student s = (Student) o;\n        return id == s.id && name.equals(s.name);\n    }\n    @Override\n    public int hashCode() {\n        return java.util.Objects.hash(name, id);\n    }\n}",
+      "debugging_tip": "Always override hashCode() when overriding equals(). Use Objects.hash() for a convenient implementation. Test with HashSet to ensure duplicates are properly detected."
+    },
+    {
+      "title": "Trying to Instantiate an Abstract Class",
+      "description": "Abstract classes cannot be instantiated directly with the new keyword. They serve as base classes that must be extended by concrete subclasses.",
+      "wrong_example": "abstract class Shape {\n    abstract double area();\n}\n// Compilation error:\nShape s = new Shape(); // Cannot instantiate abstract class",
+      "correct_example": "abstract class Shape {\n    abstract double area();\n}\nclass Circle extends Shape {\n    double radius;\n    Circle(double r) { this.radius = r; }\n    @Override\n    double area() { return Math.PI * radius * radius; }\n}\nShape s = new Circle(5.0); // Use concrete subclass",
+      "debugging_tip": "If you need to create an instance, either make the class non-abstract or create a concrete subclass. You can also use anonymous inner classes: Shape s = new Shape() { double area() { return 0; } };"
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {"question": "What are the four pillars of OOP?", "answer": "The four pillars are Encapsulation (hiding internal data behind access modifiers and providing getters/setters), Inheritance (allowing a class to inherit properties from another using extends), Polymorphism (ability of objects to take multiple forms through overloading and overriding), and Abstraction (hiding implementation details through abstract classes and interfaces). These principles work together to create modular, reusable, and maintainable code."},
+      {"question": "What is the difference between a class and an object?", "answer": "A class is a blueprint or template that defines the structure (fields) and behavior (methods) of objects. An object is a concrete instance of a class created at runtime using the new keyword. A class doesn't occupy memory for instance data, while an object is allocated memory on the heap. You can create multiple objects from the same class, each with its own independent state."},
+      {"question": "What is encapsulation and how is it achieved in Java?", "answer": "Encapsulation is the principle of bundling data (fields) and methods that operate on that data within a class, while restricting direct access to internal state. In Java, it is achieved by declaring fields as private and providing public getter and setter methods. Setters can include validation logic to ensure data integrity. This approach is fundamental to the JavaBeans convention used by frameworks like Spring and Hibernate."},
+      {"question": "What is inheritance in Java?", "answer": "Inheritance is the mechanism by which one class (child/subclass) acquires the properties and methods of another class (parent/superclass) using the extends keyword. It establishes an IS-A relationship. The child class inherits all non-private members and can override methods to provide specialized behavior. Java supports single class inheritance only to avoid the diamond problem."},
+      {"question": "Can a class extend multiple classes in Java?", "answer": "No, Java does not support multiple class inheritance. A class can extend only one other class. This design avoids the diamond problem where ambiguity arises if two parent classes have methods with the same signature. However, Java supports multiple inheritance of type through interfaces — a class can implement any number of interfaces."},
+      {"question": "What is the difference between method overloading and overriding?", "answer": "Method overloading is compile-time polymorphism where multiple methods in the same class have the same name but different parameter lists. Method overriding is runtime polymorphism where a subclass provides a specific implementation of a method already defined in its superclass with the exact same signature. Overloading is resolved at compile time, while overriding is resolved at runtime through dynamic method dispatch."},
+      {"question": "What is the purpose of the super keyword?", "answer": "The super keyword refers to the parent class. It has two primary uses: super() calls the parent class constructor (must be the first statement in the child constructor), and super.methodName() calls the parent's version of an overridden method. It is essential when the parent class doesn't have a no-argument constructor, as the child must explicitly invoke the appropriate parent constructor."},
+      {"question": "What is an abstract class?", "answer": "An abstract class is a class declared with the abstract keyword that cannot be instantiated directly. It can contain both abstract methods (without a body, declared with abstract keyword) and concrete methods (with implementation). Subclasses must implement all abstract methods unless they are also declared abstract. Abstract classes are used to provide a common base with some shared functionality."},
+      {"question": "What is the difference between an interface and an abstract class?", "answer": "Abstract classes can have constructors, instance variables, and a mix of abstract and concrete methods; a class can extend only one. Interfaces can only have constants (public static final), abstract methods, default methods (Java 8+), and static methods; a class can implement multiple interfaces. Use abstract classes for IS-A relationships with shared state, interfaces for defining contracts across unrelated classes."},
+      {"question": "What is the this keyword in Java?", "answer": "The this keyword refers to the current object instance. It is used to distinguish instance variables from local variables with the same name (this.name = name), to call another constructor of the same class (this()), and to pass the current object as a parameter. It cannot be used in static contexts because static methods don't belong to any instance."}
+    ],
+    "intermediate": [
+      {"question": "What is dynamic method dispatch in Java?", "answer": "Dynamic method dispatch is the mechanism by which the JVM determines which overridden method to call at runtime based on the actual type of the object, not the reference type. When a parent reference holds a child object and calls an overridden method, the JVM looks up the object's vtable to find the correct implementation. This is the foundation of runtime polymorphism in Java."},
+      {"question": "What are default methods in interfaces and why were they introduced?", "answer": "Default methods, introduced in Java 8, are interface methods with a body declared using the default keyword. They were introduced to allow adding new methods to existing interfaces without breaking backward compatibility with implementing classes. They enable interfaces to evolve over time and were essential for adding Stream API methods to collection interfaces like Iterable.forEach(). Classes can override default methods if needed."},
+      {"question": "Explain the diamond problem and how Java handles it.", "answer": "The diamond problem occurs when a class inherits from two classes that both inherit from a common ancestor, creating ambiguity about which inherited method to use. Java avoids this for classes by supporting only single class inheritance. For interfaces with default methods, if two interfaces provide conflicting default methods, the implementing class must explicitly override the method and choose which to call using InterfaceName.super.method()."},
+      {"question": "What is the difference between composition and inheritance?", "answer": "Inheritance creates an IS-A relationship (Dog IS-A Animal) with tight coupling. Composition creates a HAS-A relationship (Car HAS-A Engine) with loose coupling. Composition is more flexible because you can change the composed object at runtime, and changes to the composed class don't break the composing class. Modern best practice favors composition over inheritance for code reuse."},
+      {"question": "Can we override static methods in Java?", "answer": "No, static methods cannot be overridden because they belong to the class, not instances, and are resolved at compile time. If a subclass defines a static method with the same signature as the parent, it is called method hiding, not overriding. The method called depends on the reference type, not the object type. Using @Override on a static method causes a compilation error."},
+      {"question": "What is covariant return type in Java?", "answer": "Covariant return type, introduced in Java 5, allows an overriding method to return a more specific type than the parent method. For example, if a parent method returns Object, the overriding method can return String (since String is a subclass of Object). This eliminates the need for casting when calling the overriding method and makes the API more type-safe."},
+      {"question": "What is the purpose of the final keyword in OOP?", "answer": "The final keyword has three uses in OOP: a final class cannot be extended (e.g., String, Integer), a final method cannot be overridden by subclasses, and a final variable cannot be reassigned after initialization. Final classes prevent inheritance for security or design reasons. Final methods prevent subclasses from changing behavior. Blank final variables must be initialized in the constructor."},
+      {"question": "How does Java implement polymorphism at the JVM level?", "answer": "The JVM uses a virtual method table (vtable) for each class. The vtable contains pointers to the actual implementations of all virtual (overridable) methods. When a method is called on an object, the JVM looks up the method in the vtable of the object's runtime class. This lookup enables dynamic dispatch — the correct overridden method is invoked regardless of the reference type. Static and private methods bypass the vtable."},
+      {"question": "What are marker interfaces? Give examples.", "answer": "Marker interfaces are interfaces with no methods or constants — they serve as metadata tags to indicate that a class has a specific capability. Examples include Serializable (marks objects that can be serialized), Cloneable (marks objects that can be cloned), and Remote (marks objects for RMI). The JVM and frameworks check for these interfaces using instanceof. In modern Java, annotations like @interface have largely replaced marker interfaces."},
+      {"question": "Explain constructor chaining in Java.", "answer": "Constructor chaining is the practice of calling one constructor from another. Within the same class, this() is used (must be the first statement). To call the parent constructor, super() is used (also must be the first statement). This avoids code duplication in constructors. You cannot use both this() and super() in the same constructor because both must be the first statement. The chain always ends with a call to Object's constructor."}
+    ],
+    "advanced": [
+      {"question": "What are sealed classes in Java and how do they relate to OOP?", "answer": "Sealed classes, introduced as a preview in Java 15 and finalized in Java 17, allow a class to explicitly specify which classes can extend it using the permits keyword. This gives developers precise control over the inheritance hierarchy. Permitted subclasses must be final, sealed, or non-sealed. Sealed classes enable exhaustive pattern matching in switch expressions and represent a middle ground between open (normal) and closed (final) inheritance."},
+      {"question": "How do records relate to OOP concepts in Java?", "answer": "Records, introduced in Java 14, are special classes that act as transparent data carriers. They automatically generate the constructor, getters, equals(), hashCode(), and toString() methods based on the record components. Records are implicitly final (cannot be extended) and promote immutability. They represent a concise way to create value objects that embody encapsulation while reducing boilerplate code."},
+      {"question": "Explain the Liskov Substitution Principle with a Java example.", "answer": "The Liskov Substitution Principle (LSP) states that objects of a subclass should be substitutable for objects of the superclass without altering the correctness of the program. A classic violation is the Square-Rectangle problem: if Square extends Rectangle and overrides setWidth/setHeight to maintain equal sides, code expecting independent width/height changes breaks. The fix is to use composition or separate abstractions rather than forcing an IS-A relationship."},
+      {"question": "What is the difference between early binding and late binding in Java?", "answer": "Early binding (static binding) occurs at compile time for static, private, and final methods — the compiler determines which method to call based on the reference type. Late binding (dynamic binding) occurs at runtime for virtual methods — the JVM determines the method to call based on the actual object type using the vtable. Late binding is what enables runtime polymorphism. Only late-bound methods participate in dynamic dispatch."},
+      {"question": "How does Java handle multiple interface inheritance with conflicting default methods?", "answer": "When a class implements two interfaces with conflicting default methods, the compiler requires the class to override the conflicting method and resolve the ambiguity. The class can choose one interface's implementation using InterfaceName.super.methodName() or provide an entirely new implementation. If a class inherits a method from both a class and an interface, the class's method always wins (class wins rule)."},
+      {"question": "What is the double dispatch problem and how is the Visitor pattern related?", "answer": "Double dispatch is the need to select a method based on the runtime types of two objects, but Java's virtual dispatch only considers the receiver object. The Visitor pattern solves this by using two method calls: the element accepts a visitor (first dispatch on element type), and the visitor visits the element (second dispatch on visitor type). This pattern enables adding new operations to class hierarchies without modifying the classes."},
+      {"question": "Explain type erasure and how it affects OOP with generics.", "answer": "Type erasure is the process by which the Java compiler removes generic type information at compile time, replacing type parameters with their bounds (or Object if unbounded). This means generic types don't exist at runtime — a List<String> and List<Integer> are the same class at runtime. This affects OOP because you cannot use instanceof with generic types, cannot create generic arrays, and cannot call new T(). Generics provide compile-time safety but no runtime type information."},
+      {"question": "How do anonymous inner classes relate to interfaces and abstraction?", "answer": "Anonymous inner classes allow you to create a one-time implementation of an interface or abstract class inline without declaring a separate named class. They are commonly used for event handlers and callbacks. Since Java 8, functional interfaces (single abstract method) can be replaced with lambda expressions, which are more concise. Anonymous inner classes still have access to effectively final local variables from the enclosing scope."},
+      {"question": "What is the fragile base class problem and how can it be mitigated?", "answer": "The fragile base class problem occurs when changes to a base class break subclasses because the subclass depends on specific implementation details of the base class. For example, if a base class method internally calls another overridable method, overriding that method in a subclass can cause unexpected behavior. Mitigation strategies include using composition over inheritance, making classes final by default, documenting methods intended for overriding, and using the Template Method pattern."},
+      {"question": "How do Java's pattern matching features enhance OOP?", "answer": "Pattern matching for instanceof (Java 16) eliminates the need for explicit casting after type checks, reducing boilerplate code. Pattern matching for switch (Java 21) enables exhaustive switching over sealed class hierarchies, combining the benefits of sealed classes with type-safe branching. Record patterns allow deconstructing record objects in instanceof and switch. These features enhance OOP by making type-safe polymorphic code more readable and less error-prone."}
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a class Person with fields name and age, a constructor, and a display method. Create two Person objects and display their details.",
+      "Write a class BankAccount with private balance field and methods deposit(), withdraw(), and getBalance(). Demonstrate encapsulation.",
+      "Create a class Rectangle with fields length and width. Add methods to calculate area and perimeter.",
+      "Demonstrate method overloading by creating a Calculator class with multiple add() methods accepting different parameter types.",
+      "Create a simple inheritance hierarchy: Vehicle (parent) with Car and Bike subclasses. Add a describe() method to each.",
+      "Write a class with a default constructor and a parameterized constructor. Show constructor overloading.",
+      "Create a Student class and override the toString() method to display student information in a formatted way.",
+      "Demonstrate the use of the this keyword to resolve naming conflicts between instance variables and constructor parameters.",
+      "Create an interface Printable with a print() method. Implement it in two different classes.",
+      "Write a program that demonstrates the use of super keyword to call the parent class constructor and method."
+    ],
+    "medium": [
+      "Design a library system with a base class LibraryItem and subclasses Book, DVD, and Magazine. Include a checkout/return mechanism.",
+      "Create an abstract class Shape with abstract methods area() and perimeter(). Implement Circle, Rectangle, and Triangle subclasses.",
+      "Build an employee management system demonstrating all four OOP pillars with Manager and Developer classes.",
+      "Implement a simple banking application with SavingsAccount and CheckingAccount inheriting from a common Account class with different interest calculations.",
+      "Create an interface Sortable with a compareTo method and implement it in a Product class to sort products by price.",
+      "Design a notification system using interfaces (EmailNotification, SMSNotification, PushNotification) with a common Notifiable interface.",
+      "Write a program demonstrating runtime polymorphism with an array of Shape references pointing to different shape objects.",
+      "Create a class hierarchy for a zoo management system with encapsulated fields, constructors, and overridden methods.",
+      "Implement the Comparable interface in a custom class and sort an array of objects using Arrays.sort().",
+      "Build a simple menu-driven application using abstract classes and interfaces to demonstrate abstraction."
+    ],
+    "hard": [
+      "Design a complete e-commerce order processing system using OOP principles with Product, Order, Customer, and Payment classes.",
+      "Implement the Builder design pattern for creating complex objects with many optional parameters.",
+      "Create a plugin system using interfaces where new plugins can be added without modifying existing code (Open/Closed Principle).",
+      "Build a generic repository pattern with CRUD operations using abstract classes, interfaces, and generics.",
+      "Implement the Strategy pattern for a payment processing system with different payment strategies (CreditCard, PayPal, Crypto).",
+      "Design a real-time chat application model with User, Message, ChatRoom classes demonstrating all OOP concepts.",
+      "Create a school management system with Students, Teachers, Courses, and Grades with proper encapsulation and inheritance.",
+      "Implement the Observer design pattern for a stock price notification system using interfaces.",
+      "Build a file system model with File and Directory classes using the Composite design pattern.",
+      "Design a multi-level game character system with abstract base classes, interfaces for abilities, and composition for equipment."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a class hierarchy for a Vehicle Rental System. Design an abstract class Vehicle with properties (id, brand, dailyRate), an abstract method calculateRentalCost(int days), and an interface Insurable with a method getInsuranceCost(). Implement Car (extra charge per km if above 200km/day), Truck (extra charge for weight category), and Motorcycle (discount for rentals > 7 days). Calculate total rental cost for a fleet of mixed vehicles.",
+      "input": "Car: 5 days, 300km/day; Truck: 3 days, Heavy category; Motorcycle: 10 days",
+      "output": "Car Rental (5 days): $375.00 (base: $250.00 + km surcharge: $125.00)\nTruck Rental (3 days): $540.00 (base: $360.00 + heavy surcharge: $180.00)\nMotorcycle Rental (10 days): $425.00 (base: $500.00 - loyalty discount: $75.00)\nTotal Fleet Cost: $1340.00",
+      "constraints": "Use at least one abstract class, one interface, method overriding, and encapsulation. All amounts should be formatted to two decimal places.",
+      "solution": "import java.util.ArrayList;\nimport java.util.List;\n\ninterface Insurable {\n    double getInsuranceCost();\n}\n\nabstract class Vehicle implements Insurable {\n    private String id;\n    private String brand;\n    private double dailyRate;\n\n    public Vehicle(String id, String brand, double dailyRate) {\n        this.id = id;\n        this.brand = brand;\n        this.dailyRate = dailyRate;\n    }\n\n    public String getId() { return id; }\n    public String getBrand() { return brand; }\n    public double getDailyRate() { return dailyRate; }\n\n    public abstract double calculateRentalCost(int days);\n    public abstract String getRentalBreakdown(int days);\n}\n\nclass Car extends Vehicle {\n    private double kmPerDay;\n    private static final double KM_SURCHARGE_RATE = 0.25;\n    private static final int FREE_KM_LIMIT = 200;\n\n    public Car(String id, String brand, double dailyRate, double kmPerDay) {\n        super(id, brand, dailyRate);\n        this.kmPerDay = kmPerDay;\n    }\n\n    @Override\n    public double calculateRentalCost(int days) {\n        double base = getDailyRate() * days;\n        double surcharge = 0;\n        if (kmPerDay > FREE_KM_LIMIT) {\n            surcharge = (kmPerDay - FREE_KM_LIMIT) * KM_SURCHARGE_RATE * days;\n        }\n        return base + surcharge;\n    }\n\n    @Override\n    public String getRentalBreakdown(int days) {\n        double base = getDailyRate() * days;\n        double surcharge = (kmPerDay > FREE_KM_LIMIT) ? (kmPerDay - FREE_KM_LIMIT) * KM_SURCHARGE_RATE * days : 0;\n        return String.format(\"Car Rental (%d days): $%.2f (base: $%.2f + km surcharge: $%.2f)\", days, base + surcharge, base, surcharge);\n    }\n\n    @Override\n    public double getInsuranceCost() { return 15.0; }\n}\n\nclass Truck extends Vehicle {\n    private String weightCategory;\n\n    public Truck(String id, String brand, double dailyRate, String weightCategory) {\n        super(id, brand, dailyRate);\n        this.weightCategory = weightCategory;\n    }\n\n    @Override\n    public double calculateRentalCost(int days) {\n        double base = getDailyRate() * days;\n        double surcharge = weightCategory.equalsIgnoreCase(\"Heavy\") ? base * 0.5 : base * 0.2;\n        return base + surcharge;\n    }\n\n    @Override\n    public String getRentalBreakdown(int days) {\n        double base = getDailyRate() * days;\n        double surcharge = weightCategory.equalsIgnoreCase(\"Heavy\") ? base * 0.5 : base * 0.2;\n        return String.format(\"Truck Rental (%d days): $%.2f (base: $%.2f + %s surcharge: $%.2f)\", days, base + surcharge, base, weightCategory.toLowerCase(), surcharge);\n    }\n\n    @Override\n    public double getInsuranceCost() { return 30.0; }\n}\n\nclass Motorcycle extends Vehicle {\n    private static final int LOYALTY_THRESHOLD = 7;\n    private static final double DISCOUNT_RATE = 0.15;\n\n    public Motorcycle(String id, String brand, double dailyRate) {\n        super(id, brand, dailyRate);\n    }\n\n    @Override\n    public double calculateRentalCost(int days) {\n        double base = getDailyRate() * days;\n        if (days > LOYALTY_THRESHOLD) {\n            return base * (1 - DISCOUNT_RATE);\n        }\n        return base;\n    }\n\n    @Override\n    public String getRentalBreakdown(int days) {\n        double base = getDailyRate() * days;\n        double discount = days > LOYALTY_THRESHOLD ? base * DISCOUNT_RATE : 0;\n        return String.format(\"Motorcycle Rental (%d days): $%.2f (base: $%.2f - loyalty discount: $%.2f)\", days, base - discount, base, discount);\n    }\n\n    @Override\n    public double getInsuranceCost() { return 10.0; }\n}\n\npublic class VehicleRentalSystem {\n    public static void main(String[] args) {\n        Car car = new Car(\"C001\", \"Toyota\", 50.0, 300);\n        Truck truck = new Truck(\"T001\", \"Ford\", 120.0, \"Heavy\");\n        Motorcycle moto = new Motorcycle(\"M001\", \"Honda\", 50.0);\n\n        int[] rentalDays = {5, 3, 10};\n        Vehicle[] fleet = {car, truck, moto};\n\n        double totalCost = 0;\n        for (int i = 0; i < fleet.length; i++) {\n            System.out.println(fleet[i].getRentalBreakdown(rentalDays[i]));\n            totalCost += fleet[i].calculateRentalCost(rentalDays[i]);\n        }\n        System.out.printf(\"Total Fleet Cost: $%.2f%n\", totalCost);\n    }\n}"
+    },
+    {
+      "statement": "Implement a simple Shape Drawing application using all four OOP pillars. Create an interface Drawable with draw() and resize(double factor) methods. Create an abstract class Shape with common properties (color, filled). Implement Circle, Rectangle, and Triangle. Use polymorphism to draw all shapes from an array and demonstrate encapsulation with validation.",
+      "input": "Circle(red, 5.0), Rectangle(blue, 4.0, 6.0), Triangle(green, 3.0, 4.0, 5.0)",
+      "output": "Drawing Circle [red, filled] - Radius: 5.0, Area: 78.54\nDrawing Rectangle [blue, filled] - 4.0x6.0, Area: 24.00\nDrawing Triangle [green, filled] - Sides: 3.0, 4.0, 5.0, Area: 6.00\n\nAfter resizing by 2.0x:\nDrawing Circle [red, filled] - Radius: 10.0, Area: 314.16\nDrawing Rectangle [blue, filled] - 8.0x12.0, Area: 96.00\nDrawing Triangle [green, filled] - Sides: 6.0, 8.0, 10.0, Area: 24.00",
+      "constraints": "Must demonstrate encapsulation (private fields with validation), inheritance (extends), polymorphism (common reference type), and abstraction (abstract class + interface). Area calculations must be accurate.",
+      "solution": "interface Drawable {\n    void draw();\n    void resize(double factor);\n}\n\nabstract class Shape implements Drawable {\n    private String color;\n    private boolean filled;\n\n    public Shape(String color, boolean filled) {\n        this.color = color;\n        this.filled = filled;\n    }\n\n    public String getColor() { return color; }\n    public boolean isFilled() { return filled; }\n\n    public void setColor(String color) {\n        if (color != null && !color.isEmpty()) this.color = color;\n    }\n\n    public abstract double area();\n\n    protected String getDescription() {\n        return \"[\" + color + \", \" + (filled ? \"filled\" : \"not filled\") + \"]\";\n    }\n}\n\nclass Circle extends Shape {\n    private double radius;\n\n    public Circle(String color, double radius) {\n        super(color, true);\n        this.radius = radius > 0 ? radius : 1.0;\n    }\n\n    @Override\n    public double area() { return Math.PI * radius * radius; }\n\n    @Override\n    public void draw() {\n        System.out.printf(\"Drawing Circle %s - Radius: %.1f, Area: %.2f%n\", getDescription(), radius, area());\n    }\n\n    @Override\n    public void resize(double factor) {\n        if (factor > 0) radius *= factor;\n    }\n}\n\nclass Rectangle extends Shape {\n    private double width, height;\n\n    public Rectangle(String color, double width, double height) {\n        super(color, true);\n        this.width = width > 0 ? width : 1.0;\n        this.height = height > 0 ? height : 1.0;\n    }\n\n    @Override\n    public double area() { return width * height; }\n\n    @Override\n    public void draw() {\n        System.out.printf(\"Drawing Rectangle %s - %.1fx%.1f, Area: %.2f%n\", getDescription(), width, height, area());\n    }\n\n    @Override\n    public void resize(double factor) {\n        if (factor > 0) { width *= factor; height *= factor; }\n    }\n}\n\nclass Triangle extends Shape {\n    private double a, b, c;\n\n    public Triangle(String color, double a, double b, double c) {\n        super(color, true);\n        this.a = a; this.b = b; this.c = c;\n    }\n\n    @Override\n    public double area() {\n        double s = (a + b + c) / 2;\n        return Math.sqrt(s * (s - a) * (s - b) * (s - c));\n    }\n\n    @Override\n    public void draw() {\n        System.out.printf(\"Drawing Triangle %s - Sides: %.1f, %.1f, %.1f, Area: %.2f%n\", getDescription(), a, b, c, area());\n    }\n\n    @Override\n    public void resize(double factor) {\n        if (factor > 0) { a *= factor; b *= factor; c *= factor; }\n    }\n}\n\npublic class ShapeDrawingApp {\n    public static void main(String[] args) {\n        Shape[] shapes = {\n            new Circle(\"red\", 5.0),\n            new Rectangle(\"blue\", 4.0, 6.0),\n            new Triangle(\"green\", 3.0, 4.0, 5.0)\n        };\n\n        for (Shape s : shapes) s.draw();\n\n        System.out.println(\"\\nAfter resizing by 2.0x:\");\n        for (Shape s : shapes) {\n            s.resize(2.0);\n            s.draw();\n        }\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Applications",
+      "explanation": "Enterprise Java applications (built with Spring, Jakarta EE) are entirely structured around OOP. Services, repositories, controllers, and entities are all classes organized in inheritance hierarchies and implementing interfaces. Dependency injection — a core enterprise pattern — relies on programming to interfaces (abstraction) and polymorphic bean resolution."
+    },
+    {
+      "field": "Banking Systems",
+      "explanation": "Banking software models accounts (SavingsAccount, CheckingAccount, LoanAccount) as classes inheriting from a common Account base class. Encapsulation protects sensitive data like balance and PIN. Polymorphism allows uniform processing of different transaction types through a common Transaction interface. OOP ensures regulatory compliance through well-structured, auditable code."
+    },
+    {
+      "field": "Android Development",
+      "explanation": "Android's entire framework is built on OOP. Activities, Fragments, Views, and Services are classes in deep inheritance hierarchies. Developers extend base classes (AppCompatActivity, RecyclerView.Adapter) and implement interfaces (OnClickListener, Serializable). The lifecycle callbacks use the Template Method pattern, a direct application of polymorphism and inheritance."
+    },
+    {
+      "field": "Web Applications",
+      "explanation": "Java web applications use OOP extensively — servlets extend HttpServlet, Spring controllers are annotated classes, and data access objects implement repository interfaces. The MVC pattern organizes web apps into Model (data classes), View (templates), and Controller (handler classes). OOP enables clean separation of concerns and testable code through interface-based design."
+    },
+    {
+      "field": "Microservices",
+      "explanation": "Microservices architectures use OOP to define domain models, service interfaces, and API contracts. Each microservice encapsulates its business logic within well-defined class boundaries. Interface-based design enables swapping implementations (e.g., different database adapters) without changing business logic. Abstract classes provide common cross-cutting concerns like logging and error handling."
+    },
+    {
+      "field": "Cloud Applications",
+      "explanation": "Cloud-native Java applications use OOP for modeling cloud resources, implementing provider-agnostic interfaces (e.g., a StorageService interface with S3 and Azure Blob implementations), and building event-driven architectures. Polymorphism enables writing cloud-portable code that works across AWS, Azure, and GCP. Encapsulation protects configuration credentials and API keys."
+    }
+  ],
+  "best_practices": [
+    "Follow the Single Responsibility Principle — each class should have only one reason to change",
+    "Prefer composition over inheritance to avoid tight coupling and the fragile base class problem",
+    "Always use the @Override annotation when overriding methods to catch errors at compile time",
+    "Make fields private and provide getters/setters only when necessary — minimize the public API",
+    "Program to interfaces, not implementations — declare variables and parameters as interface types",
+    "Keep inheritance hierarchies shallow (2-3 levels max) to maintain readability and maintainability",
+    "Override equals() and hashCode() together whenever you override either one",
+    "Use abstract classes for IS-A relationships with shared state; use interfaces for capability contracts",
+    "Make classes final by default unless you specifically design them for extension",
+    "Follow the Liskov Substitution Principle — subclasses must be substitutable for their parent class without breaking correctness"
+  ],
+  "summary": [
+    "OOP organizes code around objects that bundle data (state) and behavior (methods) together",
+    "Encapsulation hides internal data using private fields and exposes controlled access through getters/setters",
+    "Inheritance enables code reuse through parent-child class relationships using the extends keyword",
+    "Polymorphism allows objects to take multiple forms — overloading (compile-time) and overriding (runtime)",
+    "Abstraction hides complexity through abstract classes (partial implementation) and interfaces (pure contracts)",
+    "Interfaces support multiple inheritance of type and enable loose coupling between components",
+    "Java supports single class inheritance but multiple interface implementation to avoid the diamond problem",
+    "The super keyword calls parent constructors and methods; the this keyword refers to the current instance",
+    "Access modifiers (private, default, protected, public) control visibility at class, package, and hierarchy levels",
+    "Modern Java (8-17+) enhances OOP with default methods, records, sealed classes, and pattern matching"
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is NOT a pillar of Object-Oriented Programming?",
+      "options": ["A) Encapsulation", "B) Compilation", "C) Polymorphism", "D) Abstraction"],
+      "answer": "B) Compilation",
+      "explanation": "The four pillars of OOP are Encapsulation, Inheritance, Polymorphism, and Abstraction. Compilation is a phase in the Java build process, not an OOP principle."
+    },
+    {
+      "question": "What is the output when a parent reference holds a child object and calls an overridden method?",
+      "options": ["A) Parent's method is called", "B) Child's method is called", "C) Compilation error", "D) Runtime exception"],
+      "answer": "B) Child's method is called",
+      "explanation": "This is runtime polymorphism (dynamic method dispatch). The JVM determines the actual object type at runtime and calls the child's overridden version of the method, regardless of the reference type."
+    },
+    {
+      "question": "Which keyword is used to prevent a class from being inherited?",
+      "options": ["A) static", "B) abstract", "C) final", "D) private"],
+      "answer": "C) final",
+      "explanation": "A class declared as final cannot be extended by any other class. For example, String and Integer are final classes in Java. Abstract has the opposite effect — abstract classes are designed to be inherited."
+    },
+    {
+      "question": "How many classes can a Java class extend?",
+      "options": ["A) Unlimited", "B) Two", "C) One", "D) Zero"],
+      "answer": "C) One",
+      "explanation": "Java supports only single class inheritance. A class can extend exactly one other class. If no extends clause is specified, the class implicitly extends Object. Multiple inheritance of type is achieved through interfaces."
+    },
+    {
+      "question": "What is method overloading?",
+      "options": ["A) Redefining a parent method in a child class", "B) Having multiple methods with the same name but different parameters", "C) Calling a method multiple times", "D) Making a method final"],
+      "answer": "B) Having multiple methods with the same name but different parameters",
+      "explanation": "Method overloading is compile-time polymorphism where methods share the same name but differ in parameter count, types, or order. The compiler determines which method to call based on the arguments passed."
+    },
+    {
+      "question": "Which access modifier provides the most restrictive access?",
+      "options": ["A) public", "B) protected", "C) default", "D) private"],
+      "answer": "D) private",
+      "explanation": "Private is the most restrictive access modifier. Private members are accessible only within the same class, not even by subclasses or other classes in the same package."
+    },
+    {
+      "question": "What happens when you try to instantiate an abstract class?",
+      "options": ["A) An object is created normally", "B) A runtime exception occurs", "C) A compilation error occurs", "D) The JVM ignores it"],
+      "answer": "C) A compilation error occurs",
+      "explanation": "Abstract classes cannot be instantiated using the new keyword. The compiler generates an error. You must create a concrete subclass that implements all abstract methods and instantiate that subclass instead."
+    },
+    {
+      "question": "Since Java 8, interfaces can contain which of the following?",
+      "options": ["A) Instance variables", "B) Constructors", "C) Default methods with a body", "D) Private instance fields"],
+      "answer": "C) Default methods with a body",
+      "explanation": "Java 8 introduced default methods (using the default keyword) that provide a method body in interfaces. This allows interfaces to evolve without breaking existing implementations. Interfaces still cannot have instance variables or constructors."
+    },
+    {
+      "question": "What is the purpose of the super keyword in a constructor?",
+      "options": ["A) To call a sibling constructor", "B) To call the parent class constructor", "C) To create a new object", "D) To access static methods"],
+      "answer": "B) To call the parent class constructor",
+      "explanation": "The super() call in a constructor invokes the parent class constructor. It must be the first statement in the constructor. If not explicitly written, the compiler automatically inserts a no-arg super() call."
+    },
+    {
+      "question": "Which design principle suggests using interfaces over concrete class dependencies?",
+      "options": ["A) Single Responsibility Principle", "B) Don't Repeat Yourself", "C) Dependency Inversion Principle", "D) KISS Principle"],
+      "answer": "C) Dependency Inversion Principle",
+      "explanation": "The Dependency Inversion Principle (the 'D' in SOLID) states that high-level modules should depend on abstractions (interfaces), not concrete implementations. This enables loose coupling and makes code easier to test, maintain, and extend."
+    }
+  ]
+}

@@ -1,0 +1,360 @@
+{
+  "title": "Decorators",
+  "introduction": {
+    "what_it_is": "A decorator in Python is a design pattern that allows a user to add new functionality to an existing object (like a function or a method) without modifying its structure.",
+    "why_important": "Decorators are essential for writing clean, DRY (Don't Repeat Yourself) code. They allow for the separation of concerns, letting you extract boilerplate code (like logging, authentication, or timing) away from core business logic.",
+    "real_world": [
+      "In web frameworks like Flask, decorators (`@app.route()`) are used to bind a URL to a specific function.",
+      "Checking if a user is authenticated (`@login_required`) before allowing them to access a specific page.",
+      "Measuring the execution time of a data processing function without cluttering the function's code."
+    ]
+  },
+  "detailed_theory": "To understand decorators, one must first grasp the concept that in Python, functions are 'first-class citizens'. This means functions can be assigned to variables, passed as arguments to other functions, and returned from other functions.\n\nA decorator is essentially a function that takes another function as an argument, extends its behavior, and returns a new function with the extended behavior, all without explicitly modifying the original function's source code.\n\nThe basic anatomy of a decorator involves an outer function that accepts the target function, and an inner function (the 'wrapper') that performs the added functionality before and/or after calling the target function. The outer function then returns this wrapper function.\n\nWhile you can apply a decorator manually by passing a function into it (e.g., `my_func = my_decorator(my_func)`), Python provides a much cleaner syntax using the `@` symbol, known as 'pie syntax'. By placing `@decorator_name` directly above a function definition, Python automatically applies the decorator.\n\nDecorators become slightly more complex when the function they are decorating accepts arguments. To handle this, the inner wrapper function must use `*args` and `**kwargs` to accept an arbitrary number of positional and keyword arguments, and then pass them down to the original function.\n\nFurthermore, decorators themselves can accept arguments (e.g., `@repeat(num_times=3)`). This requires a three-level nested function structure: the outermost function takes the decorator arguments, the middle function takes the decorated function, and the innermost wrapper takes the function arguments.\n\nOne downside of decorators is that they obscure the metadata of the original function (like its `__name__` and docstring), replacing them with the wrapper's metadata. To fix this, Python provides `functools.wraps`, a utility decorator that copies the metadata from the original function to the wrapper.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Higher-Order Functions",
+        "description": "Decorators rely on the ability to pass functions as arguments and return them."
+      },
+      {
+        "name": "Pie Syntax (`@`)",
+        "description": "Syntactic sugar that makes applying decorators clean and readable."
+      },
+      {
+        "name": "Wrapper Functions",
+        "description": "Inner functions that encapsulate the added behavior around the original function."
+      }
+    ],
+    "advantages": [
+      "Promotes code reuse by extracting boilerplate code.",
+      "Improves code readability by separating core logic from utility logic.",
+      "Allows modifying behavior of functions dynamically at runtime."
+    ],
+    "limitations": [
+      "Can make debugging slightly harder as tracebacks route through the wrapper.",
+      "Nested decorators or decorators with arguments can become complex to read and write.",
+      "Hides original function metadata unless `functools.wraps` is used."
+    ]
+  },
+  "syntax": {
+    "explanation": "A decorator is defined as a function returning a function. It is applied using the `@` symbol.",
+    "breakdown": [
+      "def my_decorator(func):",
+      "    def wrapper(*args, **kwargs):",
+      "        # Do something before",
+      "        result = func(*args, **kwargs)",
+      "        # Do something after",
+      "        return result",
+      "    return wrapper",
+      "",
+      "@my_decorator",
+      "def target_function():",
+      "    pass"
+    ],
+    "rules": [
+      "The decorator function must return a callable (usually the wrapper function).",
+      "The wrapper should accept `*args, **kwargs` to remain universally applicable.",
+      "Always use `@functools.wraps(func)` on the wrapper."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "A Simple Logging Decorator",
+      "code": "def log_call(func):\n    def wrapper():\n        print(f'Calling {func.__name__}')\n        func()\n        print(f'Finished {func.__name__}')\n    return wrapper\n\n@log_call\ndef say_hello():\n    print('Hello!')\n\nsay_hello()",
+      "output": "Calling say_hello\nHello!\nFinished say_hello",
+      "explanation": "The `log_call` decorator wraps `say_hello`. When `say_hello()` is called, it actually executes `wrapper()`, which adds print statements before and after."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Decorators with Arguments",
+      "code": "def execute_twice(func):\n    def wrapper(*args, **kwargs):\n        func(*args, **kwargs)\n        return func(*args, **kwargs)\n    return wrapper\n\n@execute_twice\ndef greet(name):\n    print(f'Welcome, {name}')\n\ngreet('Alice')",
+      "output": "Welcome, Alice\nWelcome, Alice",
+      "explanation": "The wrapper accepts `*args` and `**kwargs` so it works with functions that require parameters. It calls the original function twice."
+    },
+    {
+      "level": "Advanced",
+      "title": "Decorator that takes Arguments",
+      "code": "def repeat(num_times):\n    def decorator_repeat(func):\n        def wrapper(*args, **kwargs):\n            for _ in range(num_times):\n                result = func(*args, **kwargs)\n            return result\n        return wrapper\n    return decorator_repeat\n\n@repeat(num_times=3)\ndef echo(msg):\n    print(msg)\n\necho('Echo!')",
+      "output": "Echo!\nEcho!\nEcho!",
+      "explanation": "A three-level structure. `repeat` takes the argument, returns `decorator_repeat`, which takes the function, which returns `wrapper`."
+    },
+    {
+      "level": "Real-world",
+      "title": "Execution Timer using functools.wraps",
+      "code": "import time\nfrom functools import wraps\n\ndef timer(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        end = time.time()\n        print(f'{func.__name__} took {end-start:.4f} secs')\n        return result\n    return wrapper\n\n@timer\ndef slow_task():\n    \"\"\"Simulates a slow task.\"\"\"\n    time.sleep(1)\n\nslow_task()\nprint(slow_task.__doc__)",
+      "output": "slow_task took 1.0010 secs\nSimulates a slow task.",
+      "explanation": "Used for benchmarking. `@wraps(func)` preserves the original name and docstring of `slow_task`."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Built-in Python Decorators",
+        "headers": [
+          "Decorator",
+          "Usage / Purpose"
+        ],
+        "rows": [
+          [
+            "`@staticmethod`",
+            "Defines a method that does not depend on instance or class state."
+          ],
+          [
+            "`@classmethod`",
+            "Defines a method that receives the class (`cls`) as the first argument."
+          ],
+          [
+            "`@property`",
+            "Allows a method to be accessed as an attribute (getter)."
+          ],
+          [
+            "`@functools.lru_cache`",
+            "Caches the return values of a function based on arguments to speed up future calls."
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Decorator",
+        "concept_b": "Inheritance",
+        "explanation": "Decorators add behavior to individual objects/functions dynamically. Inheritance adds behavior to classes statically. Decorators are composition-based."
+      },
+      {
+        "concept_a": "Function Decorator",
+        "concept_b": "Class Decorator",
+        "explanation": "Function decorators modify functions. Class decorators (applied above a `class` definition) intercept class creation and can modify the class attributes."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "functools.wraps(func)",
+      "description": "A decorator applied to the wrapper function to copy metadata (`__name__`, `__doc__`, etc.) from the original function.",
+      "parameters": "func (the original function)",
+      "return_value": "wrapper function",
+      "example_usage": "@wraps(func)"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting to return the Wrapper",
+      "description": "If the outer decorator function doesn't return the inner wrapper, the decorated function becomes `None`.",
+      "wrong_example": "def my_dec(func):\n    def wrapper():\n        func()\n    # Missing return wrapper",
+      "correct_example": "def my_dec(func):\n    def wrapper():\n        func()\n    return wrapper",
+      "debugging_tip": "If calling a decorated function results in 'NoneType object is not callable', check your returns."
+    },
+    {
+      "title": "Not accepting arguments in Wrapper",
+      "description": "Creating a wrapper without `*args, **kwargs` will cause a TypeError if applied to a function that takes arguments.",
+      "wrong_example": "def dec(func):\n    def wrapper(): # Fails on parameterized funcs\n        return func()",
+      "correct_example": "def dec(func):\n    def wrapper(*args, **kwargs):\n        return func(*args, **kwargs)",
+      "debugging_tip": "Always use `*args, **kwargs` in your wrappers to make decorators universal."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is a decorator in Python?",
+        "answer": "A decorator is a function that takes another function, extends its behavior, and returns a new function without modifying the original function's source code."
+      },
+      {
+        "question": "What does the `@` symbol do in Python?",
+        "answer": "The `@` symbol is syntactic sugar used to apply a decorator to a function directly above its definition."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Why should you use `functools.wraps`?",
+        "answer": "When a function is decorated, its metadata (like name and docstring) is overwritten by the wrapper function. `functools.wraps` preserves the original metadata."
+      },
+      {
+        "question": "How do you pass arguments to a decorated function?",
+        "answer": "The inner wrapper function inside the decorator must be defined to accept `*args` and `**kwargs`, which are then passed to the original function call."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you write a decorator that takes its own arguments?",
+        "answer": "It requires three levels of nested functions: the outer function accepts the decorator arguments, the middle accepts the target function, and the inner wrapper accepts the function arguments."
+      },
+      {
+        "question": "Can decorators be applied to classes? Give an example.",
+        "answer": "Yes, class decorators take a class as an argument and return a modified class. Built-in examples include `@dataclass` from the `dataclasses` module."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a decorator that prints 'Start' before a function executes and 'End' after.",
+      "Apply the above decorator to a function that prints 'Middle'.",
+      "Write a decorator that transforms the string output of a function to uppercase.",
+      "Identify the error in a provided decorator that fails to return the wrapper.",
+      "Use multiple decorators on a single function and observe the order of execution."
+    ],
+    "medium": [
+      "Write an `@authenticate` decorator that checks if a global variable `is_logged_in` is True before executing the function.",
+      "Write a decorator that catches any exception raised by a function, prints a custom error message, and returns None.",
+      "Create a decorator that logs the arguments a function was called with.",
+      "Use `functools.wraps` on a decorator and prove that the original docstring is preserved.",
+      "Apply the `@staticmethod` and `@classmethod` decorators to methods in a class."
+    ],
+    "hard": [
+      "Write a `@retry(times=3)` decorator that will attempt to run a function up to 3 times if it throws an exception.",
+      "Create a `@memoize` decorator that caches the results of a function based on its arguments (similar to `lru_cache`).",
+      "Write a class-based decorator (using `__init__` and `__call__` methods).",
+      "Create a decorator that enforces type checking on function arguments based on Python type hints.",
+      "Write a decorator that limits the execution rate of a function (e.g., max 1 call per second)."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a decorator `@validate_positive` that checks if all arguments passed to a mathematical function are positive numbers. If any argument is negative or zero, raise a ValueError.",
+      "input": "@validate_positive\\ndef add(a, b): return a+b\\nadd(5, -2)",
+      "output": "ValueError: All arguments must be positive.",
+      "constraints": "Handle both positional and keyword arguments.",
+      "solution": "def validate_positive(func):\n    def wrapper(*args, **kwargs):\n        if any(x <= 0 for x in args) or any(x <= 0 for x in kwargs.values()):\n            raise ValueError('All arguments must be positive.')\n        return func(*args, **kwargs)\n    return wrapper"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Web Development (Flask/FastAPI)",
+      "explanation": "Routing URLs to view functions (`@app.route('/home')`)."
+    },
+    {
+      "field": "Security",
+      "explanation": "Access control and authentication checks (`@login_required`, `@require_role('admin')`)."
+    },
+    {
+      "field": "Performance Optimization",
+      "explanation": "Caching expensive database query results using `@lru_cache`."
+    }
+  ],
+  "best_practices": [
+    "Always use `@wraps(func)` from `functools` to preserve metadata.",
+    "Keep decorators focused on a single concern (e.g., logging OR authentication, not both).",
+    "Ensure the wrapper function uses `*args, **kwargs` to remain flexible.",
+    "Document what the decorator does clearly, as it abstracts behavior away from the decorated function.",
+    "Avoid deep nesting of multiple decorators if it makes the code hard to trace."
+  ],
+  "summary": [
+    "Decorators are functions that modify the behavior of other functions or classes.",
+    "They utilize Python's support for higher-order functions.",
+    "The `@` syntax provides a clean way to apply decorators.",
+    "They are heavily used for logging, timing, authorization, and caching.",
+    "`functools.wraps` is crucial for preserving original function metadata."
+  ],
+  "quiz": [
+    {
+      "question": "What is the primary purpose of a decorator?",
+      "options": [
+        "To speed up function execution.",
+        "To modify or extend the behavior of a function without changing its code.",
+        "To define global variables.",
+        "To convert a function into a class."
+      ],
+      "answer": "To modify or extend the behavior of a function without changing its code.",
+      "explanation": "Decorators act as wrappers to add functionality dynamically."
+    },
+    {
+      "question": "Which symbol is used as syntactic sugar for applying decorators?",
+      "options": [
+        "#",
+        "$",
+        "@",
+        "&"
+      ],
+      "answer": "@",
+      "explanation": "The `@` symbol is placed above a function definition to apply a decorator."
+    },
+    {
+      "question": "A decorator is an example of what programming concept?",
+      "options": [
+        "Inheritance",
+        "Higher-order functions",
+        "Recursion",
+        "Polymorphism"
+      ],
+      "answer": "Higher-order functions",
+      "explanation": "A higher-order function is one that takes one or more functions as arguments or returns a function."
+    },
+    {
+      "question": "Why do wrapper functions use `*args, **kwargs`?",
+      "options": [
+        "To make the code look professional.",
+        "To accept an arbitrary number of arguments to pass to the decorated function.",
+        "To enforce type checking.",
+        "To hide the arguments from the user."
+      ],
+      "answer": "To accept an arbitrary number of arguments to pass to the decorated function.",
+      "explanation": "This ensures the decorator works on any function, regardless of its signature."
+    },
+    {
+      "question": "What is the purpose of `@functools.wraps(func)`?",
+      "options": [
+        "It wraps the function in a try-except block.",
+        "It preserves the original function's metadata (like `__name__` and `__doc__`).",
+        "It makes the function run in a separate thread.",
+        "It prevents the function from being decorated twice."
+      ],
+      "answer": "It preserves the original function's metadata (like `__name__` and `__doc__`).",
+      "explanation": "Without it, the decorated function will appear to have the name and docstring of the wrapper function."
+    },
+    {
+      "question": "If multiple decorators are applied to a function, in what order are they executed?",
+      "options": [
+        "Top to bottom.",
+        "Bottom to top (closest to the function first).",
+        "Randomly.",
+        "Simultaneously."
+      ],
+      "answer": "Bottom to top (closest to the function first).",
+      "explanation": "Decorators are applied from the inside out, meaning the one immediately above the function runs first."
+    },
+    {
+      "question": "How many nested functions are typically required to create a decorator that takes arguments?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "answer": "3",
+      "explanation": "Outer (takes decorator args) -> Middle (takes func) -> Inner/Wrapper (takes func args)."
+    },
+    {
+      "question": "Which built-in decorator allows a method to be called without creating an instance of the class?",
+      "options": [
+        "@property",
+        "@classmethod",
+        "@staticmethod",
+        "Both @classmethod and @staticmethod"
+      ],
+      "answer": "Both @classmethod and @staticmethod",
+      "explanation": "Both allow calling methods directly from the class, though they handle arguments differently."
+    },
+    {
+      "question": "Can decorators be implemented using classes instead of functions?",
+      "options": [
+        "Yes, by defining `__init__` and `__call__` methods.",
+        "No, decorators must be functions.",
+        "Yes, but only in Python 3.10+.",
+        "Yes, by inheriting from the `Decorator` base class."
+      ],
+      "answer": "Yes, by defining `__init__` and `__call__` methods.",
+      "explanation": "A class can act as a decorator if it is callable (implementing `__call__`)."
+    },
+    {
+      "question": "What will `func.__name__` output if `func` is decorated and `@wraps` is NOT used?",
+      "options": [
+        "The original function's name.",
+        "'wrapper' (or whatever the inner function is named).",
+        "An error.",
+        "'decorator'"
+      ],
+      "answer": "'wrapper' (or whatever the inner function is named).",
+      "explanation": "The decorated function is technically the wrapper function, so its name attributes reflect the wrapper."
+    }
+  ]
+}

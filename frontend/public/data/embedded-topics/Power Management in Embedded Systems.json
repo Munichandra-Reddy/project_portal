@@ -1,0 +1,43 @@
+{
+    "title": "Power Management in Embedded Systems",
+    "topic_overview": "Power management involves designing hardware and software strategies to minimize energy consumption, crucial for battery-operated devices to maximize their operational lifespan.",
+    "core_concepts": [
+        "Active Power: Power consumed when the CPU is running.",
+        "Static Power (Leakage): Power consumed even when idle, significant in modern small-geometry silicon.",
+        "Sleep Modes: Hardware states that disable parts of the chip (clocks, peripherals, CPU) to save power.",
+        "Wakeup Sources: Interrupts (timers, GPIO, communication) configured to bring the system out of sleep."
+    ],
+    "architecture_working_principle": "The microcontroller is kept in its lowest possible power state for the majority of the time. It briefly wakes up via an RTC timer or external interrupt, quickly performs its required task (e.g., reads a sensor, transmits data), and immediately goes back to sleep. This is called a duty-cycling approach.",
+    "real_world_applications": [
+        "Wireless sensor nodes running for years on a coin cell battery.",
+        "Smartwatches managing power between display, Bluetooth, and sensors.",
+        "Implantable medical devices."
+    ],
+    "advantages": [
+        "Dramatically extends battery life.",
+        "Reduces thermal output, sometimes eliminating the need for heatsinks.",
+        "Allows the use of smaller, cheaper batteries."
+    ],
+    "limitations": [
+        "Entering and exiting deep sleep modes takes time and consumes a burst of energy.",
+        "Deep sleep modes often turn off RAM, requiring state to be saved to non-volatile memory or re-initialized.",
+        "Software complexity increases significantly."
+    ],
+    "industry_use_cases": "Bluetooth Low Energy (BLE) beacons utilize aggressive power management, broadcasting a tiny packet of data periodically and sleeping for the rest of the time, allowing them to run for years on small batteries.",
+    "best_practices": [
+        "Use an event-driven architecture (interrupts) instead of polling.",
+        "Turn off peripherals (ADC, UART) and their clocks completely before entering sleep.",
+        "Design the system to execute tasks at the highest clock speed possible to finish quickly, then immediately enter deep sleep (Race-to-Sleep strategy)."
+    ],
+    "interview_questions": [
+        {
+            "q": "What is the 'Race-to-Sleep' strategy in power management?",
+            "a": "It involves running the microcontroller at a high clock speed to complete a task as fast as possible, and then immediately entering a deep sleep state. Because the active time is extremely short, the overall energy consumed is often less than running slowly for a longer period."
+        }
+    ],
+    "learning_outcomes": [
+        "Identify the sources of power consumption in an embedded system.",
+        "Utilize microcontroller sleep modes to reduce power.",
+        "Implement event-driven software architectures for low power."
+    ]
+}

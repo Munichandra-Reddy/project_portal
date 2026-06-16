@@ -1,0 +1,273 @@
+{
+  "title": "Input & Output",
+  "introduction": {
+    "what_it_is": "Input and Output (I/O) are the ways a program communicates with the outside world. Input is data fed into the program, and Output is the result the program provides.",
+    "why_important": "A program without input is static and cannot process dynamic user data. A program without output is useless because it cannot communicate its results. I/O makes software interactive.",
+    "real_world": [
+      "Asking a user for their username and password via a console prompt.",
+      "Displaying a formatted final receipt after a purchase is completed.",
+      "Reading settings from a configuration file and printing logs."
+    ]
+  },
+  "detailed_theory": "In Python, handling basic input and output is straightforward and primarily involves two built-in functions: `input()` and `print()`.\n\n**Output using `print()`:** The `print()` function sends data to the standard output device (usually the screen). You can pass multiple objects to `print()`, separated by commas, and it will output them with a default space separator. The function also supports keyword arguments like `sep` (to change the separator between items) and `end` (to change what is printed at the very end, which defaults to a newline `\\n`). Over time, formatting output has evolved. Python 3.6 introduced f-strings (Formatted String Literals), which provide a concise, readable, and fast way to embed expressions inside string literals using curly braces `{}`. Older methods include the `.format()` method and `%` formatting.\n\n**Input using `input()`:** The `input()` function pauses program execution and waits for the user to type something on the keyboard and press Enter. It accepts an optional string argument that acts as a prompt for the user. Crucially, `input()` **always** returns the user's entry as a string (`str`). Even if the user types a number like 42, Python reads it as the string '42'. To perform mathematical operations on user input, you must explicitly type-cast it using functions like `int()` or `float()`.\n\nBeyond basic console I/O, Python can read from and write to files using the `open()` function, which returns a file object. This involves opening the file in a specific mode ('r' for read, 'w' for write, 'a' for append), performing the operation, and closing the file. Using the `with` statement is highly recommended for file I/O as it automatically handles closing the file even if exceptions occur.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Standard I/O Functions",
+        "description": "Built-in `input()` and `print()` functions require no imports."
+      },
+      {
+        "name": "F-Strings Formatting",
+        "description": "Modern, elegant syntax for embedding expressions inside string outputs."
+      },
+      {
+        "name": "File I/O",
+        "description": "Native capability to open, read, write, and manipulate files."
+      }
+    ],
+    "advantages": [
+      "Very low barrier to entry for beginners making interactive scripts.",
+      "F-strings provide highly readable and computationally efficient string interpolation.",
+      "Context managers (`with` statement) make file handling safe and simple."
+    ],
+    "limitations": [
+      "The `input()` function blocks execution synchronously until input is received.",
+      "Implicit string return from `input()` often requires boilerplate casting code."
+    ]
+  },
+  "syntax": {
+    "explanation": "Using standard functions for console interaction and string formatting.",
+    "breakdown": [
+      "`print(*objects, sep=' ', end='\\n')`",
+      "`variable = input('Prompt message: ')`",
+      "`f'String text {expression}'` (f-string)"
+    ],
+    "rules": [
+      "`input()` always returns a string.",
+      "F-strings must be prefixed with the character 'f' or 'F'.",
+      "Explicitly cast `input()` results if you need numerical data."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple Output and Input",
+      "code": "name = input('Enter your name: ')\nprint('Hello,', name)",
+      "output": "Enter your name: Alice\nHello, Alice",
+      "explanation": "Prompts the user for a name and then prints a greeting."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Type Casting Input",
+      "code": "age_str = input('Enter age: ')\nage_int = int(age_str)\nprint('Next year you will be:', age_int + 1)",
+      "output": "Enter age: 25\nNext year you will be: 26",
+      "explanation": "Shows the necessity of casting the string returned by `input()` to an integer for math."
+    },
+    {
+      "level": "Advanced",
+      "title": "F-String Formatting",
+      "code": "item = 'Laptop'\nprice = 999.99\nquantity = 2\ntotal = price * quantity\nprint(f'{quantity}x {item}s cost a total of ${total:,.2f}')",
+      "output": "2x Laptops cost a total of $1,999.98",
+      "explanation": "Uses an f-string to embed variables and format the total as currency with commas and 2 decimal places."
+    },
+    {
+      "level": "Real-world",
+      "title": "Custom Print Formatting",
+      "code": "print('Loading', end='')\nfor i in range(3):\n    print('.', end='')\nprint('\\nDone!')",
+      "output": "Loading...\nDone!",
+      "explanation": "Modifying the `end` parameter of `print()` to build a loading sequence on a single line."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Print Function Parameters",
+        "headers": ["Parameter", "Description", "Default Value"],
+        "rows": [
+          ["objects", "The values to be printed", "N/A"],
+          ["sep", "Separator between multiple objects", "' ' (space)"],
+          ["end", "What to print at the very end", "'\\n' (newline)"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": ".format() method",
+        "concept_b": "F-strings (Python 3.6+)",
+        "explanation": "`.format()`: `\"Hello {}\".format(name)` | F-strings: `f\"Hello {name}\"`. F-strings are generally more readable and faster."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "print()",
+      "description": "Prints objects to the text stream file, separated by sep and followed by end.",
+      "parameters": "*objects, sep=' ', end='\\n'",
+      "return_value": "None",
+      "example_usage": "print('Hello', 'World', sep='-')"
+    },
+    {
+      "name": "input()",
+      "description": "Reads a line from input, converts it to a string, and returns it.",
+      "parameters": "prompt (optional)",
+      "return_value": "str",
+      "example_usage": "input('How are you? ')"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting to Cast Input",
+      "description": "Trying to perform math on the raw return value of input().",
+      "wrong_example": "age = input('Age: ')\nfuture = age + 5",
+      "correct_example": "age = int(input('Age: '))\nfuture = age + 5",
+      "debugging_tip": "If you get a TypeError involving strings and ints during math, you probably forgot to cast input."
+    },
+    {
+      "title": "Missing 'f' in F-strings",
+      "description": "Writing curly braces but forgetting the 'f' prefix, resulting in literal braces printing.",
+      "wrong_example": "print('Name is {name}')",
+      "correct_example": "print(f'Name is {name}')",
+      "debugging_tip": "If your variables are printing as `{var_name}`, add an `f` before the opening quote."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What data type does the `input()` function return?",
+        "answer": "The `input()` function always returns a string (str), regardless of what the user types."
+      },
+      {
+        "question": "How do you prevent the `print()` function from printing a newline at the end?",
+        "answer": "By using the `end` parameter, e.g., `print('Text', end='')`."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What are f-strings and why are they preferred over older formatting methods?",
+        "answer": "F-strings (formatted string literals) allow embedding expressions inside string literals using `{}`. They are preferred because they are highly readable, less verbose, and evaluate faster than `.format()` or `%` formatting."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you handle inputs when you expect a number but the user types a letter?",
+        "answer": "You must use a `try...except ValueError` block around the `int(input())` call to gracefully catch the error and prompt the user again without crashing the program."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "1. Ask the user for their favorite color and print a response.",
+      "2. Ask the user for two numbers, add them, and print the result.",
+      "3. Use `print()` to output 'One', 'Two', 'Three' separated by commas on one line.",
+      "4. Write an f-string that incorporates a variable `city = 'Paris'`.",
+      "5. Prompt a user for a password but don't cast it to anything."
+    ],
+    "medium": [
+      "1. Write a program that asks for a price and a discount percentage, calculates the final price, and prints it.",
+      "2. Use f-strings to align text (e.g., pad a string to be 10 characters wide).",
+      "3. Print a countdown from 3 to 1, all on the same line, separated by spaces.",
+      "4. Accept multiple inputs in a single line using `input().split()`.",
+      "5. Format a floating point number to show exactly 3 decimal places using an f-string."
+    ],
+    "hard": [
+      "1. Write a robust script that loops and asks for an integer until the user actually provides a valid integer.",
+      "2. Demonstrate how to read from a text file and print its contents line by line.",
+      "3. Write variables to a file using formatted output.",
+      "4. Build a mini interactive calculator utilizing a while loop, input(), and print().",
+      "5. Use f-string debugging features (e.g., `f'{variable=}'`) introduced in Python 3.8."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a program that prompts the user for a temperature in Celsius, converts it to Fahrenheit, and displays the result formatted to 1 decimal place.",
+      "input": "User enters: 25",
+      "output": "25.0C is equal to 77.0F",
+      "constraints": "Must use `input()`, type casting, and f-strings. Formula: F = C * 9/5 + 32",
+      "solution": "celsius = float(input('Enter temperature in Celsius: '))\nfahrenheit = (celsius * 9/5) + 32\nprint(f'{celsius:.1f}C is equal to {fahrenheit:.1f}F')"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "CLI Applications",
+      "explanation": "Command Line Interfaces heavily rely on `input()` to navigate menus and `print()` to display status logs."
+    },
+    {
+      "field": "Data Reports",
+      "explanation": "F-strings are extensively used to generate formatted reports, aligning data in tables and handling currency formatting."
+    }
+  ],
+  "best_practices": [
+    "Always provide a clear, descriptive prompt inside `input()` so the user knows what is expected.",
+    "Adopt f-strings (f\"...\") for all string formatting needs in modern Python (3.6+).",
+    "Assume all user input is malicious or incorrect; validate and sanitize it, wrapping casts in try-except blocks.",
+    "For complex or multiline formatting, consider multiline f-strings or text wrapping libraries."
+  ],
+  "summary": [
+    "Input and Output are essential for making programs interactive.",
+    "The `input()` function captures user entries as strings, requiring casting for numeric operations.",
+    "The `print()` function is highly customizable using `sep` and `end` parameters.",
+    "F-strings provide the most modern, readable, and efficient way to format output in Python."
+  ],
+  "quiz": [
+    {
+      "question": "What is the primary function used to get text from a user in the console?",
+      "options": ["get()", "read()", "input()", "scan()"],
+      "answer": "input()",
+      "explanation": "The built-in input() function pauses execution to read user input."
+    },
+    {
+      "question": "If a user types 10 into `input()`, what data type is returned?",
+      "options": ["int", "float", "str", "bool"],
+      "answer": "str",
+      "explanation": "input() ALWAYS returns a string."
+    },
+    {
+      "question": "Which of these is the correct syntax for an f-string?",
+      "options": ["format('Name: {}', name)", "f'Name: {name}'", "F-string('Name: ' + name)", "'Name: f{name}'"],
+      "answer": "f'Name: {name}'",
+      "explanation": "F-strings start with an 'f' followed by the string, with variables in curly braces."
+    },
+    {
+      "question": "How do you cast a user's input to a floating-point number immediately?",
+      "options": ["float = input()", "input(float)", "float(input())", "parse_float(input())"],
+      "answer": "float(input())",
+      "explanation": "You wrap the input() function inside the float() constructor."
+    },
+    {
+      "question": "What parameter is used to change the character printed at the end of a `print()` statement?",
+      "options": ["sep", "stop", "end", "close"],
+      "answer": "end",
+      "explanation": "The 'end' parameter defines what is appended after the objects are printed (defaults to newline)."
+    },
+    {
+      "question": "What does the `sep` parameter in `print()` do?",
+      "options": ["Separates the code from output", "Defines the string inserted between multiple items", "Separates lines of output", "Separates errors from standard output"],
+      "answer": "Defines the string inserted between multiple items",
+      "explanation": "When printing multiple arguments, 'sep' determines the separator between them (defaults to a space)."
+    },
+    {
+      "question": "How would you format a float `x` to display exactly two decimal places in an f-string?",
+      "options": ["f'{x:.2f}'", "f'{x:2}'", "f'{x.2}'", "f'{x[2]}'"],
+      "answer": "f'{x:.2f}'",
+      "explanation": "The colon `:` introduces formatting options, and `.2f` specifies 2 decimal places for a float."
+    },
+    {
+      "question": "What happens if you omit the `f` from an f-string (e.g., `'My name is {name}'`)?",
+      "options": ["SyntaxError", "It prints the variable value anyway", "It literally prints '{name}'", "NameError"],
+      "answer": "It literally prints '{name}'",
+      "explanation": "Without the 'f' prefix, Python treats it as a normal string and does not evaluate expressions in braces."
+    },
+    {
+      "question": "Is it possible to use mathematical expressions directly inside f-string braces?",
+      "options": ["Yes, e.g., f'{5 + 5}'", "No, only variables are allowed", "Yes, but only in Python 2", "No, it causes an error"],
+      "answer": "Yes, e.g., f'{5 + 5}'",
+      "explanation": "F-strings can evaluate full Python expressions inside the curly braces."
+    },
+    {
+      "question": "Which statement correctly prints two words on the same line using two print statements?",
+      "options": ["print('Hello', inline=True); print('World')", "print('Hello'); print('World')", "print('Hello', end=' '); print('World')", "print('Hello', sep=''); print('World')"],
+      "answer": "print('Hello', end=' '); print('World')",
+      "explanation": "Setting end=' ' prevents the first print from moving to a newline."
+    }
+  ]
+}

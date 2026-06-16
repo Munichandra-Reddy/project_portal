@@ -1,0 +1,22 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#f4f4f4" />
+      <text x="400" y="40" font-family="monospace" font-size="24" font-weight="bold" text-anchor="middle">Low Power Op-Amp Block Diagram</text>
+      
+      <rect x="150" y="100" width="140" height="80" fill="#fef08a" stroke="#ca8a04" stroke-width="2" rx="4"/>
+      <text x="220" y="145" font-family="monospace" font-size="14" text-anchor="middle">Differential Pair</text>
+
+      <rect x="350" y="100" width="140" height="80" fill="#fef08a" stroke="#ca8a04" stroke-width="2" rx="4"/>
+      <text x="420" y="145" font-family="monospace" font-size="14" text-anchor="middle">Gain Stage</text>
+
+      <rect x="550" y="100" width="140" height="80" fill="#fef08a" stroke="#ca8a04" stroke-width="2" rx="4"/>
+      <text x="620" y="145" font-family="monospace" font-size="14" text-anchor="middle">Output Stage</text>
+
+      <rect x="150" y="250" width="340" height="60" fill="#bfdbfe" stroke="#2563eb" stroke-width="2" rx="4"/>
+      <text x="320" y="285" font-family="monospace" font-size="14" text-anchor="middle">Current Mirrors / Bias Circuit</text>
+
+      <path d="M 290 140 L 350 140" stroke="#000" stroke-width="2"/>
+      <path d="M 490 140 L 550 140" stroke="#000" stroke-width="2"/>
+
+      <path d="M 220 250 L 220 180" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4"/>
+      <path d="M 420 250 L 420 180" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4"/>
+    </svg>

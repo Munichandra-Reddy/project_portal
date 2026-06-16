@@ -1,0 +1,275 @@
+{
+  "title": "Loops",
+  "introduction": {
+    "what_it_is": "Loops are control flow structures used to repeatedly execute a block of code. Python has two primitive loop commands: `while` loops and `for` loops.",
+    "why_important": "Loops violate the DRY (Don't Repeat Yourself) principle if not used. Instead of writing the same line of code 100 times, you write it once and use a loop to execute it 100 times, making code efficient and scalable.",
+    "real_world": [
+      "Iterating through a database of users to send a newsletter to each one.",
+      "Keeping a video game running continuously until the player chooses to quit.",
+      "Reading lines from a large text file one by one."
+    ]
+  },
+  "detailed_theory": "Iteration is a core concept in programming, allowing repetitive tasks to be automated. Python provides two primary loop constructs:\n\n1. **The `while` Loop:** This loop executes a set of statements as long as a specified condition is true. The condition is evaluated before executing the block. If the condition is initially false, the block is never executed. It is crucial to ensure that the condition eventually becomes false; otherwise, you will create an 'infinite loop', which will crash your program. This is usually managed by incrementing a counter variable inside the loop.\n\n2. **The `for` Loop:** Unlike `for` loops in other languages (which are often based on a counter), Python's `for` loop acts as an iterator. It is used for iterating over a sequence (such as a list, tuple, dictionary, set, or string). It executes a block of code for each item in the sequence. The built-in `range()` function is frequently used with `for` loops to generate a sequence of numbers, allowing you to execute code a specific number of times.\n\n**Loop Control Statements:** Python provides keywords to alter the flow of a loop:\n- **`break`:** Terminates the loop entirely and transfers execution to the statement immediately following the loop.\n- **`continue`:** Skips the rest of the code inside the loop for the current iteration and jumps back to the top to evaluate the condition for the next iteration.\n- **`pass`:** A null operation. It does nothing and is used as a placeholder when a statement is required syntactically, but no code needs to be executed.\n\n**`else` in Loops:** A unique feature in Python is the ability to attach an `else` block to a loop. The code in the `else` block runs when the loop finishes iterating naturally (for loop) or when the condition becomes false (while loop). Crucially, if the loop is terminated by a `break` statement, the `else` block is *not* executed. This is highly useful for search algorithms.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Sequence Iteration",
+        "description": "The `for` loop natively iterates over collections without needing index tracking."
+      },
+      {
+        "name": "Range Function",
+        "description": "Generates sequences of numbers efficiently for standard bounded loops."
+      },
+      {
+        "name": "Loop Control Flow",
+        "description": "`break` and `continue` keywords offer precise control over execution paths."
+      }
+    ],
+    "advantages": [
+      "Python's `for...in` syntax is exceptionally readable compared to C-style `for` loops.",
+      "Avoids off-by-one errors common in index-based looping.",
+      "The `else` clause provides an elegant way to handle 'item not found' scenarios."
+    ],
+    "limitations": [
+      "Traditional `while` loops require manual management of counter variables.",
+      "Infinite loops can easily hang applications if exit conditions aren't rigorously tested."
+    ]
+  },
+  "syntax": {
+    "explanation": "Loops use a colon and indentation, similar to conditionals.",
+    "breakdown": [
+      "`while condition:`",
+      "    `# Execute while condition is True`",
+      "",
+      "`for variable in sequence:`",
+      "    `# Execute for every item in sequence`"
+    ],
+    "rules": [
+      "A colon must terminate the loop declaration line.",
+      "The loop body must be indented.",
+      "A `while` loop requires a condition that can change to prevent infinite looping."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "The While Loop",
+      "code": "i = 1\nwhile i <= 5:\n    print(i)\n    i += 1",
+      "output": "1\n2\n3\n4\n5",
+      "explanation": "Prints numbers 1 to 5. The variable `i` must be incremented (`i += 1`) to avoid an infinite loop."
+    },
+    {
+      "level": "Intermediate",
+      "title": "The For Loop with Range",
+      "code": "for x in range(2, 8, 2):\n    print(x)",
+      "output": "2\n4\n6",
+      "explanation": "Uses `range(start, stop, step)` to iterate from 2 up to (but not including) 8, in increments of 2."
+    },
+    {
+      "level": "Advanced",
+      "title": "Break, Continue, and Else",
+      "code": "for val in 'string':\n    if val == 'i':\n        continue\n    if val == 'n':\n        break\n    print(val)\nelse:\n    print('Loop finished')",
+      "output": "s\nt\nr",
+      "explanation": "Skips 'i' using `continue`. Stops completely at 'n' using `break`. Because it breaks, the `else` block does not run."
+    },
+    {
+      "level": "Real-world",
+      "title": "Iterating through Dictionaries",
+      "code": "user = {'name': 'Alice', 'role': 'Admin'}\nfor key, value in user.items():\n    print(f'{key.capitalize()}: {value}')",
+      "output": "Name: Alice\nRole: Admin",
+      "explanation": "Using `.items()` to loop through both keys and values of a dictionary simultaneously."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Loop Control Statements",
+        "headers": ["Statement", "Action"],
+        "rows": [
+          ["break", "Exits the current loop entirely."],
+          ["continue", "Skips the rest of the current iteration and goes to the next."],
+          ["pass", "Does nothing; acts as a syntactic placeholder."]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "while loop",
+        "concept_b": "for loop",
+        "explanation": "Use `while` when you don't know beforehand how many times the loop should run (e.g., waiting for user input). Use `for` when iterating over a known sequence or specific number of times."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "range()",
+      "description": "Returns a sequence of numbers, starting from 0 by default, and increments by 1 (by default), and stops before a specified number.",
+      "parameters": "start(opt), stop, step(opt)",
+      "return_value": "range object",
+      "example_usage": "for i in range(5):"
+    },
+    {
+      "name": "enumerate()",
+      "description": "Adds a counter to an iterable and returns it in a form of enumerating object.",
+      "parameters": "iterable, start=0",
+      "return_value": "enumerate object",
+      "example_usage": "for idx, val in enumerate(my_list):"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Creating an Infinite Loop",
+      "description": "Failing to update the loop variable in a while loop.",
+      "wrong_example": "x = 5\nwhile x > 0:\n    print(x)",
+      "correct_example": "x = 5\nwhile x > 0:\n    print(x)\n    x -= 1",
+      "debugging_tip": "If your terminal hangs and prints endlessly, press `Ctrl + C` to interrupt the infinite loop."
+    },
+    {
+      "title": "Modifying a List While Iterating Over It",
+      "description": "Removing items from a list while iterating over it with a `for` loop causes elements to be skipped.",
+      "wrong_example": "for item in my_list:\n    if item == 'bad':\n        my_list.remove(item)",
+      "correct_example": "for item in my_list.copy():\n    if item == 'bad':\n        my_list.remove(item)",
+      "debugging_tip": "Always iterate over a copy of the list (e.g., `my_list[:]`) if you intend to remove elements during the loop."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between a `while` loop and a `for` loop?",
+        "answer": "A `for` loop iterates over a sequence or range a known number of times. A `while` loop runs indefinitely as long as a given condition remains True."
+      },
+      {
+        "question": "What does the `break` statement do?",
+        "answer": "The `break` statement immediately terminates the loop it is inside, skipping any remaining iterations."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How does the `range()` function work?",
+        "answer": "`range()` generates an immutable sequence of numbers. It can take 1 to 3 arguments: start (inclusive, default 0), stop (exclusive), and step (default 1)."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain the purpose of the `else` clause in a loop.",
+        "answer": "The `else` clause executes only if the loop completes normally, meaning it wasn't terminated by a `break` statement. This is useful for search loops to execute code if an item was not found."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "1. Write a `for` loop to print the numbers 1 through 5 using `range()`.",
+      "2. Write a `while` loop that counts down from 5 to 1.",
+      "3. Iterate over a string 'Python' and print each character.",
+      "4. Iterate over a list of fruits and print them.",
+      "5. Use the `break` statement to stop a loop when a variable reaches 3."
+    ],
+    "medium": [
+      "1. Write a `for` loop using `range()` that prints even numbers from 2 to 20.",
+      "2. Use a `while` loop to validate user input (keep asking until they enter 'yes').",
+      "3. Write a script that uses `continue` to print only odd numbers from a list.",
+      "4. Iterate over a list using `enumerate()` to print both the index and the item.",
+      "5. Write a nested loop to print a 3x3 grid of asterisks (*)."
+    ],
+    "hard": [
+      "1. Implement a prime number checker using a `for` loop and the `else` clause.",
+      "2. Write a program to find the factorial of a number using a `while` loop.",
+      "3. Iterate over a dictionary, modify the values, and print the updated dictionary.",
+      "4. Demonstrate a situation where modifying a list while iterating over it causes a bug, and fix it.",
+      "5. Create a 'guessing game' using a while loop, break on correct guess, and limit the user to 3 attempts."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a program that prints the multiplication table (from 1 to 10) for a given number.",
+      "input": "number = 5",
+      "output": "5 x 1 = 5 \n ... \n 5 x 10 = 50",
+      "constraints": "Use a `for` loop and `range()`.",
+      "solution": "number = 5\nfor i in range(1, 11):\n    print(f'{number} x {i} = {number * i}')"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Data Processing",
+      "explanation": "Iterating over rows in a CSV file or records in a database to aggregate data or perform calculations."
+    },
+    {
+      "field": "Web Scraping",
+      "explanation": "Looping through multiple pages of a website to extract lists of products or articles."
+    }
+  ],
+  "best_practices": [
+    "Prefer `for` loops over `while` loops whenever possible, as they are less prone to infinite loop bugs.",
+    "Use `enumerate()` if you need both the item and its index in a `for` loop, rather than manually incrementing a counter.",
+    "Avoid deep nested loops, as they severely impact performance (Time complexity O(N^2) or worse).",
+    "Use list comprehensions for simple loops that build lists, as they are more 'Pythonic' and faster."
+  ],
+  "summary": [
+    "Loops execute blocks of code repeatedly based on sequences or boolean conditions.",
+    "`for` loops are designed to iterate over iterables like lists, strings, and ranges.",
+    "`while` loops execute as long as a condition holds true.",
+    "Control statements like `break` and `continue` modify the flow of iteration."
+  ],
+  "quiz": [
+    {
+      "question": "Which loop is best suited for iterating over a list of items?",
+      "options": ["while loop", "for loop", "do-while loop", "infinite loop"],
+      "answer": "for loop",
+      "explanation": "Python's for loop is an iterator inherently designed to traverse sequences like lists."
+    },
+    {
+      "question": "What is the primary danger of a `while` loop?",
+      "options": ["Syntax errors", "Infinite loops", "Memory leaks", "Slow performance"],
+      "answer": "Infinite loops",
+      "explanation": "If the condition in a while loop never evaluates to False, the loop will run forever."
+    },
+    {
+      "question": "What does the `range(5)` function generate?",
+      "options": ["Numbers 1 to 5", "Numbers 0 to 5", "Numbers 0 to 4", "Numbers 1 to 4"],
+      "answer": "Numbers 0 to 4",
+      "explanation": "range(start, stop) starts at 0 by default and stops before the specified stop number."
+    },
+    {
+      "question": "Which keyword is used to skip the current iteration and move to the next one?",
+      "options": ["break", "stop", "continue", "pass"],
+      "answer": "continue",
+      "explanation": "The continue statement skips the rest of the loop block and immediately starts the next iteration."
+    },
+    {
+      "question": "Which keyword immediately exits the entire loop?",
+      "options": ["break", "stop", "continue", "exit"],
+      "answer": "break",
+      "explanation": "The break statement terminates the loop execution entirely."
+    },
+    {
+      "question": "When does the `else` block of a Python loop execute?",
+      "options": ["When an error occurs", "Every iteration", "When the loop completes normally without a break", "When the loop is broken"],
+      "answer": "When the loop completes normally without a break",
+      "explanation": "The loop's else block only runs if the loop exhausts its sequence naturally or its condition becomes false."
+    },
+    {
+      "question": "What is the purpose of the `pass` statement?",
+      "options": ["To exit a loop", "To skip an iteration", "It does nothing; acts as a placeholder", "To pass a variable to a function"],
+      "answer": "It does nothing; acts as a placeholder",
+      "explanation": "pass is a null operation used when syntax requires a statement, but you have no code to execute."
+    },
+    {
+      "question": "How do you loop through a dictionary to get both keys and values?",
+      "options": ["for i in dict:", "for k, v in dict.items():", "for k, v in dict:", "for val in dict.values():"],
+      "answer": "for k, v in dict.items():",
+      "explanation": "The .items() method returns a view object that displays a list of dictionary's (key, value) tuple pairs."
+    },
+    {
+      "question": "Is `do-while` a native loop construct in Python?",
+      "options": ["Yes", "No", "Only in Python 3", "Yes, but syntax is `while-do`"],
+      "answer": "No",
+      "explanation": "Python does not have a do-while loop. You achieve similar behavior using an infinite while loop and breaking conditionally."
+    },
+    {
+      "question": "What function adds an index counter to an iterable during a for loop?",
+      "options": ["count()", "index()", "enumerate()", "range()"],
+      "answer": "enumerate()",
+      "explanation": "enumerate() returns both the index and the item during iteration."
+    }
+  ]
+}

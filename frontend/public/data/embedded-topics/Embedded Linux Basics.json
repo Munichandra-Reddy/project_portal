@@ -1,0 +1,43 @@
+{
+    "title": "Embedded Linux Basics",
+    "topic_overview": "Embedded Linux involves using the Linux kernel and various open-source software components in embedded devices. It provides a robust, scalable, and feature-rich environment for complex systems.",
+    "core_concepts": [
+        "Bootloader (e.g., U-Boot): Initializes hardware and loads the kernel into RAM.",
+        "Linux Kernel: Manages hardware, memory, scheduling, and provides drivers.",
+        "Root Filesystem (rootfs): Contains the libraries, binaries, and configuration files needed by the system.",
+        "Device Tree: A data structure describing the hardware topology, allowing a single kernel binary to support multiple boards."
+    ],
+    "architecture_working_principle": "Power on -> Boot ROM loads Bootloader -> Bootloader initializes RAM and loads Kernel and Device Tree -> Kernel initializes drivers based on Device Tree and mounts Rootfs -> Kernel starts 'init' process -> 'init' launches user-space applications.",
+    "real_world_applications": [
+        "Smart TVs and set-top boxes.",
+        "Automotive infotainment systems.",
+        "Industrial IoT gateways and routers."
+    ],
+    "advantages": [
+        "Access to a vast ecosystem of open-source software and networking protocols.",
+        "Hardware abstraction makes application development easier and highly portable.",
+        "Memory protection and multi-threading capabilities for complex applications."
+    ],
+    "limitations": [
+        "Requires microprocessors with MMUs and significant memory (RAM/Flash), increasing hardware cost.",
+        "Boot time is longer than RTOS or bare-metal systems.",
+        "Not suitable for hard real-time requirements without specific kernel patches (like PREEMPT_RT)."
+    ],
+    "industry_use_cases": "Raspberry Pi and BeagleBone are popular development boards showcasing Embedded Linux. Industry uses tools like Yocto Project or Buildroot to create custom, minimal Linux distributions tailored precisely to their hardware.",
+    "best_practices": [
+        "Use build systems like Yocto or Buildroot for reproducible builds instead of manually assembling distributions.",
+        "Write applications in user-space; only write kernel modules when direct hardware access is absolutely necessary.",
+        "Optimize boot time by removing unused kernel modules and delaying non-critical services."
+    ],
+    "interview_questions": [
+        {
+            "q": "What is the purpose of the Device Tree in Embedded Linux?",
+            "a": "The Device Tree is a data structure that describes the hardware components of a specific board (like memory addresses, interrupts for peripherals). It allows the Linux kernel to discover the hardware configuration dynamically, meaning one compiled kernel can run on many different hardware boards."
+        }
+    ],
+    "learning_outcomes": [
+        "Identify the main components of an Embedded Linux system.",
+        "Understand the boot process from power-on to user space.",
+        "Explain the role of the Device Tree."
+    ]
+}

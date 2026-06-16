@@ -1,0 +1,43 @@
+{
+    "title": "I2C Communication",
+    "topic_overview": "Inter-Integrated Circuit (I2C) is a synchronous, half-duplex serial communication protocol that allows multiple masters and multiple slaves to communicate over just two wires.",
+    "core_concepts": [
+        "Two Wires: SDA (Serial Data) and SCL (Serial Clock). Both require pull-up resistors.",
+        "Addressing: Each slave device has a unique 7-bit (or 10-bit) address.",
+        "Open-Drain: Devices can only pull lines low; resistors pull them high. Prevents short circuits.",
+        "ACK/NACK: An acknowledgment bit is sent after every byte transferred."
+    ],
+    "architecture_working_principle": "The master initiates communication by generating a Start condition, followed by the 7-bit address of the target slave and a Read/Write bit. The addressed slave responds with an ACK. Data bytes are then transferred, with the receiver acknowledging each byte. The master terminates communication with a Stop condition.",
+    "real_world_applications": [
+        "Interfacing with slow-speed peripherals like RTCs (Real-Time Clocks), EEPROMs.",
+        "Connecting multiple sensors on a single bus (temperature, humidity, ambient light).",
+        "Reading configuration data from monitor displays."
+    ],
+    "advantages": [
+        "Requires only two wires regardless of the number of devices on the bus.",
+        "Built-in addressing and acknowledgment mechanisms.",
+        "Supports multi-master configurations."
+    ],
+    "limitations": [
+        "Slower data transfer rates compared to SPI (typically 100 kHz to 400 kHz, up to a few MHz in specific modes).",
+        "Half-duplex communication (cannot transmit and receive simultaneously).",
+        "Bus capacitance limits the maximum number of devices and bus length."
+    ],
+    "industry_use_cases": "I2C is ubiquitous for connecting peripheral ICs on a motherboard or embedded system board where conserving pin count is more important than raw speed.",
+    "best_practices": [
+        "Calculate pull-up resistor values carefully based on bus capacitance and desired speed.",
+        "Ensure unique addresses for all devices on the bus. Some devices have configurable address pins.",
+        "Implement software timeouts for I2C operations to prevent the system from hanging if the bus gets stuck."
+    ],
+    "interview_questions": [
+        {
+            "q": "What is 'Clock Stretching' in I2C?",
+            "a": "Clock stretching is a mechanism where a slow slave device holds the SCL line low after receiving a byte to pause communication, giving itself time to process the data before releasing SCL to allow the master to continue."
+        }
+    ],
+    "learning_outcomes": [
+        "Understand the I2C bus topology and open-drain concept.",
+        "Explain the I2C frame structure including Start, Address, Data, ACK, and Stop.",
+        "Interface an I2C sensor and read its registers."
+    ]
+}

@@ -1,0 +1,374 @@
+{
+  "title": "OOPs Concepts",
+  "introduction": {
+    "what_it_is": "Object-Oriented Programming (OOP) is a programming paradigm based on the concept of 'objects', which can contain data (attributes) and code (methods). Python is a multi-paradigm language that heavily supports OOP.",
+    "why_important": "OOP makes it easier to design, build, and maintain complex software by mimicking real-world entities. It promotes code reusability, modularity, and a clear structure, making large collaborative projects manageable.",
+    "real_world": [
+      "Designing a video game where characters, vehicles, and weapons are modeled as objects with specific properties and behaviors.",
+      "Building a banking system where 'Account', 'Customer', and 'Transaction' are represented as interacting classes.",
+      "Creating GUI applications where buttons, windows, and text fields are distinct objects."
+    ]
+  },
+  "detailed_theory": "Object-Oriented Programming (OOP) in Python is built around several core concepts that help in organizing and structuring code effectively. The foundation of OOP is the Class and the Object. A Class is a blueprint or a template for creating objects. It defines the state (attributes/variables) and behavior (methods/functions) that the created objects will have. An Object is an instance of a Class. For example, if 'Car' is a class, a specific red Mustang is an object of that class.\n\nThe `__init__` method, also known as the constructor, is automatically called when a new object is created. It is used to initialize the object's attributes. The `self` parameter is a reference to the current instance of the class and is used to access variables and methods associated with that specific object.\n\nOOP relies on four main pillars:\n\n1. Encapsulation: This is the bundling of data and the methods that operate on that data into a single unit (the class). It also involves restricting direct access to some of the object's components, which is a means of preventing accidental interference. In Python, this is achieved by prefixing attribute names with an underscore (protected) or double underscore (private).\n\n2. Inheritance: This mechanism allows one class (the child or subclass) to inherit the attributes and methods of another class (the parent or superclass). This promotes massive code reuse. Python supports single, multiple, and multilevel inheritance. The `super()` function is commonly used in child classes to call methods of the parent class.\n\n3. Polymorphism: This means 'many forms'. It allows methods to do different things based on the object it is acting upon. In Python, this is often seen in method overriding, where a child class provides a specific implementation of a method that is already provided by its parent class. Duck typing is another form of polymorphism in Python: 'If it walks like a duck and quacks like a duck, it must be a duck'.\n\n4. Abstraction: This involves hiding complex implementation details and exposing only the essential features of an object. In Python, abstraction can be achieved using abstract base classes (the `abc` module), which define methods that must be implemented by their subclasses, ensuring a consistent interface.\n\nUnderstanding these concepts allows developers to transition from writing simple procedural scripts to designing scalable, enterprise-level software architectures.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Classes and Objects",
+        "description": "Blueprints (classes) and their instances (objects) for structuring code."
+      },
+      {
+        "name": "Encapsulation",
+        "description": "Data hiding and bundling of attributes and methods."
+      },
+      {
+        "name": "Inheritance",
+        "description": "Creating new classes based on existing ones to reuse code."
+      },
+      {
+        "name": "Polymorphism",
+        "description": "Using a unified interface to operate on different types of objects."
+      }
+    ],
+    "advantages": [
+      "Provides a clear modular structure for programs.",
+      "Facilitates easy maintenance and modification of existing code.",
+      "Enhances code reusability through inheritance.",
+      "Models real-world scenarios effectively."
+    ],
+    "limitations": [
+      "Can be overly complex for simple, small scripts.",
+      "Often requires a steeper learning curve than procedural programming.",
+      "OOP programs can be slightly slower due to overhead and method lookups."
+    ]
+  },
+  "syntax": {
+    "explanation": "Classes are defined using the `class` keyword. The constructor is `__init__`. The first parameter of instance methods is always `self`.",
+    "breakdown": [
+      "class ClassName:",
+      "    def __init__(self, attribute):",
+      "        self.attribute = attribute",
+      "    def method(self):",
+      "        return self.attribute",
+      "obj = ClassName('Value')"
+    ],
+    "rules": [
+      "Class names should use CamelCase convention.",
+      "`self` must be explicitly passed as the first parameter in instance methods.",
+      "Use `__` prefix to make attributes or methods 'private' (name mangling)."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating a Class and Object",
+      "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return f'{self.name} says Woof!'\n\nmy_dog = Dog('Buddy')\nprint(my_dog.bark())",
+      "output": "Buddy says Woof!",
+      "explanation": "Defines a `Dog` class with an `__init__` constructor and a `bark` method. `my_dog` is an instance."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Inheritance and Overriding",
+      "code": "class Animal:\n    def speak(self):\n        return 'Animal sound'\n\nclass Cat(Animal):\n    def speak(self):\n        return 'Meow'\n\npet = Cat()\nprint(pet.speak())",
+      "output": "Meow",
+      "explanation": "`Cat` inherits from `Animal` but overrides the `speak` method to provide its own specific behavior (Polymorphism)."
+    },
+    {
+      "level": "Advanced",
+      "title": "Encapsulation (Private Attributes)",
+      "code": "class BankAccount:\n    def __init__(self, balance):\n        self.__balance = balance # Private attribute\n\n    def get_balance(self):\n        return self.__balance\n\nacc = BankAccount(100)\nprint(acc.get_balance())\n# print(acc.__balance) # This would raise an AttributeError",
+      "output": "100",
+      "explanation": "The double underscore `__` makes the `__balance` attribute private (name-mangled), preventing direct access from outside the class. It must be accessed via a getter method."
+    },
+    {
+      "level": "Real-world",
+      "title": "Using super() in Inheritance",
+      "code": "class Employee:\n    def __init__(self, name, salary):\n        self.name = name\n        self.salary = salary\n\nclass Manager(Employee):\n    def __init__(self, name, salary, department):\n        super().__init__(name, salary)\n        self.department = department\n\nm = Manager('Alice', 90000, 'IT')\nprint(m.name, m.department)",
+      "output": "Alice IT",
+      "explanation": "`super()` is used to call the `__init__` method of the parent `Employee` class, ensuring the basic setup is done before adding Manager-specific logic."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Access Modifiers in Python",
+        "headers": [
+          "Modifier",
+          "Syntax Prefix",
+          "Description"
+        ],
+        "rows": [
+          [
+            "Public",
+            "None (e.g., `name`)",
+            "Accessible from anywhere."
+          ],
+          [
+            "Protected",
+            "Single Underscore (e.g., `_name`)",
+            "Convention indicating internal use. Not strictly enforced."
+          ],
+          [
+            "Private",
+            "Double Underscore (e.g., `__name`)",
+            "Triggers name mangling. Strongly discourages outside access."
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Class Attribute",
+        "concept_b": "Instance Attribute",
+        "explanation": "Class attributes belong to the class itself and are shared among all instances. Instance attributes belong to a specific object and are usually defined in `__init__`."
+      },
+      {
+        "concept_a": "Method Overriding",
+        "concept_b": "Method Overloading",
+        "explanation": "Overriding: Child class replaces parent's method. Overloading (same method, different parameters): Not natively supported in Python in the traditional sense, handled via default arguments instead."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "isinstance(object, classinfo)",
+      "description": "Returns True if the object is an instance of the classinfo, or a subclass thereof.",
+      "parameters": "object, classinfo",
+      "return_value": "bool",
+      "example_usage": "isinstance(my_dog, Dog)"
+    },
+    {
+      "name": "issubclass(class, classinfo)",
+      "description": "Returns True if class is a subclass of classinfo.",
+      "parameters": "class, classinfo",
+      "return_value": "bool",
+      "example_usage": "issubclass(Cat, Animal)"
+    },
+    {
+      "name": "super()",
+      "description": "Returns a proxy object that delegates method calls to a parent or sibling class of type.",
+      "parameters": "None (usually)",
+      "return_value": "Proxy object",
+      "example_usage": "super().__init__()"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting 'self' in Methods",
+      "description": "Defining a method inside a class without `self` as the first parameter causes a TypeError when called.",
+      "wrong_example": "class A:\n    def print_msg(msg):\n        print(msg)",
+      "correct_example": "class A:\n    def print_msg(self, msg):\n        print(msg)",
+      "debugging_tip": "Always ensure the first argument of an instance method is `self`."
+    },
+    {
+      "title": "Modifying Class Attributes via Instances",
+      "description": "Trying to modify a class attribute by assigning it through an instance creates a new instance attribute instead of changing the class attribute.",
+      "wrong_example": "class Dog:\n    species = 'Canine'\nd1 = Dog()\nd1.species = 'Feline' # Creates instance attribute",
+      "correct_example": "Dog.species = 'Feline' # Correctly modifies class attribute",
+      "debugging_tip": "Modify class attributes using the ClassName, not the instance object."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is `self` in Python?",
+        "answer": "`self` represents the instance of the class. By using the `self` keyword, we can access the attributes and methods of the class in Python."
+      },
+      {
+        "question": "What is the `__init__` method?",
+        "answer": "`__init__` is a reserved method in Python classes. It is known as a constructor and is called automatically when an object is created from a class."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How does Python achieve encapsulation?",
+        "answer": "Python achieves encapsulation through access modifiers, specifically by using single underscores `_` to denote protected members and double underscores `__` for private members (which invokes name mangling)."
+      },
+      {
+        "question": "What is the difference between multiple inheritance and multilevel inheritance?",
+        "answer": "Multiple inheritance is when a class inherits from more than one base class (A, B -> C). Multilevel inheritance is when a class inherits from a child class, creating a chain (A -> B -> C)."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain Method Resolution Order (MRO) in Python.",
+        "answer": "MRO is the order in which Python searches for base classes during multiple inheritance. It follows the C3 linearization algorithm and can be viewed using the `__mro__` attribute or `mro()` method."
+      },
+      {
+        "question": "What are Abstract Base Classes (ABCs)?",
+        "answer": "ABCs provide a way to define interfaces. They cannot be instantiated themselves and require subclasses to provide implementations for their abstract methods. They are implemented using the `abc` module."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a `Car` class with attributes `make` and `model`. Create an instance of this class.",
+      "Add a method `display_info()` to the `Car` class that prints the make and model.",
+      "Create a class `Rectangle` with a constructor that takes `length` and `width`. Add a method `area()`.",
+      "Create a class with a class attribute `count` that increments every time a new object is created.",
+      "Create an `Employee` class. Create a `Developer` class that inherits from `Employee`."
+    ],
+    "medium": [
+      "Implement a `BankAccount` class with private attributes for balance and methods to deposit and withdraw.",
+      "Demonstrate polymorphism by creating a `Bird` and `Airplane` class, both having a `fly()` method, and call them in a loop.",
+      "Use `super()` to inherit the `__init__` method of a parent class and add a new attribute to the child class.",
+      "Create a class using class methods (`@classmethod`) to create instances from different data formats (e.g., from a comma-separated string).",
+      "Implement dunder methods like `__str__` and `__len__` in a custom `Library` class."
+    ],
+    "hard": [
+      "Create a complex multiple inheritance scenario. Check and explain the MRO of the child class.",
+      "Implement an Abstract Base Class `Shape` with an abstract method `area()`. Inherit it in `Circle` and `Square` classes.",
+      "Design a property using the `@property` decorator to validate that a `temperature` attribute cannot be set below absolute zero.",
+      "Implement a Singleton design pattern in Python using class-level attributes and the `__new__` method.",
+      "Build a simple text-based RPG combat system using classes for `Player`, `Enemy`, and `Weapon` with varying behaviors."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a class `Vector` that represents a 2D vector (x, y). Implement operator overloading so that two Vector objects can be added using the `+` operator, returning a new Vector.",
+      "input": "v1 = Vector(2, 3), v2 = Vector(4, 5); print(v1 + v2)",
+      "output": "Vector(6, 8) (assuming __str__ or __repr__ is implemented)",
+      "constraints": "You must use the `__add__` magic method.",
+      "solution": "class Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    def __str__(self):\n        return f'Vector({self.x}, {self.y})'"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Web Frameworks (Django)",
+      "explanation": "Models are represented as classes inheriting from `models.Model`, and database tables are objects of these classes."
+    },
+    {
+      "field": "GUI Development (Tkinter, PyQt)",
+      "explanation": "Every window, button, and layout is an object instantiated from classes provided by the library."
+    },
+    {
+      "field": "Machine Learning (Scikit-learn)",
+      "explanation": "Algorithms are implemented as classes (e.g., `RandomForestClassifier`), and models are trained objects maintaining their own state."
+    }
+  ],
+  "best_practices": [
+    "Use PascalCase (CamelCase) for class names and snake_case for method and attribute names.",
+    "Keep classes focused on a single responsibility (Single Responsibility Principle).",
+    "Favor composition over inheritance when a class needs features from another class but doesn't have an 'is-a' relationship.",
+    "Use docstrings inside classes and methods to explain their purpose.",
+    "Use properties (`@property`) instead of writing explicit getter and setter methods."
+  ],
+  "summary": [
+    "OOP structures code into Objects that combine data and behavior.",
+    "Classes act as blueprints, while Objects are specific instances.",
+    "Encapsulation hides data, improving security and stability.",
+    "Inheritance allows for code reuse and hierarchical relationships.",
+    "Polymorphism allows different objects to be treated uniformly through shared interfaces."
+  ],
+  "quiz": [
+    {
+      "question": "What is the keyword used to define a class in Python?",
+      "options": [
+        "object",
+        "def",
+        "class",
+        "struct"
+      ],
+      "answer": "class",
+      "explanation": "The `class` keyword is used to begin a class definition."
+    },
+    {
+      "question": "What is instantiation?",
+      "options": [
+        "Deleting an object.",
+        "Creating an object from a class.",
+        "Hiding class attributes.",
+        "Inheriting a class."
+      ],
+      "answer": "Creating an object from a class.",
+      "explanation": "Instantiation is the process of creating a specific instance (object) based on a class blueprint."
+    },
+    {
+      "question": "Which method acts as the constructor in a Python class?",
+      "options": [
+        "__init__",
+        "__construct__",
+        "__new__",
+        "__main__"
+      ],
+      "answer": "__init__",
+      "explanation": "The `__init__` method initializes the object's state upon creation."
+    },
+    {
+      "question": "What does the `self` parameter represent?",
+      "options": [
+        "The parent class.",
+        "The current instance of the class.",
+        "A global variable.",
+        "The class itself."
+      ],
+      "answer": "The current instance of the class.",
+      "explanation": "`self` binds the attributes with the given arguments for the specific object calling the method."
+    },
+    {
+      "question": "How do you indicate that an attribute is private in Python?",
+      "options": [
+        "Prefix with `private_`",
+        "Use the `private` keyword",
+        "Prefix with `__` (double underscore)",
+        "Prefix with `_` (single underscore)"
+      ],
+      "answer": "Prefix with `__` (double underscore)",
+      "explanation": "Double underscores invoke name mangling, acting as a strong indicator of privacy."
+    },
+    {
+      "question": "Which concept allows a child class to provide a specific implementation of a method defined in its parent?",
+      "options": [
+        "Encapsulation",
+        "Method Overloading",
+        "Method Overriding",
+        "Abstraction"
+      ],
+      "answer": "Method Overriding",
+      "explanation": "Overriding allows polymorphism by letting a subclass replace a parent's method."
+    },
+    {
+      "question": "What is the use of the `super()` function?",
+      "options": [
+        "To call methods of the superclass (parent class).",
+        "To make an attribute super private.",
+        "To terminate the program.",
+        "To grant a class administrative privileges."
+      ],
+      "answer": "To call methods of the superclass (parent class).",
+      "explanation": "`super()` returns a proxy object allowing you to call methods of the parent class, primarily used in `__init__`."
+    },
+    {
+      "question": "If Class C inherits from Class B, and Class B inherits from Class A, what type of inheritance is this?",
+      "options": [
+        "Multiple Inheritance",
+        "Hierarchical Inheritance",
+        "Multilevel Inheritance",
+        "Hybrid Inheritance"
+      ],
+      "answer": "Multilevel Inheritance",
+      "explanation": "Multilevel inheritance forms a chain of parent-child relationships."
+    },
+    {
+      "question": "Which decorator is used to define a method that operates on the class rather than an instance?",
+      "options": [
+        "@staticmethod",
+        "@classmethod",
+        "@property",
+        "@abstractmethod"
+      ],
+      "answer": "@classmethod",
+      "explanation": "`@classmethod` takes `cls` as the first parameter and modifies class state."
+    },
+    {
+      "question": "What does Duck Typing refer to in Python?",
+      "options": [
+        "A form of polymorphism where an object's suitability is determined by its methods rather than its inheritance.",
+        "A way to write unit tests.",
+        "A specific syntax error.",
+        "Creating classes named after animals."
+      ],
+      "answer": "A form of polymorphism where an object's suitability is determined by its methods rather than its inheritance.",
+      "explanation": "'If it walks like a duck and quacks like a duck, it's a duck.' Python cares about methods, not strictly types."
+    }
+  ]
+}

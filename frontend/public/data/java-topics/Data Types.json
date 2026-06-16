@@ -1,0 +1,270 @@
+{
+  "title": "Java Data Types",
+  "introduction": {
+    "what_it_is": "Data types in Java specify the different sizes and values that can be stored in a variable. They define the type of data a variable can hold and dictate the operations that can be performed on it.",
+    "why_important": "Java is a strongly typed language, meaning every variable must be declared with a data type. This helps the compiler allocate memory efficiently, perform strict type checking at compile-time, and ensure robust and error-free code execution.",
+    "real_world": [
+      "Using 'double' to represent exact coordinate positions in a GPS tracking application.",
+      "Employing 'boolean' flags to track a user's session state (e.g., logged in or logged out) in a web application."
+    ]
+  },
+  "detailed_theory": "In Java, data types are broadly categorized into two main groups: Primitive Data Types and Non-Primitive (Reference) Data Types. \n\n1. Primitive Data Types: These are predefined by the language and named by keywords. They represent raw, fundamental values and do not share state with other primitive values. The eight primitive types are: `byte`, `short`, `int`, `long`, `float`, `double`, `boolean`, and `char`.\n\n2. Non-Primitive Data Types: These are created by the programmer and are not defined by Java (except for `String`). Also known as reference variables or object references, they are used to access objects. Examples include Classes, Interfaces, and Arrays. A key distinction is that primitive types store the actual value, whereas non-primitive types store the memory address of the object they refer to. Additionally, primitive types are always lowercase, while non-primitive types typically start with an uppercase letter.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Strongly Typed",
+        "description": "Every variable and expression has a type that is strictly checked at compile time, reducing runtime errors."
+      },
+      {
+        "name": "Fixed Sizes",
+        "description": "Unlike some languages like C/C++, the size of primitive data types in Java is standardized and machine-independent."
+      }
+    ],
+    "advantages": [
+      "Ensures type safety by preventing inappropriate operations across different types.",
+      "Fixed sizes guarantee consistent behavior across different platforms and operating systems.",
+      "Optimized memory usage by allowing developers to choose precisely sized primitives (e.g., using a `byte` instead of an `int` for small ranges)."
+    ],
+    "limitations": [
+      "Strict typing requires explicit type casting, which can sometimes lead to verbose code.",
+      "Primitive types are not objects, meaning they lack methods (though Wrapper classes provide a workaround)."
+    ]
+  },
+  "syntax": {
+    "explanation": "To use a data type in Java, you must declare a variable. This involves specifying the data type followed by a valid variable name, and optionally assigning it an initial value using the assignment operator (`=`).",
+    "breakdown": [
+      "dataType: The type of data (e.g., int, double, String).",
+      "variableName: A unique identifier for the variable.",
+      "=: The assignment operator used to assign a value.",
+      "value: The literal data being assigned.",
+      ";: Statement terminator."
+    ],
+    "rules": [
+      "Every variable must have a declared data type before it is used.",
+      "Primitive data type keywords must be written in lowercase (e.g., `int`, `boolean`).",
+      "Assigning a value larger than the data type's capacity will result in a compile-time error."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Declaring Primitive Data Types",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        int age = 25;\n        double salary = 50000.50;\n        char grade = 'A';\n        boolean isEmployed = true;\n\n        System.out.println(\"Age: \" + age);\n        System.out.println(\"Salary: \" + salary);\n        System.out.println(\"Grade: \" + grade);\n        System.out.println(\"Employed: \" + isEmployed);\n    }\n}",
+      "output": "Age: 25\nSalary: 50000.5\nGrade: A\nEmployed: true",
+      "explanation": "This example demonstrates how to declare, initialize, and print various primitive data types. We create variables for an integer, a floating-point number, a single character, and a boolean value."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Type Casting (Implicit and Explicit)",
+      "code": "public class CastingExample {\n    public static void main(String[] args) {\n        // Implicit casting (Widening)\n        int myInt = 9;\n        double myDouble = myInt;\n        \n        // Explicit casting (Narrowing)\n        double price = 9.78d;\n        int roundedPrice = (int) price;\n\n        System.out.println(\"Implicit: \" + myInt + \" -> \" + myDouble);\n        System.out.println(\"Explicit: \" + price + \" -> \" + roundedPrice);\n    }\n}",
+      "output": "Implicit: 9 -> 9.0\nExplicit: 9.78 -> 9",
+      "explanation": "Implicit casting happens automatically when assigning a smaller primitive type to a larger one. Explicit casting requires manually specifying the target type in parentheses and is used when converting a larger type to a smaller type, which may result in data loss (e.g., truncating decimals)."
+    },
+    {
+      "level": "Advanced",
+      "title": "Autoboxing and Unboxing with Wrapper Classes",
+      "code": "import java.util.ArrayList;\n\npublic class WrapperExample {\n    public static void main(String[] args) {\n        ArrayList<Integer> numbers = new ArrayList<>();\n        \n        // Autoboxing: primitive 'int' to object 'Integer'\n        numbers.add(10); \n        numbers.add(20);\n        \n        // Unboxing: object 'Integer' to primitive 'int'\n        int sum = numbers.get(0) + numbers.get(1);\n        \n        System.out.println(\"Sum: \" + sum);\n    }\n}",
+      "output": "Sum: 30",
+      "explanation": "Collections like ArrayList can only store objects, not primitives. Autoboxing is the automatic conversion the Java compiler makes between primitive types and their corresponding object wrapper classes. Unboxing is the reverse process. Here, primitives are automatically boxed into `Integer` objects and then unboxed back to `int` for addition."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Java Primitive Data Types",
+        "headers": [
+          "Data Type",
+          "Size",
+          "Range / Description"
+        ],
+        "rows": [
+          [
+            "byte",
+            "1 byte",
+            "-128 to 127"
+          ],
+          [
+            "short",
+            "2 bytes",
+            "-32,768 to 32,767"
+          ],
+          [
+            "int",
+            "4 bytes",
+            "-2^31 to 2^31-1"
+          ],
+          [
+            "long",
+            "8 bytes",
+            "-2^63 to 2^63-1"
+          ],
+          [
+            "float",
+            "4 bytes",
+            "Fractional numbers, up to 7 decimal digits"
+          ],
+          [
+            "double",
+            "8 bytes",
+            "Fractional numbers, up to 15 decimal digits"
+          ],
+          [
+            "boolean",
+            "1 bit",
+            "Stores true or false"
+          ],
+          [
+            "char",
+            "2 bytes",
+            "Single 16-bit Unicode character"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Primitive Data Types",
+        "concept_b": "Non-Primitive (Reference) Data Types",
+        "explanation": "Primitive types define variables that directly hold their values in stack memory. Non-primitive types, however, do not hold the actual value; instead, they store a memory address (reference) pointing to the object located in the heap memory."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "Integer.parseInt()",
+      "description": "A static method belonging to the Integer wrapper class that converts a String representation of a number into a primitive int.",
+      "parameters": "String s (The string to be parsed)",
+      "return_value": "int (The integer value represented by the argument in decimal)",
+      "example_usage": "int num = Integer.parseInt(\"123\");"
+    },
+    {
+      "name": "Double.parseDouble()",
+      "description": "A static method belonging to the Double wrapper class used to convert a String into a primitive double.",
+      "parameters": "String s (The string to be parsed)",
+      "return_value": "double (The double value represented by the string argument)",
+      "example_usage": "double price = Double.parseDouble(\"19.99\");"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using floating-point types for currency calculations",
+      "description": "Due to how floating-point arithmetic works in hardware, `float` and `double` can suffer from precision loss when performing operations. This makes them unsuitable for exact financial calculations.",
+      "wrong_example": "double price1 = 0.1;\ndouble price2 = 0.2;\ndouble total = price1 + price2; // Yields 0.30000000000000004",
+      "correct_example": "import java.math.BigDecimal;\nBigDecimal p1 = new BigDecimal(\"0.1\");\nBigDecimal p2 = new BigDecimal(\"0.2\");\nBigDecimal total = p1.add(p2); // Yields 0.3",
+      "debugging_tip": "Whenever you deal with currency or require absolute mathematical precision, always utilize the `java.math.BigDecimal` class."
+    },
+    {
+      "title": "Integer Overflow",
+      "description": "If a mathematical operation yields a value outside the valid range of the data type, Java silently wraps the value around without throwing an exception.",
+      "wrong_example": "int max = 2147483647;\nint result = max + 1; // Yields -2147483648",
+      "correct_example": "long max = 2147483647L;\nlong result = max + 1L; // Yields 2147483648",
+      "debugging_tip": "If you anticipate a calculation might exceed the maximum limit of an `int`, use a `long` or `BigInteger`."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between a primitive and a non-primitive data type?",
+        "answer": "Primitive data types are predefined by Java, store actual values directly, and always start with a lowercase letter (e.g., int, boolean). Non-primitive data types are created by the programmer (except String), store memory addresses pointing to objects, and conventionally start with an uppercase letter (e.g., Object, Array, Class)."
+      },
+      {
+        "question": "What is the default value of an uninitialized local boolean variable?",
+        "answer": "In Java, local variables do not have default values. Using an uninitialized local variable will result in a compile-time error. However, if a boolean is an instance or static variable of a class, its default value is `false`."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Why does Java need wrapper classes if it already has primitive types?",
+        "answer": "Java collections (like ArrayList, HashMap) and Generics can only work with objects, not primitives. Wrapper classes (like Integer, Double) provide a way to convert primitives into objects, allowing them to be stored in these structures. They also provide useful utility methods like parsing strings into numbers."
+      },
+      {
+        "question": "What happens if you assign a double value to an int variable?",
+        "answer": "It will cause a compile-time error due to a \"possible loss of precision.\" A double is larger and can hold fractional values, whereas an int cannot. To bypass this, you must explicitly cast the double to an int using `(int) value`, which truncates the fractional part."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain Autoboxing and Unboxing. Can they lead to NullPointerExceptions?",
+        "answer": "Autoboxing is the automatic conversion by the Java compiler from a primitive type to its corresponding wrapper class, while unboxing is the reverse. Yes, unboxing can cause a `NullPointerException` if a wrapper class reference is `null` and the JVM attempts to unbox it to a primitive type, because primitives cannot be null."
+      },
+      {
+        "question": "Why is the char data type 2 bytes in Java, whereas it is typically 1 byte in C/C++?",
+        "answer": "In Java, the `char` data type uses the Unicode encoding system (UTF-16) to represent characters, which allows it to support internationalization and a vast array of global characters and symbols. In C/C++, char uses ASCII, which only requires 1 byte."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Declare a variable of type byte and assign it the value 120. Print it to the console.",
+      "Create an application that calculates the area of a rectangle. Use variables of type 'double' for the width, height, and area.",
+      "Write a program that demonstrates implicit casting from an int to a long."
+    ],
+    "medium": [
+      "Create an Integer object using autoboxing. Then, extract its primitive int value using unboxing and multiply it by 10.",
+      "Write a method that takes a double and an int. Cast the double to an int, add them together, and return the result.",
+      "Write a program that intentionally causes an integer overflow and print the result. Then fix the issue using a 'long' data type."
+    ],
+    "hard": [
+      "Develop a robust String parser function that attempts to convert a String to an integer, catching 'NumberFormatException' to prevent application crashes when invalid strings are provided.",
+      "Create a basic generic class 'Container<T>' that can store an object of any data type. Instantiate it using different wrapper classes.",
+      "Simulate a financial transaction involving precise currency division using 'BigDecimal' and 'RoundingMode' to ensure no floating point inaccuracy."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a Java program that takes a string input and determines if it can be successfully parsed into an integer.",
+      "input": "String input = \"4025\";",
+      "output": "true",
+      "constraints": "The input string can be null, empty, or contain characters that are not digits.",
+      "solution": "public class Main {\n    public static boolean isInteger(String str) {\n        if (str == null || str.isEmpty()) {\n            return false;\n        }\n        try {\n            Integer.parseInt(str);\n            return true;\n        } catch (NumberFormatException e) {\n            return false;\n        }\n    }\n    \n    public static void main(String[] args) {\n        System.out.println(isInteger(\"4025\")); // true\n        System.out.println(isInteger(\"4025abc\")); // false\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Embedded Systems",
+      "explanation": "When programming microcontrollers in Java (like Java ME), memory is highly constrained. Developers heavily utilize 'byte' and 'short' data types to minimize memory footprints instead of defaulting to 'int'."
+    },
+    {
+      "field": "Cryptography & Hashing",
+      "explanation": "Cryptographic algorithms often manipulate individual bytes and bits. The 'byte' array is extensively used to represent raw binary data when generating hashes or encrypting payloads."
+    }
+  ],
+  "best_practices": [
+    "Choose the most appropriate data type for your variables to optimize memory. Don't use a 'long' if a 'byte' or 'int' will suffice.",
+    "Use uppercase 'L' when defining long literals (e.g., 10000000000L) to avoid confusion with the number '1'.",
+    "Similarly, use 'f' or 'F' for float literals and 'd' or 'D' for double literals to be explicit about your intentions.",
+    "Rely on 'BigDecimal' when calculating currency or metrics that demand high precision.",
+    "Leverage primitive types whenever possible for better performance, reserving Wrapper classes solely for situations that require objects (like Collections or Generics)."
+  ],
+  "summary": [
+    "Java strictly enforces data types, guaranteeing type safety and clarity.",
+    "There are 8 primitive data types (`byte`, `short`, `int`, `long`, `float`, `double`, `boolean`, `char`) that store fundamental values.",
+    "Non-primitive types refer to objects and are used for more complex data structures, such as Strings and Arrays.",
+    "Java performs implicit casting for widening conversions, but narrowing conversions require explicit casting from the developer.",
+    "Wrapper classes exist to bridge the gap between object-oriented requirements (like Generics) and the performance of primitive types via Autoboxing and Unboxing."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following data types uses exactly 8 bytes of memory in Java?",
+      "options": [
+        "int",
+        "float",
+        "long",
+        "short"
+      ],
+      "answer": "long",
+      "explanation": "In Java, a 'long' takes 8 bytes (64 bits) and a 'double' also takes 8 bytes. 'int' and 'float' take 4 bytes, while 'short' takes 2 bytes."
+    },
+    {
+      "question": "Which primitive type is used to store exactly one 16-bit Unicode character?",
+      "options": [
+        "String",
+        "byte",
+        "char",
+        "boolean"
+      ],
+      "answer": "char",
+      "explanation": "The 'char' data type is a single 16-bit Unicode character, with a minimum value of '\\u0000' (or 0) and a maximum value of '\\uffff' (or 65,535)."
+    }
+  ]
+}

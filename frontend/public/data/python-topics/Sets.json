@@ -1,0 +1,264 @@
+{
+  "title": "Sets",
+  "introduction": {
+    "what_it_is": "A Set is an unordered collection of unique, immutable elements.",
+    "why_important": "Sets are highly optimized for mathematical operations like unions, intersections, and membership testing.",
+    "real_world": [
+      "Finding mutual friends between two users on a social network",
+      "Removing duplicate entries from a large dataset",
+      "Filtering out banned words from a text stream"
+    ]
+  },
+  "detailed_theory": "Sets in Python are an unordered collection of unique elements. They are mutable, meaning you can add or remove items after creation, but the elements themselves must be immutable and hashable (like numbers, strings, or tuples). You cannot put a list or a dictionary inside a set.\n\nSets are defined using curly braces `{}` with comma-separated values, or by using the `set()` constructor. An empty set must be created using `set()`, as `{}` creates an empty dictionary instead. The primary characteristic of a set is that it automatically removes duplicates. If you pass a list with duplicate values into the `set()` constructor, the resulting set will only contain the unique values.\n\nUnder the hood, sets are implemented using hash tables. This gives them a massive performance advantage over lists when it comes to membership testing (`in` operator). Checking if an item exists in a set takes O(1) constant time on average, whereas checking a list takes O(n) linear time. This makes sets the ideal data structure for \"seen\" tracking or large-scale lookups.\n\nFurthermore, Python sets fully support mathematical set theory operations. You can compute the union (elements in either set), intersection (elements in both sets), difference (elements in the first set but not the second), and symmetric difference (elements in either set, but not both) using operators like `|`, `&`, `-`, and `^`, or their corresponding named methods.\n\nBecause sets are unordered, they do not support indexing or slicing. You cannot ask a set for its \"first\" element. If you need to process set elements, you must iterate over them using a `for` loop, but the iteration order is arbitrary and not guaranteed to be consistent.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Unordered",
+        "description": "Elements have no specific order and cannot be accessed via indexing."
+      },
+      {
+        "name": "Unique Elements",
+        "description": "Automatically removes any duplicate values upon creation or insertion."
+      },
+      {
+        "name": "Optimized Lookups",
+        "description": "Membership testing is O(1) on average due to hash table implementation."
+      }
+    ],
+    "advantages": [
+      "Extremely fast for checking if an item exists",
+      "Effortless duplicate removal from lists or other iterables",
+      "Built-in support for mathematical set operations"
+    ],
+    "limitations": [
+      "Cannot contain mutable elements like lists or dictionaries",
+      "Does not support indexing or slicing",
+      "Iteration order is unpredictable"
+    ]
+  },
+  "syntax": {
+    "explanation": "Sets are created using curly braces `{}` containing elements, or the `set()` function.",
+    "breakdown": [
+      "`{}`: Curly braces define the set structure.",
+      "`,`: Separates the elements within the set.",
+      "`set()`: The constructor required to create an empty set or convert other iterables."
+    ],
+    "rules": [
+      "An empty set must be created with `set()`, not `{}`.",
+      "All elements inside the set must be hashable.",
+      "Duplicates are silently ignored during creation."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating a Set and Removing Duplicates",
+      "code": "numbers = [1, 2, 2, 3, 4, 4, 5]\nunique_numbers = set(numbers)\nprint(unique_numbers)",
+      "output": "{1, 2, 3, 4, 5}",
+      "explanation": "Converting a list to a set automatically removes all duplicate values."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Set Operations (Union and Intersection)",
+      "code": "set_a = {1, 2, 3}\nset_b = {3, 4, 5}\nprint('Union:', set_a | set_b)\nprint('Intersection:', set_a & set_b)",
+      "output": "Union: {1, 2, 3, 4, 5}\nIntersection: {3}",
+      "explanation": "The `|` operator combines all unique elements. The `&` operator finds elements present in both sets."
+    },
+    {
+      "level": "Advanced",
+      "title": "Symmetric Difference",
+      "code": "set_a = {'apple', 'banana', 'cherry'}\nset_b = {'banana', 'cherry', 'date'}\nprint(set_a ^ set_b)",
+      "output": "{'apple', 'date'}",
+      "explanation": "The `^` operator returns elements that are in either set, but not in both."
+    },
+    {
+      "level": "Real-world",
+      "title": "Finding Missing Elements",
+      "code": "all_users = {'Alice', 'Bob', 'Charlie', 'David'}\nactive_users = {'Alice', 'Charlie'}\ninactive_users = all_users - active_users\nprint(inactive_users)",
+      "output": "{'Bob', 'David'}",
+      "explanation": "The `-` operator computes the difference, useful for finding items missing from a subset."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Set Operations",
+        "headers": ["Operation", "Operator", "Method", "Description"],
+        "rows": [
+          ["Union", "`|`", "`.union()`", "Elements in A, or B, or both"],
+          ["Intersection", "`&`", "`.intersection()`", "Elements in both A and B"],
+          ["Difference", "`-`", "`.difference()`", "Elements in A but not in B"],
+          ["Symmetric Diff.", "`^`", "`.symmetric_difference()`", "Elements in A or B, but not both"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "add()",
+        "concept_b": "update()",
+        "explanation": "`add()` inserts a single element into the set. `update()` adds multiple elements from an iterable into the set."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "add()",
+      "description": "Adds an element to the set.",
+      "parameters": "element",
+      "return_value": "None",
+      "example_usage": "s = {1, 2}\ns.add(3)\nprint(s) # {1, 2, 3}"
+    },
+    {
+      "name": "discard()",
+      "description": "Removes an element from the set if it is present.",
+      "parameters": "element",
+      "return_value": "None (does not raise error if element not found)",
+      "example_usage": "s = {1, 2}\ns.discard(3)\nprint(s) # {1, 2}"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Creating an Empty Set with {}",
+      "description": "Using empty curly braces creates an empty dictionary, not an empty set.",
+      "wrong_example": "my_set = {}\nprint(type(my_set))",
+      "correct_example": "my_set = set()\nprint(type(my_set))",
+      "debugging_tip": "Always use the `set()` constructor to initialize an empty set."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What happens if you try to add a duplicate element to a set?",
+        "answer": "The set simply ignores the duplicate element. No error is raised, and the set remains unchanged."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Why can't you put a list inside a set?",
+        "answer": "Sets use hash tables for fast lookups, which requires elements to be hashable and immutable. Lists are mutable and therefore unhashable."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What is the difference between `remove()` and `discard()`?",
+        "answer": "Both remove an element from a set. However, if the element does not exist, `remove()` raises a KeyError, while `discard()` does nothing."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a set of your 3 favorite colors.",
+      "Add a new color to the set.",
+      "Remove a color from the set using `discard()`.",
+      "Check if 'blue' is in the set.",
+      "Clear all elements from the set."
+    ],
+    "medium": [
+      "Write a function that takes a list and returns a list with duplicates removed.",
+      "Find the intersection of two sets of numbers.",
+      "Given two sets, return True if they have no common elements.",
+      "Compute the symmetric difference between two sets.",
+      "Update a set with elements from a list."
+    ],
+    "hard": [
+      "Implement a function to find the Jaccard similarity coefficient between two sets.",
+      "Given a list of sets, find the common elements across all of them.",
+      "Create a frozenset and attempt to add an item to it.",
+      "Find all subsets of a given set.",
+      "Write a one-liner to find the vowels present in a given word using sets."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.",
+      "input": "nums = [1, 2, 3, 1]",
+      "output": "True",
+      "constraints": "Optimize for O(n) time and O(n) space complexity.",
+      "solution": "def contains_duplicate(nums):\n    return len(set(nums)) != len(nums)"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Natural Language Processing",
+      "explanation": "Sets are used to create vocabularies (unique words) from massive text corpora quickly."
+    },
+    {
+      "field": "Data Deduplication",
+      "explanation": "When importing records from messy sources (like CSVs), converting lists of identifiers to a set instantly removes all duplicate records."
+    }
+  ],
+  "best_practices": [
+    "Use sets instead of lists when you need to perform frequent membership tests (the `in` operator).",
+    "Use set comprehensions `{x for x in iterable}` for concise set creation.",
+    "Use `frozenset` if you need an immutable set that can act as a dictionary key.",
+    "Prefer `.discard()` over `.remove()` unless you explicitly want an exception when the item is missing."
+  ],
+  "summary": [
+    "Sets are unordered collections of unique, hashable items.",
+    "They are created using `{}` or the `set()` constructor.",
+    "Sets provide O(1) average time complexity for membership testing.",
+    "They fully support mathematical operations like union, intersection, and difference."
+  ],
+  "quiz": [
+    {
+      "question": "Which constructor creates an empty set?",
+      "options": ["{}", "set()", "[]", "Set{}"],
+      "answer": "set()",
+      "explanation": "The `set()` constructor must be used because `{}` creates an empty dictionary."
+    },
+    {
+      "question": "What is a primary characteristic of a Python set?",
+      "options": ["It maintains insertion order", "It allows duplicate elements", "It stores only unique elements", "It is immutable"],
+      "answer": "It stores only unique elements",
+      "explanation": "Sets automatically filter out duplicate values."
+    },
+    {
+      "question": "Which operator is used to find the intersection of two sets?",
+      "options": ["|", "-", "^", "&"],
+      "answer": "&",
+      "explanation": "The `&` operator (or the `.intersection()` method) returns elements common to both sets."
+    },
+    {
+      "question": "Why is checking membership in a set faster than in a list?",
+      "options": ["Sets are smaller", "Sets use a hash table implementation", "Sets are sorted", "Lists are immutable"],
+      "answer": "Sets use a hash table implementation",
+      "explanation": "Sets use hash tables, allowing O(1) average lookup time, whereas lists require O(n) linear scanning."
+    },
+    {
+      "question": "Which of the following data types CANNOT be added to a set?",
+      "options": ["String", "Integer", "Tuple", "List"],
+      "answer": "List",
+      "explanation": "Set elements must be hashable (immutable). Lists are mutable and therefore unhashable."
+    },
+    {
+      "question": "What does the `.symmetric_difference()` method do?",
+      "options": ["Returns elements in both sets", "Returns elements in either set, but not in both", "Returns all elements from both sets", "Returns elements in the first set but not the second"],
+      "answer": "Returns elements in either set, but not in both",
+      "explanation": "Symmetric difference (operator `^`) finds elements unique to each set."
+    },
+    {
+      "question": "What happens if you use `.remove()` on a set and the item does not exist?",
+      "options": ["It returns False", "It returns None", "It raises a KeyError", "It raises a ValueError"],
+      "answer": "It raises a KeyError",
+      "explanation": "Unlike `.discard()`, `.remove()` throws an exception if the specified element is not found."
+    },
+    {
+      "question": "Can you access elements in a set using an index like `my_set[0]`?",
+      "options": ["Yes", "No", "Only if the set contains integers", "Only if the set is sorted"],
+      "answer": "No",
+      "explanation": "Sets are unordered, so they do not support indexing or slicing."
+    },
+    {
+      "question": "Which function converts a list into a set, effectively removing duplicates?",
+      "options": ["dict()", "set()", "list()", "tuple()"],
+      "answer": "set()",
+      "explanation": "Passing a list to the `set()` constructor creates a set containing only the unique elements of the list."
+    },
+    {
+      "question": "What is a `frozenset`?",
+      "options": ["A set that is sorted", "A set that allows duplicates", "An immutable version of a set", "A set that only contains strings"],
+      "answer": "An immutable version of a set",
+      "explanation": "A frozenset cannot be modified after creation, making it hashable and usable as a dictionary key."
+    }
+  ]
+}

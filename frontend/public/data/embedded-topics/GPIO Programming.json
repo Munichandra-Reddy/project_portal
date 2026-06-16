@@ -1,0 +1,43 @@
+{
+    "title": "GPIO Programming",
+    "topic_overview": "General-Purpose Input/Output (GPIO) pins are the fundamental interface between a microcontroller and the external physical world. They can be configured dynamically as either inputs to read digital signals or outputs to drive digital signals.",
+    "core_concepts": [
+        "Pin Configuration: Setting the direction (input or output).",
+        "Digital I/O: Reading states (High/Low) or driving states.",
+        "Pull-up/Pull-down Resistors: Defining a default state for floating input pins.",
+        "Alternate Functions: Multiplexing GPIO pins for other peripherals (e.g., UART TX/RX)."
+    ],
+    "architecture_working_principle": "GPIO pins are controlled via memory-mapped registers (e.g., Direction Register, Output Data Register, Input Data Register). Writing specific bit patterns to these registers configures the hardware circuitry of the pin to act as a digital driver or receiver.",
+    "real_world_applications": [
+        "Blinking LEDs for status indication.",
+        "Reading states of mechanical buttons or switches.",
+        "Controlling relays to switch high-power loads."
+    ],
+    "advantages": [
+        "Extremely versatile and simple to use.",
+        "Provides direct control over digital signals.",
+        "Essential for bit-banging communication protocols if hardware peripherals are unavailable."
+    ],
+    "limitations": [
+        "Can only handle digital (binary) signals natively.",
+        "Driving high current loads requires external circuitry (like transistors or relays).",
+        "Software polling of inputs wastes CPU cycles."
+    ],
+    "industry_use_cases": "GPIOs are used in almost every embedded design, from simple user interfaces (buttons/LEDs) to controlling complex motor drivers and interfacing with digital sensors.",
+    "best_practices": [
+        "Always enable internal pull-up/pull-down resistors for inputs connected to mechanical switches to avoid floating states.",
+        "Use bitwise operations to change specific pin states without affecting others on the same port.",
+        "Implement debouncing (software or hardware) when reading mechanical switches."
+    ],
+    "interview_questions": [
+        {
+            "q": "How do you configure a specific pin as an output without affecting other pins on the same port in C?",
+            "a": "Using a bitwise OR operation. For example, `PORT_DIR_REG |= (1 << PIN_NUMBER);` sets the specific bit to 1, configuring it as an output, while leaving other bits unchanged."
+        }
+    ],
+    "learning_outcomes": [
+        "Configure microcontroller pins as digital inputs or outputs.",
+        "Write code to read digital sensors and drive actuators.",
+        "Understand the necessity of pull resistors and debouncing."
+    ]
+}

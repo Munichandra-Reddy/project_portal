@@ -1,0 +1,43 @@
+{
+    "title": "SPI Communication",
+    "topic_overview": "Serial Peripheral Interface (SPI) is a synchronous, full-duplex serial communication protocol used primarily for short-distance communication in embedded systems. It uses a master-slave architecture.",
+    "core_concepts": [
+        "Master-Slave: One master device controls communication with one or more slave devices.",
+        "Synchronous: The master generates a clock signal (SCLK) that synchronizes data transfer.",
+        "Four Wires: MOSI (Master Out Slave In), MISO (Master In Slave Out), SCLK (Serial Clock), SS/CS (Slave Select/Chip Select).",
+        "Clock Polarity and Phase (CPOL/CPHA): Defines the clock idle state and on which edge data is sampled."
+    ],
+    "architecture_working_principle": "The master selects a specific slave by pulling its SS line low. It then generates the clock signal. During each clock cycle, the master shifts out one bit on the MOSI line while simultaneously shifting in one bit from the MISO line. It acts like a distributed shift register.",
+    "real_world_applications": [
+        "Interfacing with high-speed sensors (e.g., accelerometers, gyroscopes).",
+        "Communicating with external memory (SD cards, flash memory).",
+        "Driving graphical LCD/OLED displays."
+    ],
+    "advantages": [
+        "High data transfer rates (often several megabits per second).",
+        "Full-duplex communication (simultaneous transmit and receive).",
+        "Simple hardware implementation without complex framing or addressing overhead."
+    ],
+    "limitations": [
+        "Requires more pins than I2C or UART (4 wires + 1 extra wire per slave).",
+        "Typically limited to short distances on a single PCB.",
+        "No formal standard acknowledgment mechanism; the master assumes the slave received data."
+    ],
+    "industry_use_cases": "SPI is the protocol of choice when throughput is critical, such as reading uncompressed audio data from an SD card or rapidly updating pixels on an LCD screen.",
+    "best_practices": [
+        "Verify the CPOL and CPHA requirements of the slave device datasheet and configure the master accordingly.",
+        "Manage Slave Select (SS) lines carefully in software, ensuring only one slave is selected at a time.",
+        "Keep SPI traces short on the PCB to minimize parasitic capacitance and noise at high speeds."
+    ],
+    "interview_questions": [
+        {
+            "q": "What happens if you have multiple SPI slaves but the microcontroller doesn't have enough hardware SS pins?",
+            "a": "You can use any General Purpose I/O (GPIO) pin as a software-controlled Slave Select. You simply pull the specific GPIO low before starting the SPI transfer and pull it high when finished."
+        }
+    ],
+    "learning_outcomes": [
+        "Understand the SPI master-slave architecture and signal lines.",
+        "Configure SPI clock polarity and phase to match a peripheral.",
+        "Implement SPI communication to read/write from a sensor or memory device."
+    ]
+}

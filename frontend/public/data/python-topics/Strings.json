@@ -1,0 +1,263 @@
+{
+  "title": "Strings",
+  "introduction": {
+    "what_it_is": "A String is an immutable sequence of characters used to represent text.",
+    "why_important": "Strings are essential for parsing, formatting, and displaying human-readable data.",
+    "real_world": [
+      "Storing user passwords and email addresses",
+      "Parsing data from a CSV file",
+      "Generating dynamic web page HTML"
+    ]
+  },
+  "detailed_theory": "Strings in Python are sequences of characters, enclosed within either single quotes `' '` or double quotes `\" \"`. For multi-line strings, triple quotes `''' '''` or `\"\"\" \"\"\"` are used. Because they are sequences, strings share many characteristics with lists and tuples. You can access individual characters using zero-based indexing, use negative indices, and extract substrings using slicing.\n\nHowever, a crucial characteristic of strings is that they are immutable. Once a string is created in memory, it cannot be changed. Attempting to reassign a character, such as `my_string[0] = 'H'`, will result in a TypeError. Any operation that appears to modify a string, like concatenation or replacing characters, actually creates and returns a completely new string object. This immutability ensures safety and enables Python to cache and reuse strings efficiently.\n\nPython provides an incredibly rich set of built-in string methods for text manipulation. You can easily change case using `.upper()`, `.lower()`, and `.title()`. You can remove whitespace using `.strip()`, replace substrings with `.replace()`, and split a string into a list of words using `.split()`. Conversely, you can join an iterable of strings back into a single string using the `.join()` method.\n\nString formatting is another powerful feature. Over the years, Python has introduced several ways to format strings. The most modern, readable, and preferred method is f-strings (formatted string literals), introduced in Python 3.6. By prefixing a string with `f` or `F`, you can directly embed Python expressions inside curly braces `{}` within the string, resulting in clean and highly readable code.\n\nUnderstanding how strings are encoded is also important. In Python 3, all strings are Unicode by default, allowing them to represent text from almost any language in the world, as well as emojis. If you need to deal with raw bytes, you use the `bytes` data type, encoding and decoding between strings and bytes using `.encode()` and `.decode()`.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Immutable",
+        "description": "The contents of a string cannot be altered after creation."
+      },
+      {
+        "name": "Sequence Types",
+        "description": "Supports indexing, slicing, and iteration over characters."
+      },
+      {
+        "name": "Unicode Native",
+        "description": "Python 3 strings are Unicode, supporting global languages and emojis natively."
+      }
+    ],
+    "advantages": [
+      "Extensive built-in methods for parsing and manipulation",
+      "Immutability provides safety in concurrent environments",
+      "F-strings offer a beautiful and efficient way to format variables"
+    ],
+    "limitations": [
+      "Modifying strings requires creating new ones, which can be inefficient in tight loops",
+      "Encoding issues can arise when interacting with older systems or file formats"
+    ]
+  },
+  "syntax": {
+    "explanation": "Strings are created by enclosing characters in quotes.",
+    "breakdown": [
+      "`'Hello'`: Single quotes.",
+      "`\"Hello\"`: Double quotes (equivalent to single).",
+      "`'''Hello'''`: Triple quotes for multi-line strings."
+    ],
+    "rules": [
+      "Quotes must match; you cannot start with single and end with double.",
+      "Backslashes `\\` are used as escape characters (e.g., `\\n` for newline).",
+      "Prefixing with `f` enables f-string formatting."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "String Concatenation and Indexing",
+      "code": "greeting = 'Hello' + ' ' + 'World'\nprint(greeting[0])",
+      "output": "H",
+      "explanation": "Strings can be concatenated with `+` and accessed via 0-based index."
+    },
+    {
+      "level": "Intermediate",
+      "title": "String Methods",
+      "code": "text = '  Python is FUN  '\nprint(text.strip().lower())",
+      "output": "python is fun",
+      "explanation": "Methods can be chained. `.strip()` removes outer whitespace, and `.lower()` makes it lowercase."
+    },
+    {
+      "level": "Advanced",
+      "title": "F-Strings",
+      "code": "name = 'Alice'\nage = 30\nprint(f'{name} will be {age + 1} next year.')",
+      "output": "Alice will be 31 next year.",
+      "explanation": "F-strings allow embedded variables and expressions directly inside the string literal."
+    },
+    {
+      "level": "Real-world",
+      "title": "Parsing CSV Lines",
+      "code": "csv_line = 'John,Doe,35,Engineer'\ndata = csv_line.split(',')\nprint(f'First Name: {data[0]}, Profession: {data[3]}')",
+      "output": "First Name: John, Profession: Engineer",
+      "explanation": "The `.split()` method is essential for parsing structured text data."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common String Methods",
+        "headers": ["Method", "Description", "Example"],
+        "rows": [
+          ["split()", "Splits string into a list", "`'a,b'.split(',')` -> `['a', 'b']`"],
+          ["join()", "Joins an iterable into a string", "`'-'.join(['a', 'b'])` -> `'a-b'`"],
+          ["replace()", "Replaces substrings", "`'hi'.replace('i', 'ello')`"],
+          ["strip()", "Removes leading/trailing whitespace", "`'  hi  '.strip()`"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "split()",
+        "concept_b": "join()",
+        "explanation": "`.split()` converts a string into a list of substrings. `.join()` is the inverse, taking a list of strings and combining them into a single string."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "startswith()",
+      "description": "Returns True if the string starts with the specified prefix.",
+      "parameters": "prefix",
+      "return_value": "Boolean",
+      "example_usage": "s = 'Hello'\nprint(s.startswith('He')) # True"
+    },
+    {
+      "name": "find()",
+      "description": "Returns the lowest index of the substring if found in the string.",
+      "parameters": "substring",
+      "return_value": "Integer index (or -1 if not found)",
+      "example_usage": "s = 'Hello'\nprint(s.find('l')) # 2"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Trying to Modify a String in Place",
+      "description": "Because strings are immutable, you cannot change a character by assigning it to an index.",
+      "wrong_example": "s = 'hello'\ns[0] = 'H'",
+      "correct_example": "s = 'hello'\ns = 'H' + s[1:]",
+      "debugging_tip": "Create a new string using slicing and concatenation, or use `.replace()`."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between single quotes and double quotes in Python?",
+        "answer": "There is no difference in functionality. They are interchangeable, which helps avoid escaping quotes if the string itself contains a single or double quote."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What are f-strings and why are they useful?",
+        "answer": "F-strings (formatted string literals) allow you to embed Python expressions inside string constants. They are evaluated at runtime and are faster and more readable than older formatting methods."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How would you reverse a string in Python?",
+        "answer": "The most Pythonic and efficient way is using slicing: `my_string[::-1]`."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a string with your full name.",
+      "Convert the string to all uppercase.",
+      "Find the length of the string.",
+      "Extract the first three characters using slicing.",
+      "Replace a word in a sentence with another word."
+    ],
+    "medium": [
+      "Write a function that checks if a string is a palindrome.",
+      "Count the number of vowels in a string.",
+      "Split a comma-separated string into a list of words, and strip whitespace from each word.",
+      "Use an f-string to format a float to exactly 2 decimal places.",
+      "Reverse the words in a sentence."
+    ],
+    "hard": [
+      "Write a function to find the longest substring without repeating characters.",
+      "Implement a basic string compression algorithm (e.g., 'aabcccccaaa' -> 'a2b1c5a3').",
+      "Determine if two strings are anagrams of each other.",
+      "Extract all email addresses from a large block of text using regular expressions.",
+      "Write a function that converts a string to Title Case without using the `.title()` method."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string.",
+      "input": "strs = ['flower', 'flow', 'flight']",
+      "output": "'fl'",
+      "constraints": "Optimize for O(S) time complexity, where S is the sum of all characters in all strings.",
+      "solution": "def longest_common_prefix(strs):\n    if not strs: return ''\n    prefix = strs[0]\n    for s in strs[1:]:\n        while not s.startswith(prefix):\n            prefix = prefix[:-1]\n            if not prefix: return ''\n    return prefix"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Web Development",
+      "explanation": "Strings are used extensively to generate and manipulate HTML/CSS templates dynamically."
+    },
+    {
+      "field": "Data Cleaning",
+      "explanation": "Data analysts use string methods to clean messy data (e.g., removing extra spaces, standardizing casing, extracting substrings from IDs)."
+    }
+  ],
+  "best_practices": [
+    "Use f-strings for string formatting; avoid `%` formatting or `.format()` unless maintaining old code.",
+    "Use `.join()` instead of `+` inside loops when concatenating many strings, as it is much more efficient.",
+    "Remember that string methods return a *new* string; you must reassign it if you want to keep the changes.",
+    "Use raw strings `r'...'` when dealing with regular expressions or file paths to prevent accidental escape character triggering."
+  ],
+  "summary": [
+    "Strings are immutable sequences of characters.",
+    "They are defined using single, double, or triple quotes.",
+    "Python provides a vast library of string methods like `.split()`, `.replace()`, and `.strip()`.",
+    "F-strings provide an elegant way to format strings dynamically."
+  ],
+  "quiz": [
+    {
+      "question": "Are strings in Python mutable or immutable?",
+      "options": ["Mutable", "Immutable", "Depends on how they are created", "They can be changed using .replace()"],
+      "answer": "Immutable",
+      "explanation": "Once created, the characters within a string cannot be changed. Methods return new strings."
+    },
+    {
+      "question": "Which of the following is an f-string?",
+      "options": ["'f{value}'", "f'{value}'", "format(value)", "%s value"],
+      "answer": "f'{value}'",
+      "explanation": "An f-string is denoted by prefixing the string literal with an `f` or `F`."
+    },
+    {
+      "question": "What is the result of `'Hello'[1:4]`?",
+      "options": ["'ell'", "'ello'", "'Hel'", "'el'"],
+      "answer": "'ell'",
+      "explanation": "Slicing extracts characters from index 1 up to, but not including, index 4."
+    },
+    {
+      "question": "Which method divides a string into a list of substrings?",
+      "options": ["divide()", "slice()", "split()", "break()"],
+      "answer": "split()",
+      "explanation": "The `.split()` method splits a string into a list based on a specified separator."
+    },
+    {
+      "question": "What does the `.strip()` method do?",
+      "options": ["Removes all vowels", "Removes leading and trailing whitespace", "Deletes the string", "Removes all spaces between words"],
+      "answer": "Removes leading and trailing whitespace",
+      "explanation": "`.strip()` is used to clean up spaces, tabs, and newlines from the start and end of a string."
+    },
+    {
+      "question": "What is the most efficient way to concatenate a large list of strings into one string?",
+      "options": ["Using the + operator in a loop", "Using the .concat() method", "Using the .join() method", "Using f-strings"],
+      "answer": "Using the .join() method",
+      "explanation": "`.join()` computes the memory required for the final string once, making it much faster than repeated `+` concatenation."
+    },
+    {
+      "question": "What happens if you try `s = 'hi'; s[0] = 'm'`?",
+      "options": ["The string becomes 'mi'", "A TypeError is raised", "The string remains 'hi'", "A ValueError is raised"],
+      "answer": "A TypeError is raised",
+      "explanation": "Because strings are immutable, item assignment is not supported."
+    },
+    {
+      "question": "Which method returns True if a string contains only letters?",
+      "options": ["isalpha()", "isnumeric()", "isalnum()", "isletters()"],
+      "answer": "isalpha()",
+      "explanation": "`.isalpha()` returns True if all characters in the string are alphabetic and there is at least one character."
+    },
+    {
+      "question": "How do you write a multi-line string?",
+      "options": ["Using \n between words", "Enclosing text in triple quotes ''' or \"\"\"", "Using // before each line", "Enclosing text in single quotes"],
+      "answer": "Enclosing text in triple quotes ''' or \"\"\"",
+      "explanation": "Triple quotes allow strings to span multiple lines naturally."
+    },
+    {
+      "question": "What does `'abc' * 3` evaluate to?",
+      "options": ["Error", "['abc', 'abc', 'abc']", "'abcabcabc'", "'abc3'"],
+      "answer": "'abcabcabc'",
+      "explanation": "The `*` operator on a string repeats the string the specified number of times."
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "title": "Django",
+  "introduction": {
+    "what_it_is": "Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It is built by experienced developers to handle much of the hassle of web development.",
+    "why_important": "It follows the 'batteries-included' philosophy, providing almost everything developers need out of the box, such as an ORM, authentication, routing, and an admin interface, which speeds up development significantly.",
+    "real_world": [
+      "Building complex, data-driven web applications.",
+      "Developing content management systems (CMS).",
+      "Creating backend services for large-scale social networks or e-commerce platforms."
+    ]
+  },
+  "detailed_theory": "Django follows the MVT (Model-View-Template) architectural pattern. While similar to the popular MVC (Model-View-Controller) pattern, Django's terminology is slightly different. In Django, the 'Model' manages the data and business logic, the 'View' processes the request and determines what data is needed, and the 'Template' handles the presentation or how the data is displayed to the user.\n\nOne of Django's most powerful features is its Object-Relational Mapper (ORM). The ORM allows developers to interact with the database, like creating, retrieving, updating, and deleting records, using Python code instead of writing raw SQL. This abstracts away the database specifics, making it easy to switch from SQLite during development to PostgreSQL in production without changing the data access code.\n\nDjango also includes an automatic admin interface. By simply registering your models, Django generates a professional, production-ready administrative backend that allows authorized users to manage site content seamlessly. This feature alone saves countless hours of development time.\n\nSecurity is a paramount concern in Django. It provides built-in protection against many common security threats, such as Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), SQL injection, and clickjacking. For instance, Django's templating engine automatically escapes specific characters to prevent XSS, and its form system handles CSRF tokens effortlessly.\n\nRouting in Django is handled via the URL dispatcher. It uses clean, elegant URL patterns defined using regular expressions or path converters to map incoming URLs to specific view functions or classes. Django supports both Function-Based Views (FBVs) for simplicity and Class-Based Views (CBVs) for reusability and inheritance.\n\nFurthermore, Django has a robust application ecosystem. A Django project consists of one or more 'apps', which are self-contained modules that perform specific functions. These apps can be plugged into other Django projects, promoting code reuse and modular design. Overall, Django is ideal for projects that require a quick turnaround, high security, and scalable architecture.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Object-Relational Mapping (ORM)",
+        "description": "Allows interacting with the database using Python objects instead of writing raw SQL queries."
+      },
+      {
+        "name": "Automatic Admin Interface",
+        "description": "Generates a fully functional, customizable administrative interface based on defined models."
+      },
+      {
+        "name": "Built-in Authentication System",
+        "description": "Handles user accounts, groups, permissions, and cookie-based user sessions securely."
+      },
+      {
+        "name": "Security Features",
+        "description": "Provides out-of-the-box protection against XSS, CSRF, SQL injection, and other common vulnerabilities."
+      }
+    ],
+    "advantages": [
+      "Batteries-included approach saves development time on common features.",
+      "Highly scalable and suitable for high-traffic applications.",
+      "Excellent, comprehensive documentation.",
+      "Strong emphasis on security by default."
+    ],
+    "limitations": [
+      "Can feel monolithic and opinionated, restricting flexibility compared to microframeworks.",
+      "Steeper learning curve for beginners due to the large number of built-in components.",
+      "May be overkill for very simple, single-page applications or basic APIs."
+    ]
+  },
+  "syntax": {
+    "explanation": "Django projects are created via the command line, and code is organized into specific files like `models.py`, `views.py`, and `urls.py`.",
+    "breakdown": [
+      "`django-admin startproject myproject`: Creates a new Django project structure.",
+      "`python manage.py startapp myapp`: Creates a new app within the project.",
+      "`class MyModel(models.Model):`: Defines a database model extending Django's base Model class.",
+      "`def my_view(request):`: A standard function-based view that takes an HttpRequest object."
+    ],
+    "rules": [
+      "All models must inherit from `django.db.models.Model`.",
+      "URLs must be registered in the `urlpatterns` list in `urls.py`.",
+      "Every view function must accept at least one parameter, conventionally named `request`, and return an `HttpResponse`."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Defining a Model",
+      "code": "from django.db import models\n\nclass Article(models.Model):\n    title = models.CharField(max_length=200)\n    content = models.TextField()\n    published_date = models.DateTimeField(auto_now_add=True)\n\n    def __str__(self):\n        return self.title",
+      "output": "(Creates a database table for 'Article' with title, content, and date columns)",
+      "explanation": "Models are Python classes that map to database tables. `CharField` and `TextField` define column types, and `__str__` defines how the object is represented as a string."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Creating a View and URL",
+      "code": "# views.py\nfrom django.shortcuts import render\nfrom .models import Article\n\ndef article_list(request):\n    articles = Article.objects.all()\n    return render(request, 'articles/list.html', {'articles': articles})\n\n# urls.py\nfrom django.urls import path\nfrom . import views\n\nurlpatterns = [\n    path('articles/', views.article_list, name='article_list'),\n]",
+      "output": "(Renders the 'articles/list.html' template displaying all articles when visiting /articles/)",
+      "explanation": "The view queries all Article objects using the ORM and passes them to a template. The URL pattern maps the path 'articles/' to this view function."
+    },
+    {
+      "level": "Advanced",
+      "title": "Class-Based Views (CBV)",
+      "code": "from django.views.generic import ListView\nfrom .models import Article\n\nclass ArticleListView(ListView):\n    model = Article\n    template_name = 'articles/list.html'\n    context_object_name = 'articles'\n    paginate_by = 10",
+      "output": "(Functions identically to the intermediate example but adds automatic pagination)",
+      "explanation": "Class-Based Views provide reusable classes for common patterns. `ListView` automatically queries the model, sets up context, and even handles pagination with minimal code."
+    },
+    {
+      "level": "Real-world",
+      "title": "Django Forms",
+      "code": "from django import forms\nfrom .models import Article\n\nclass ArticleForm(forms.ModelForm):\n    class Meta:\n        model = Article\n        fields = ['title', 'content']\n\n# In views.py\ndef create_article(request):\n    if request.method == 'POST':\n        form = ArticleForm(request.POST)\n        if form.is_valid():\n            form.save()\n            return redirect('article_list')\n    else:\n        form = ArticleForm()\n    return render(request, 'articles/create.html', {'form': form})",
+      "output": "(Handles form rendering, validation, and saving data directly to the database)",
+      "explanation": "ModelForms automatically generate form fields based on a Model, handle data validation, and save validated data directly to the database."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Django Command Line Commands",
+        "headers": ["Command", "Description"],
+        "rows": [
+          ["python manage.py runserver", "Starts the local development server."],
+          ["python manage.py makemigrations", "Creates new migration files based on changes to your models."],
+          ["python manage.py migrate", "Applies migrations to the database, updating the schema."],
+          ["python manage.py createsuperuser", "Creates an administrative user for the Django admin site."]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Function-Based Views (FBV)",
+        "concept_b": "Class-Based Views (CBV)",
+        "explanation": "FBVs are simple Python functions that take a request and return a response, easy to read for simple logic. CBVs use Python classes and inheritance, ideal for reusing code and handling complex operations like forms or pagination."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "render()",
+      "description": "Combines a given template with a context dictionary and returns an HttpResponse object.",
+      "parameters": "request, template_name, context=None",
+      "return_value": "HttpResponse object containing the rendered text.",
+      "example_usage": "return render(request, 'index.html', {'name': 'John'})"
+    },
+    {
+      "name": "redirect()",
+      "description": "Returns an HttpResponseRedirect to the appropriate URL for the arguments passed.",
+      "parameters": "to, *args, permanent=False, **kwargs",
+      "return_value": "HttpResponseRedirect object.",
+      "example_usage": "return redirect('article_list')"
+    },
+    {
+      "name": "get_object_or_404()",
+      "description": "Calls get() on a given model manager, but it raises Http404 instead of the model's DoesNotExist exception.",
+      "parameters": "klass, *args, **kwargs",
+      "return_value": "The model instance if found, else raises 404.",
+      "example_usage": "article = get_object_or_404(Article, pk=1)"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting to run migrations",
+      "description": "Changing `models.py` without running `makemigrations` and `migrate` will cause database errors because the schema is not updated.",
+      "wrong_example": "(Adding a field to a model and immediately trying to use it in a view without migrating)",
+      "correct_example": "Run `python manage.py makemigrations` followed by `python manage.py migrate`.",
+      "debugging_tip": "If you see an 'OperationalError: no such column', you likely forgot to migrate."
+    },
+    {
+      "title": "Missing CSRF Token in Forms",
+      "description": "Submitting a POST form without a CSRF token results in a 403 Forbidden error.",
+      "wrong_example": "<form method='post'><input type='text' name='name'></form>",
+      "correct_example": "<form method='post'>{% csrf_token %}<input type='text' name='name'></form>",
+      "debugging_tip": "Always include `{% csrf_token %}` inside any HTML form using the POST method in Django templates."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is Django?",
+        "answer": "Django is a free and open-source web framework written in Python that follows the model-template-views (MTV) architectural pattern. It emphasizes reusability, rapid development, and the 'don't repeat yourself' (DRY) principle."
+      },
+      {
+        "question": "What is the difference between a project and an app in Django?",
+        "answer": "A project is the entire web application, including settings and configurations. An app is a specific module or component within the project that does a specific thing (e.g., a blog app, a forum app). A project can contain multiple apps."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain Django ORM.",
+        "answer": "The Object-Relational Mapper (ORM) allows developers to interact with the database using Python classes and methods rather than writing raw SQL. It maps Python objects to database tables and handles query generation."
+      },
+      {
+        "question": "What are middleware in Django?",
+        "answer": "Middleware is a framework of hooks into Django's request/response processing. It's a light, low-level plugin system for globally altering Django's input or output. Examples include handling sessions, authentication, or CSRF protection."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you optimize Django ORM queries to prevent the N+1 query problem?",
+        "answer": "You can optimize queries using `select_related()` for single-valued relationships (ForeignKey, OneToOneField) and `prefetch_related()` for multi-valued relationships (ManyToManyField, reverse ForeignKey). These methods fetch related objects in a single query, reducing database hits."
+      },
+      {
+        "question": "Explain how Django's authentication system handles passwords securely.",
+        "answer": "Django never stores passwords in plain text. It uses cryptographic hash functions (PBKDF2 by default) combined with a random salt to hash passwords before storing them. When verifying, it hashes the entered password with the same algorithm and salt and compares the hashes."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a new Django project named 'mysite' and an app named 'blog'.",
+      "Create a model 'Post' with fields for title, body, and created_at date.",
+      "Register the 'Post' model in `admin.py` to view it in the admin interface.",
+      "Write a view function that returns an HttpResponse with 'Hello Django'.",
+      "Map a URL path `/hello/` to your view function."
+    ],
+    "medium": [
+      "Create a template that iterates over a list of 'Post' objects and displays their titles.",
+      "Use a Django ModelForm to create a form for adding new 'Post' entries.",
+      "Implement a detail view that uses `get_object_or_404` to display a single post by its ID.",
+      "Write a custom template filter that capitalizes every word in a string.",
+      "Serve static files (CSS/JS) in a Django development environment."
+    ],
+    "hard": [
+      "Implement a custom user model extending AbstractUser to add a 'phone_number' field.",
+      "Create a custom middleware that logs the execution time of every request.",
+      "Write a management command `python manage.py populate_db` to generate dummy data.",
+      "Implement generic Class-Based Views (ListView, DetailView, CreateView, UpdateView, DeleteView) for a model.",
+      "Set up Celery with Django to run a background task that sends a welcome email."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a simple Django model for a Book and a view to display all books sorted by publication year.",
+      "input": "Database contains books: {A, 2001}, {B, 1999}, {C, 2010}",
+      "output": "View returns a context with books ordered: [B, A, C]",
+      "constraints": "Use Django ORM's `order_by` method.",
+      "solution": "# models.py\nfrom django.db import models\nclass Book(models.Model):\n    title = models.CharField(max_length=100)\n    year = models.IntegerField()\n\n# views.py\nfrom django.shortcuts import render\nfrom .models import Book\ndef book_list(request):\n    books = Book.objects.all().order_by('year')\n    return render(request, 'books.html', {'books': books})"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Content Management Systems (CMS)",
+      "explanation": "Django is famous for powering large CMS platforms due to its built-in admin panel and robust content modeling capabilities."
+    },
+    {
+      "field": "Data-Heavy Portals",
+      "explanation": "Applications that require complex data relationships, such as e-commerce backends or real estate portals, benefit greatly from Django's powerful ORM."
+    }
+  ],
+  "best_practices": [
+    "Keep 'apps' small, reusable, and focused on a single responsibility.",
+    "Always use environment variables for sensitive settings like SECRET_KEY and database credentials.",
+    "Use `select_related` and `prefetch_related` in queries to optimize database performance.",
+    "Never put business logic in templates; keep templates restricted to presentation logic.",
+    "Regularly update Django to the latest stable version to receive security patches."
+  ],
+  "summary": [
+    "Django is a full-stack, high-level Python web framework.",
+    "It follows the MVT (Model-View-Template) pattern.",
+    "Features a powerful ORM and an automatic administrative interface.",
+    "Emphasizes the DRY (Don't Repeat Yourself) principle and rapid development.",
+    "Provides strong built-in protections against common web vulnerabilities."
+  ],
+  "quiz": [
+    {
+      "question": "What architectural pattern does Django follow?",
+      "options": ["MVC", "MVT", "MVVM", "Singleton"],
+      "answer": "MVT",
+      "explanation": "Django uses Model-View-Template, where the View acts similarly to a Controller in MVC, and Template handles the View aspects."
+    },
+    {
+      "question": "Which file is used to define the database schema in a Django app?",
+      "options": ["views.py", "admin.py", "models.py", "urls.py"],
+      "answer": "models.py",
+      "explanation": "The models.py file contains Python classes that define the structure of your database tables using Django's ORM."
+    },
+    {
+      "question": "What command creates the tables in the database based on your models?",
+      "options": ["python manage.py makemigrations", "python manage.py migrate", "python manage.py createschema", "python manage.py db_init"],
+      "answer": "python manage.py migrate",
+      "explanation": "While 'makemigrations' creates the migration files, 'migrate' actually applies those changes to the database."
+    },
+    {
+      "question": "In Django templates, how do you output the value of a variable named 'user'?",
+      "options": ["{% user %}", "{{ user }}", "[[ user ]]", "<?php echo user; ?>"],
+      "answer": "{{ user }}",
+      "explanation": "Double curly braces {{ }} are used in Django templates to output the value of a variable."
+    },
+    {
+      "question": "Which class do all Django models inherit from?",
+      "options": ["django.db.Model", "django.db.models.Model", "django.core.Model", "django.db.Entity"],
+      "answer": "django.db.models.Model",
+      "explanation": "All Django models must inherit from django.db.models.Model to be recognized by the ORM."
+    },
+    {
+      "question": "What does CSRF stand for in Django's security features?",
+      "options": ["Cross-Site Routing Function", "Cross-Site Request Forgery", "Custom Server Request Filter", "Cascading Style Rules File"],
+      "answer": "Cross-Site Request Forgery",
+      "explanation": "CSRF is a type of attack that forces an end user to execute unwanted actions. Django has built-in protection against it."
+    },
+    {
+      "question": "Which object represents an HTTP request in a Django view?",
+      "options": ["RequestObject", "HttpRequest", "IncomingRequest", "HttpEvent"],
+      "answer": "HttpRequest",
+      "explanation": "Django passes an HttpRequest object as the first argument to every view function, containing metadata about the request."
+    },
+    {
+      "question": "How do you register a model to appear in the Django admin site?",
+      "options": ["admin.site.register(ModelName)", "admin.add(ModelName)", "ModelName.register_admin()", "admin.site.append(ModelName)"],
+      "answer": "admin.site.register(ModelName)",
+      "explanation": "You use admin.site.register() in the app's admin.py file to make a model manageable via the admin interface."
+    },
+    {
+      "question": "What is the purpose of the urls.py file?",
+      "options": ["To define database connections", "To map URL patterns to view functions", "To store external API links", "To configure static files"],
+      "answer": "To map URL patterns to view functions",
+      "explanation": "urls.py acts as a dispatcher, routing incoming HTTP requests to the appropriate view based on the URL path."
+    },
+    {
+      "question": "What ORM method is used to retrieve a single object?",
+      "options": ["Model.objects.all()", "Model.objects.filter()", "Model.objects.get()", "Model.objects.find()"],
+      "answer": "Model.objects.get()",
+      "explanation": "The get() method returns exactly one object matching the criteria; it raises an error if multiple or no objects are found."
+    }
+  ]
+}

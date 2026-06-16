@@ -1,0 +1,43 @@
+{
+    "title": "Interrupts",
+    "topic_overview": "Interrupts provide a mechanism for the hardware to signal the CPU that an event requires immediate attention, causing the CPU to pause its current task and execute an Interrupt Service Routine (ISR).",
+    "core_concepts": [
+        "Interrupt Vector Table (IVT): A memory table mapping interrupt sources to the addresses of their corresponding ISRs.",
+        "Interrupt Service Routine (ISR): A function executed in response to an interrupt.",
+        "Interrupt Priority: Determines which interrupt is serviced first if multiple occur simultaneously.",
+        "Masking: Disabling specific interrupts or all interrupts globally."
+    ],
+    "architecture_working_principle": "When an interrupt occurs (e.g., a timer overflows, data arrives on UART), the hardware sets an interrupt flag. If enabled, the CPU finishes the current instruction, saves its context (registers, program counter) to the stack, and jumps to the ISR address found in the IVT. After the ISR completes, the CPU restores its context and resumes the interrupted task.",
+    "real_world_applications": [
+        "Handling urgent asynchronous events like a user pressing an emergency stop button.",
+        "Receiving data from communication interfaces (UART, SPI) without polling.",
+        "Context switching in a Real-Time Operating System (RTOS)."
+    ],
+    "advantages": [
+        "Eliminates the need for continuous polling, saving significant CPU cycles and power.",
+        "Provides deterministic response times for critical events.",
+        "Allows the system to handle asynchronous events efficiently."
+    ],
+    "limitations": [
+        "Complex to debug; timing-dependent bugs can be difficult to reproduce.",
+        "ISRs that take too long can starve the main program or cause other interrupts to be missed.",
+        "Shared resources between main code and ISRs require careful synchronization."
+    ],
+    "industry_use_cases": "Interrupts are fundamental to real-time systems. In automotive braking systems (ABS), wheel speed sensor inputs trigger interrupts to calculate slip and modulate brake pressure instantly.",
+    "best_practices": [
+        "Keep ISRs as short and fast as possible. Do minimal processing; set a flag and defer heavy processing to the main loop.",
+        "Declare variables shared between an ISR and main code as `volatile`.",
+        "Avoid blocking calls or loops inside an ISR."
+    ],
+    "interview_questions": [
+        {
+            "q": "What happens if an interrupt occurs while another interrupt is currently being serviced?",
+            "a": "This depends on the architecture and configuration. In simple systems, global interrupts are disabled upon entering an ISR, so the second interrupt becomes pending. In systems supporting nested interrupts, a higher-priority interrupt can preempt a lower-priority ISR."
+        }
+    ],
+    "learning_outcomes": [
+        "Understand the interrupt handling mechanism.",
+        "Write efficient Interrupt Service Routines.",
+        "Manage shared resources between main code and ISRs."
+    ]
+}

@@ -1,0 +1,299 @@
+{
+  "title": "REST APIs",
+  "introduction": {
+    "what_it_is": "REST (Representational State Transfer) is an architectural style for designing networked applications. A REST API (Application Programming Interface) allows systems to communicate over HTTP using standard methods like GET, POST, PUT, and DELETE.",
+    "why_important": "REST APIs are the backbone of modern web communication. They allow different software applications, written in different languages and hosted on different platforms, to share data and services seamlessly.",
+    "real_world": [
+      "A mobile app retrieving weather data from a remote server.",
+      "Integrating a third-party payment gateway (like Stripe or PayPal) into an e-commerce website.",
+      "A React frontend communicating with a Python backend to display user profiles."
+    ]
+  },
+  "detailed_theory": "The REST architectural style is based on a set of constraints that, when applied to a system, induce desirable properties like performance, scalability, and modifiability. The core concept of REST is the 'Resource'. A resource can be anything—a user, an image, a blog post, or a collection of items. Each resource is identified by a unique Uniform Resource Identifier (URI), commonly known as a URL.\n\nREST APIs use standard HTTP methods to perform CRUD (Create, Read, Update, Delete) operations on these resources. \n- **GET** retrieves a representation of a resource without modifying it.\n- **POST** submits data to create a new resource.\n- **PUT** updates an existing resource entirely or creates it if it doesn't exist.\n- **PATCH** applies partial modifications to a resource.\n- **DELETE** removes a resource.\n\nAnother critical principle of REST is statelessness. This means that every HTTP request from a client to the server must contain all the information needed to understand and process the request. The server does not store any session state about the client. This constraint vastly improves scalability, as the server doesn't need to manage memory for client sessions and any server in a cluster can handle any request.\n\nRepresentations are how data is sent between the client and server. The most common format for REST APIs today is JSON (JavaScript Object Notation), though XML, HTML, and plain text are also valid. When a client requests a resource, the server responds with a representation of that resource's current state.\n\nHTTP status codes play a vital role in REST APIs. They indicate the result of the client's request. Standard codes include 200 (OK) for successful requests, 201 (Created) for successful resource creation, 400 (Bad Request) for client errors, 401 (Unauthorized) for authentication issues, 404 (Not Found) for missing resources, and 500 (Internal Server Error) for server-side failures.\n\nIn the Python ecosystem, REST APIs are commonly built using frameworks like Flask (often with extensions like Flask-RESTful), Django (using the powerful Django REST Framework), or FastAPI, which is a modern framework specifically designed for building high-performance APIs.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Statelessness",
+        "description": "Each request contains all necessary data; the server retains no session information between requests."
+      },
+      {
+        "name": "Resource-Based URI",
+        "description": "URLs identify specific resources (e.g., `/users/123`), not actions or verbs."
+      },
+      {
+        "name": "Use of HTTP Methods",
+        "description": "Utilizes standard HTTP verbs (GET, POST, PUT, DELETE) to signify the action to be taken on a resource."
+      },
+      {
+        "name": "Standardized Formats",
+        "description": "Data is typically exchanged in standard formats, most commonly JSON."
+      }
+    ],
+    "advantages": [
+      "Highly scalable due to statelessness.",
+      "Separation of concerns: frontend and backend can be developed independently.",
+      "Language and platform agnostic; any client that can speak HTTP can use the API.",
+      "Uses existing web infrastructure (HTTP, caching mechanisms)."
+    ],
+    "limitations": [
+      "Over-fetching or under-fetching data can occur if endpoints are not perfectly designed (a problem GraphQL aims to solve).",
+      "Statelessness means clients must send authorization tokens with every request, slightly increasing payload size.",
+      "No strictly enforced standard; \"RESTful\" is often interpreted differently by different developers."
+    ]
+  },
+  "syntax": {
+    "explanation": "Building a REST API in Python often involves defining endpoints, handling HTTP methods, and serializing data to JSON. (Example using Flask)",
+    "breakdown": [
+      "`@app.route('/api/items', methods=['GET'])`: Defines an endpoint specifically for GET requests.",
+      "`json.dumps()` or `jsonify()`: Used to convert Python dictionaries or objects into JSON strings for the response.",
+      "`request.get_json()`: Used to parse incoming JSON payloads from POST or PUT requests."
+    ],
+    "rules": [
+      "Endpoints should use nouns (e.g., `/products`), not verbs (e.g., `/getProducts`).",
+      "Always return appropriate HTTP status codes based on the outcome of the request.",
+      "Set the `Content-Type` header of the response to `application/json` when returning JSON."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple GET Endpoint (Flask)",
+      "code": "from flask import Flask, jsonify\n\napp = Flask(__name__)\n\n@app.route('/api/status', methods=['GET'])\ndef get_status():\n    return jsonify({'status': 'Server is running', 'version': '1.0.0'}), 200",
+      "output": "HTTP 200 OK\n{\n  \"status\": \"Server is running\",\n  \"version\": \"1.0.0\"\n}",
+      "explanation": "A basic endpoint that responds to a GET request with a simple JSON object and a 200 OK status code."
+    },
+    {
+      "level": "Intermediate",
+      "title": "CRUD Operations",
+      "code": "from flask import Flask, jsonify, request\napp = Flask(__name__)\nitems = []\n\n@app.route('/api/items', methods=['POST'])\ndef create_item():\n    data = request.get_json()\n    items.append(data)\n    return jsonify(data), 201\n\n@app.route('/api/items', methods=['GET'])\ndef get_items():\n    return jsonify(items), 200",
+      "output": "(POST adds to the list, GET retrieves the list)",
+      "explanation": "Demonstrates handling both POST (to create) and GET (to read) on the same resource URL. Notice the use of 201 Created for the POST request."
+    },
+    {
+      "level": "Advanced",
+      "title": "Using Django REST Framework (DRF)",
+      "code": "from rest_framework import serializers, viewsets\nfrom .models import User\n\n# Serializer defines how to convert Model to JSON\nclass UserSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = User\n        fields = ['id', 'username', 'email']\n\n# ViewSet automatically provides GET, POST, PUT, DELETE\nclass UserViewSet(viewsets.ModelViewSet):\n    queryset = User.objects.all()\n    serializer_class = UserSerializer",
+      "output": "Automatically generates fully functional endpoints for /users/ and /users/<id>/",
+      "explanation": "DRF uses Serializers to convert complex data types like Django models into JSON, and ViewSets to automatically generate the necessary endpoints for full CRUD functionality."
+    },
+    {
+      "level": "Real-world",
+      "title": "API Calling with Python 'requests'",
+      "code": "import requests\n\nresponse = requests.get('https://jsonplaceholder.typicode.com/posts/1')\n\nif response.status_code == 200:\n    data = response.json()\n    print(f\"Title: {data['title']}\")\nelse:\n    print('Failed to retrieve data')",
+      "output": "Title: sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "explanation": "While APIs are built on the server, clients consume them. The `requests` library in Python is the standard way to make HTTP requests to external REST APIs."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common HTTP Status Codes",
+        "headers": ["Code", "Name", "Meaning"],
+        "rows": [
+          ["200", "OK", "The request was successful."],
+          ["201", "Created", "The request was successful and a new resource was created."],
+          ["400", "Bad Request", "The server could not understand the request due to invalid syntax."],
+          ["401", "Unauthorized", "Authentication is required and has failed or has not yet been provided."],
+          ["404", "Not Found", "The requested resource could not be found."],
+          ["500", "Internal Server Error", "A generic error message, given when an unexpected condition was encountered."]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "REST API",
+        "concept_b": "SOAP API",
+        "explanation": "REST is an architectural style that primarily uses JSON and HTTP. It is lightweight and flexible. SOAP is a strict protocol that relies exclusively on XML and requires more bandwidth and strict structural rules."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "requests.get()",
+      "description": "Sends a GET request to the specified URL.",
+      "parameters": "url, params=None, **kwargs",
+      "return_value": "Response object.",
+      "example_usage": "requests.get('https://api.example.com/data')"
+    },
+    {
+      "name": "requests.post()",
+      "description": "Sends a POST request to the specified URL.",
+      "parameters": "url, data=None, json=None, **kwargs",
+      "return_value": "Response object.",
+      "example_usage": "requests.post('https://api.example.com/users', json={'name': 'Alice'})"
+    },
+    {
+      "name": "Response.json()",
+      "description": "Returns the JSON-encoded content of a response, if any.",
+      "parameters": "None",
+      "return_value": "Parsed JSON data (dict or list).",
+      "example_usage": "data = response.json()"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using verbs in URIs",
+      "description": "Designing endpoint URLs that describe the action rather than the resource.",
+      "wrong_example": "POST /createNewUser",
+      "correct_example": "POST /users",
+      "debugging_tip": "The HTTP method (POST) already acts as the verb. The URI should only represent the noun (resource)."
+    },
+    {
+      "title": "Ignoring HTTP Status Codes",
+      "description": "Returning a 200 OK status code even when an error occurs, putting the error message inside the JSON body.",
+      "wrong_example": "return jsonify({'error': 'Item not found'}), 200",
+      "correct_example": "return jsonify({'error': 'Item not found'}), 404",
+      "debugging_tip": "Clients rely on the status code to determine success or failure before parsing the body. Always use correct semantics."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What does REST stand for?",
+        "answer": "REST stands for Representational State Transfer."
+      },
+      {
+        "question": "What is the difference between PUT and PATCH methods?",
+        "answer": "PUT is intended to replace an entire resource. If you send a PUT request, you must send the complete object. PATCH is intended for partial updates, allowing you to send only the fields that have changed."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain the concept of statelessness in REST.",
+        "answer": "Statelessness means the server does not store any state about the client session on the server-side. Every request from the client must contain all the information necessary for the server to understand and process it, including authentication tokens."
+      },
+      {
+        "question": "What are idempotent HTTP methods?",
+        "answer": "An idempotent method is one where making multiple identical requests has the same effect as making a single request. GET, PUT, and DELETE are idempotent. POST is not, as calling it multiple times will create multiple resources."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How do you handle versioning in REST APIs?",
+        "answer": "Common approaches include adding the version to the URI path (e.g., /api/v1/users), using a custom request header (e.g., X-API-Version: 1), or using the Accept header (Content Negotiation, e.g., Accept: application/vnd.myapi.v1+json). Path versioning is the most common and pragmatic."
+      },
+      {
+        "question": "What is HATEOAS?",
+        "answer": "HATEOAS stands for Hypermedia As The Engine Of Application State. It is a constraint of the REST application architecture that distinguishes it from other network application architectures. With HATEOAS, a client interacts with a network application whose application servers provide information dynamically through hypermedia (links) included in responses, guiding the client on what actions are possible next."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a Python script using `requests` to fetch data from the public 'JSONPlaceholder' API.",
+      "Create a Flask route that responds to GET requests and returns a JSON list of dictionaries.",
+      "List the four HTTP methods corresponding to CRUD operations.",
+      "What HTTP status code should be returned when a client tries to access a URL that doesn't exist?",
+      "Send a POST request using the `requests` library containing JSON data."
+    ],
+    "medium": [
+      "Build a Flask API endpoint that accepts a query parameter `?search=term` and filters a list based on it.",
+      "Implement error handling in an API so that if a resource ID is not found, it returns a 404 JSON response.",
+      "Create an endpoint that accepts a PUT request to update an existing dictionary in memory.",
+      "Write a script that parses a complex JSON response from an API and extracts specific nested fields.",
+      "Use Basic Authentication in a `requests` call to authenticate with an API."
+    ],
+    "hard": [
+      "Implement a Token-based authentication system for a Flask API using JWT (JSON Web Tokens).",
+      "Build a pagination system for an API endpoint that returns thousands of records (using `limit` and `offset`).",
+      "Implement rate limiting on an API endpoint to prevent abuse (e.g., max 100 requests per minute).",
+      "Set up CORS (Cross-Origin Resource Sharing) headers in a Python API to allow requests from a specific frontend domain.",
+      "Write comprehensive unit tests for a Flask REST API using the `pytest` framework."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a Flask API for a library. Implement endpoints to GET all books, GET a book by ID, POST a new book, and DELETE a book.",
+      "input": "Various HTTP requests to /books and /books/<id>",
+      "output": "Appropriate JSON responses and status codes",
+      "constraints": "Data can be stored in an in-memory list of dictionaries.",
+      "solution": "from flask import Flask, jsonify, request\napp = Flask(__name__)\nbooks = [{'id': 1, 'title': '1984'}]\n\n@app.route('/books', methods=['GET'])\ndef get_books(): return jsonify(books), 200\n\n@app.route('/books', methods=['POST'])\ndef add_book():\n    new_book = request.get_json()\n    books.append(new_book)\n    return jsonify(new_book), 201\n\n@app.route('/books/<int:book_id>', methods=['DELETE'])\ndef delete_book(book_id):\n    global books\n    books = [b for b in books if b['id'] != book_id]\n    return '', 204\n\nif __name__ == '__main__': app.run()"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Microservices Integration",
+      "explanation": "In microservices architectures, different services (e.g., billing, inventory, user management) communicate with each other primarily via internal REST APIs."
+    },
+    {
+      "field": "Mobile App Backends",
+      "explanation": "Mobile applications rarely connect directly to a database. They communicate with a REST API which acts as a secure intermediary to fetch data and perform business logic."
+    }
+  ],
+  "best_practices": [
+    "Always use HTTPS to secure communication between client and server.",
+    "Use nouns for endpoint paths, not verbs (e.g., /articles, not /getArticles).",
+    "Use standard HTTP status codes correctly to indicate success or failure.",
+    "Implement pagination for endpoints that return large lists of data.",
+    "Version your API from the beginning (e.g., /api/v1/...) to allow future changes without breaking existing clients."
+  ],
+  "summary": [
+    "REST APIs allow systems to communicate over HTTP using standard methods (GET, POST, PUT, DELETE).",
+    "Resources are identified by URIs and data is usually exchanged in JSON format.",
+    "A key constraint of REST is statelessness, which aids in scalability.",
+    "HTTP status codes are essential for indicating the result of an API request.",
+    "Python offers tools like Flask, Django REST Framework, and FastAPI to build robust APIs quickly."
+  ],
+  "quiz": [
+    {
+      "question": "Which HTTP method is used to create a new resource?",
+      "options": ["GET", "POST", "PUT", "DELETE"],
+      "answer": "POST",
+      "explanation": "POST is used to send data to the server to create a new resource."
+    },
+    {
+      "question": "What is the primary characteristic of a stateless API?",
+      "options": ["It does not use a database", "It requires no authentication", "The server retains no client session data between requests", "It only responds to GET requests"],
+      "answer": "The server retains no client session data between requests",
+      "explanation": "Statelessness means every request must contain all info needed; the server does not 'remember' previous requests."
+    },
+    {
+      "question": "Which HTTP status code indicates a successful creation of a resource?",
+      "options": ["200 OK", "201 Created", "204 No Content", "400 Bad Request"],
+      "answer": "201 Created",
+      "explanation": "201 specifically indicates that a request was successful and resulted in the creation of a new resource."
+    },
+    {
+      "question": "What format is most commonly used for data exchange in modern REST APIs?",
+      "options": ["XML", "HTML", "YAML", "JSON"],
+      "answer": "JSON",
+      "explanation": "JSON (JavaScript Object Notation) is the most popular format due to its lightweight nature and ease of parsing in almost all languages."
+    },
+    {
+      "question": "If you want to update only specific fields of a resource, which HTTP method is most appropriate?",
+      "options": ["PUT", "POST", "PATCH", "UPDATE"],
+      "answer": "PATCH",
+      "explanation": "PATCH is used for partial updates, whereas PUT is generally used to replace the entire resource."
+    },
+    {
+      "question": "Which of the following is considered an idempotent HTTP method?",
+      "options": ["POST", "PATCH", "DELETE", "CONNECT"],
+      "answer": "DELETE",
+      "explanation": "DELETE is idempotent because deleting a resource multiple times has the same outcome as deleting it once (the resource is gone)."
+    },
+    {
+      "question": "What status code indicates that the client must authenticate itself to get the requested response?",
+      "options": ["401 Unauthorized", "403 Forbidden", "404 Not Found", "500 Internal Server Error"],
+      "answer": "401 Unauthorized",
+      "explanation": "401 indicates that the request lacks valid authentication credentials."
+    },
+    {
+      "question": "Which Python library is widely considered the standard for making HTTP requests to external APIs?",
+      "options": ["urllib", "http.client", "requests", "api-caller"],
+      "answer": "requests",
+      "explanation": "The 'requests' library provides an elegant and simple API for sending HTTP requests in Python."
+    },
+    {
+      "question": "What is wrong with the endpoint URI: GET /api/v1/deleteUser/123 ?",
+      "options": ["It includes a version number", "It uses the GET method", "It includes a verb in the URI", "It includes an ID in the URI"],
+      "answer": "It includes a verb in the URI",
+      "explanation": "RESTful URIs should use nouns to identify resources (e.g., /api/v1/users/123). The HTTP method (DELETE) should indicate the action."
+    },
+    {
+      "question": "What does a 500 Internal Server Error indicate?",
+      "options": ["The client sent invalid data", "The requested resource does not exist", "The server encountered an unexpected condition", "The server is temporarily overloaded"],
+      "answer": "The server encountered an unexpected condition",
+      "explanation": "500 is a generic catch-all server error indicating something went wrong on the backend processing."
+    }
+  ]
+}

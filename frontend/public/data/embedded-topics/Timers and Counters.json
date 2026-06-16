@@ -1,0 +1,43 @@
+{
+    "title": "Timers and Counters",
+    "topic_overview": "Timers and counters are specialized hardware peripherals within a microcontroller used to measure time intervals, count external events, or generate precise timing signals.",
+    "core_concepts": [
+        "Prescaler: Divides the system clock frequency to provide the timer's input clock.",
+        "Timer Register: A hardware register that increments (or decrements) at the rate of the timer clock.",
+        "Overflow/Underflow: Occurs when the timer reaches its maximum (or minimum) value and wraps around.",
+        "Compare Match: An event generated when the timer value matches a predefined value in a compare register."
+    ],
+    "architecture_working_principle": "A timer is essentially a digital counter driven by a clock source. If driven by the internal system clock (often divided by a prescaler), it measures time. If driven by an external pin transition, it counts events. Interrupts can be configured to trigger on overflow or compare match events.",
+    "real_world_applications": [
+        "Generating precise delays without blocking the CPU.",
+        "Measuring the frequency of an external signal.",
+        "Creating Pulse Width Modulation (PWM) signals for motor control.",
+        "Providing a system 'tick' for Real-Time Operating Systems (RTOS)."
+    ],
+    "advantages": [
+        "Hardware-based timing is much more precise and deterministic than software loops.",
+        "Frees the CPU to perform other tasks while time is being measured.",
+        "Essential for generating complex waveforms."
+    ],
+    "limitations": [
+        "Resolution is limited by the timer's bit-width (e.g., 8-bit, 16-bit) and the system clock frequency.",
+        "Complex configurations can be difficult to manage across multiple timer channels."
+    ],
+    "industry_use_cases": "Timers are crucial in automotive engine control for precise spark timing, in consumer electronics for generating audio tones, and in industrial automation for controlling stepper motors.",
+    "best_practices": [
+        "Use hardware timers instead of software delay loops (`for`/`while`) for accurate timing.",
+        "Calculate prescaler and compare values carefully based on the system clock frequency.",
+        "Use interrupts to handle timer events asynchronously."
+    ],
+    "interview_questions": [
+        {
+            "q": "How do you calculate the time it takes for a 16-bit timer to overflow, given a system clock of 16MHz and a prescaler of 64?",
+            "a": "Timer Clock = 16MHz / 64 = 250kHz. One tick takes 1 / 250kHz = 4us. A 16-bit timer overflows after 2^16 (65536) ticks. Overflow time = 65536 * 4us = 262.144 ms."
+        }
+    ],
+    "learning_outcomes": [
+        "Configure timers to generate specific delays.",
+        "Understand the relationship between system clock, prescaler, and timer resolution.",
+        "Use timers to count external events."
+    ]
+}

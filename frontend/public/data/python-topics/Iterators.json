@@ -1,0 +1,261 @@
+{
+  "title": "Iterators",
+  "introduction": {
+    "what_it_is": "An iterator is an object that contains a countable number of values and can be iterated upon, meaning you can traverse through all the values. In Python, an iterator is an object which implements the iterator protocol, which consists of the methods __iter__() and __next__().",
+    "why_important": "Iterators provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation. They are highly memory efficient because they yield elements one at a time instead of loading the entire sequence into memory.",
+    "real_world": [
+      "Reading large files line by line without loading the entire file into memory.",
+      "Streaming data from a network socket continuously.",
+      "Processing large datasets in chunks to prevent OutOfMemory errors."
+    ]
+  },
+  "detailed_theory": "In Python, iterators are the backbone of many built-in capabilities such as 'for' loops, comprehensions, and generators. An iterable is any object that can return an iterator. Examples of iterables include lists, tuples, dictionaries, strings, and sets. When you pass an iterable to the built-in iter() function, it returns an iterator. \n\nThe core of the iterator concept is the iterator protocol, which consists of two dunder (double underscore) methods: __iter__() and __next__(). \n- The __iter__() method returns the iterator object itself. This is required to allow both iterables and iterators to be used with 'for' and 'in' statements.\n- The __next__() method must return the next item from the container. If there are no further items, it raises a StopIteration exception. \n\nWhen a 'for' loop is executed, Python automatically calls iter() on the object to get the iterator, and then calls next() on that iterator to get each value. When StopIteration is raised, the loop terminates.\n\nCreating your own iterator involves defining a class that implements both __iter__() and __next__(). This allows you to create custom objects that behave like built-in collections. \nGenerators provide an easier way to create iterators. A generator is a function that returns an iterator using the 'yield' keyword instead of 'return'. When 'yield' is encountered, the state of the function is suspended, and the value is yielded to the caller. When the generator is called again, it resumes execution from the point it was suspended. This makes generators incredibly useful for generating an infinite sequence of values or processing large streams of data efficiently.",
+  "key_features": {
+    "features": [
+      {
+        "name": "State Retention",
+        "description": "Iterators remember their state between calls, knowing exactly where they are in the sequence."
+      },
+      {
+        "name": "Lazy Evaluation",
+        "description": "Iterators compute their items on demand (lazily), saving memory and processing time."
+      }
+    ],
+    "advantages": [
+      "Memory efficient for handling large datasets.",
+      "Provides a uniform interface for iterating over various data structures.",
+      "Enables infinite sequences (like random number generators or time sequences)."
+    ],
+    "limitations": [
+      "Can only be traversed forward. You cannot go backwards.",
+      "Once exhausted, an iterator cannot be reused. You must create a new one.",
+      "Indexing or slicing is not supported."
+    ]
+  },
+  "syntax": {
+    "explanation": "Iterators are primarily implemented using the __iter__() and __next__() magic methods in a class.",
+    "breakdown": [
+      "__iter__(self): Returns the iterator object itself.",
+      "__next__(self): Returns the next value in the sequence. Raises StopIteration when done."
+    ],
+    "rules": [
+      "A class must implement both __iter__ and __next__ to be a proper iterator.",
+      "__next__ must raise StopIteration when there are no more items."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Using Built-in Iterators",
+      "code": "my_list = [1, 2, 3]\nmy_iter = iter(my_list)\n\nprint(next(my_iter))\nprint(next(my_iter))\nprint(next(my_iter))",
+      "output": "1\n2\n3",
+      "explanation": "The iter() function gets an iterator from the list. The next() function fetches the values one by one."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Creating a Custom Iterator",
+      "code": "class Counter:\n    def __init__(self, low, high):\n        self.current = low\n        self.high = high\n\n    def __iter__(self):\n        return self\n\n    def __next__(self):\n        if self.current > self.high:\n            raise StopIteration\n        else:\n            self.current += 1\n            return self.current - 1\n\nfor num in Counter(1, 3):\n    print(num)",
+      "output": "1\n2\n3",
+      "explanation": "A custom class Counter implements __iter__ and __next__, allowing it to be used in a for loop."
+    },
+    {
+      "level": "Advanced",
+      "title": "Infinite Iterator",
+      "code": "class EvenNumbers:\n    def __init__(self):\n        self.num = 0\n    \n    def __iter__(self):\n        return self\n        \n    def __next__(self):\n        self.num += 2\n        return self.num\n\niter_obj = EvenNumbers()\nprint(next(iter_obj))\nprint(next(iter_obj))\nprint(next(iter_obj))",
+      "output": "2\n4\n6",
+      "explanation": "This iterator produces an infinite sequence of even numbers because StopIteration is never raised."
+    },
+    {
+      "level": "Real-world",
+      "title": "Simulating File Reading",
+      "code": "class LogReader:\n    def __init__(self, logs):\n        self.logs = logs\n        self.index = 0\n    \n    def __iter__(self):\n        return self\n        \n    def __next__(self):\n        if self.index >= len(self.logs):\n            raise StopIteration\n        line = self.logs[self.index]\n        self.index += 1\n        return f'Processing: {line}'\n\nlogs = ['Error 101', 'Warn 202', 'Info 303']\nreader = LogReader(logs)\nfor log in reader:\n    print(log)",
+      "output": "Processing: Error 101\nProcessing: Warn 202\nProcessing: Info 303",
+      "explanation": "Custom iterator representing a reader that processes logs sequentially, similar to reading a file line by line."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Iterable vs Iterator",
+        "headers": ["Feature", "Iterable", "Iterator"],
+        "rows": [
+          ["Definition", "An object containing elements", "An object that produces elements sequentially"],
+          ["Methods", "Implements __iter__()", "Implements __iter__() and __next__()"],
+          ["State", "Does not keep state", "Maintains current state"],
+          ["Exhaustible", "No, can be iterated multiple times", "Yes, exhausted after one complete pass"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Lists (Iterable)",
+        "concept_b": "Generators (Iterator)",
+        "explanation": "Lists store all elements in memory, making them fast but memory-heavy. Generators yield elements one at a time, taking very little memory regardless of the sequence size."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "iter()",
+      "description": "Returns an iterator object for an iterable.",
+      "parameters": "object (iterable)",
+      "return_value": "An iterator object.",
+      "example_usage": "my_iter = iter([1, 2, 3])"
+    },
+    {
+      "name": "next()",
+      "description": "Retrieves the next item from the iterator.",
+      "parameters": "iterator, default (optional)",
+      "return_value": "The next item, or the default value if the iterator is exhausted.",
+      "example_usage": "item = next(my_iter, 'End')"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Iterating over an exhausted iterator",
+      "description": "Trying to use an iterator after it has raised StopIteration.",
+      "wrong_example": "my_iter = iter([1, 2])\nlist(my_iter)\nprint(list(my_iter)) # Returns []",
+      "correct_example": "my_list = [1, 2]\nprint(list(iter(my_list)))\nprint(list(iter(my_list))) # Create a new iterator",
+      "debugging_tip": "If your loops or list comprehensions are unexpectedly empty, check if you are reusing an exhausted iterator."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between an iterable and an iterator?",
+        "answer": "An iterable is a collection of items (like a list or string) that implements __iter__() to return an iterator. An iterator is an object that implements both __iter__() and __next__() to traverse those items."
+      },
+      {
+        "question": "What exception is raised when an iterator is exhausted?",
+        "answer": "StopIteration"
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How do for loops work internally in Python?",
+        "answer": "A for loop internally calls iter() on the object to get an iterator, then repeatedly calls next() to fetch elements until a StopIteration exception is raised."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How would you create an infinite iterator?",
+        "answer": "By creating a class that implements __iter__ and __next__, and ensuring the __next__ method always returns a value and never raises StopIteration."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create an iterator from the string 'Python'.",
+      "Write a for loop to iterate over a tuple of numbers.",
+      "Use next() to manually extract the first two elements of a list.",
+      "What function returns an iterator from an iterable?",
+      "Catch a StopIteration exception using a try-except block."
+    ],
+    "medium": [
+      "Create a custom iterator that generates the first n Fibonacci numbers.",
+      "Implement an iterator that returns characters of a string in reverse order.",
+      "Write an iterator that yields only even numbers from a given list.",
+      "Combine iter() and next() with a default value to prevent StopIteration.",
+      "Explain why dictionaries are iterables and how to iterate over their keys and values."
+    ],
+    "hard": [
+      "Implement an iterator that flattens a nested list of any depth.",
+      "Create an iterator that yields prime numbers infinitely.",
+      "Build a custom chunking iterator that yields sequences of length n from an iterable.",
+      "Implement an iterator that mimics the behavior of the built-in zip() function.",
+      "Write a multi-threaded program where iterators are safely shared between threads."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a custom iterator class `Squares` that yields the squares of numbers from 1 up to a given limit `n`.",
+      "input": "n = 5",
+      "output": "[1, 4, 9, 16, 25]",
+      "constraints": "Must implement __iter__ and __next__.",
+      "solution": "class Squares:\n    def __init__(self, limit):\n        self.limit = limit\n        self.current = 1\n    def __iter__(self):\n        return self\n    def __next__(self):\n        if self.current > self.limit:\n            raise StopIteration\n        val = self.current ** 2\n        self.current += 1\n        return val\n\nprint(list(Squares(5)))"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Data Analysis",
+      "explanation": "Iterating over chunks of massive CSV files using pandas chunksize to prevent RAM exhaustion."
+    },
+    {
+      "field": "Web Scraping",
+      "explanation": "Processing web pages sequentially where the next URL is generated dynamically."
+    }
+  ],
+  "best_practices": [
+    "Prefer generator functions (yield) over creating custom iterator classes when possible for cleaner code.",
+    "Do not assume an iterator can be reused. Always re-instantiate or convert to a list if multiple passes are needed.",
+    "Use built-in functions like enumerate() and zip() which return iterators for cleaner and more Pythonic loops."
+  ],
+  "summary": [
+    "Iterators are objects that produce data one element at a time.",
+    "They are memory efficient and rely on the iterator protocol (__iter__ and __next__).",
+    "Any object that can return an iterator is called an iterable.",
+    "The built-in 'for' loop handles iterators seamlessly by catching StopIteration."
+  ],
+  "quiz": [
+    {
+      "question": "Which method must an iterable implement?",
+      "options": ["__next__()", "__iter__()", "__loop__()", "__init__()"],
+      "answer": "__iter__()",
+      "explanation": "An iterable must implement __iter__() to return an iterator."
+    },
+    {
+      "question": "What happens when an iterator runs out of items?",
+      "options": ["Returns None", "Raises EndOfFile", "Raises StopIteration", "Loops back to the start"],
+      "answer": "Raises StopIteration",
+      "explanation": "The __next__() method raises StopIteration to signal the end of the sequence."
+    },
+    {
+      "question": "Which of these is NOT an iterable?",
+      "options": ["List", "Dictionary", "String", "Integer"],
+      "answer": "Integer",
+      "explanation": "Integers are singular values and do not contain multiple items to iterate over."
+    },
+    {
+      "question": "Can an exhausted iterator be reset?",
+      "options": ["Yes, using reset()", "Yes, by calling __iter__() again", "No, you must create a new one", "Yes, by setting its index to 0"],
+      "answer": "No, you must create a new one",
+      "explanation": "Once exhausted, an iterator is done. You must get a new iterator from the iterable."
+    },
+    {
+      "question": "Which keyword is commonly used to create generator iterators?",
+      "options": ["return", "yield", "produce", "generate"],
+      "answer": "yield",
+      "explanation": "The yield keyword suspends execution and returns a value, turning a function into a generator iterator."
+    },
+    {
+      "question": "What is the primary advantage of iterators?",
+      "options": ["Speed", "Memory efficiency", "Simplicity", "Thread safety"],
+      "answer": "Memory efficiency",
+      "explanation": "Iterators generate items one at a time, requiring very little memory regardless of dataset size."
+    },
+    {
+      "question": "How do you manually get the next value from an iterator?",
+      "options": ["iter.next()", "iter()", "next(iter)", "iter[0]"],
+      "answer": "next(iter)",
+      "explanation": "The built-in next() function calls the __next__() method of the iterator."
+    },
+    {
+      "question": "Is an iterator also an iterable?",
+      "options": ["Always", "Never", "Only if it inherits from Iterable", "Only in Python 2"],
+      "answer": "Always",
+      "explanation": "Yes, iterators implement __iter__() (which returns themselves), making them iterables."
+    },
+    {
+      "question": "What does a for loop do implicitly?",
+      "options": ["Calls iter() and handles StopIteration", "Only calls next()", "Converts the object to a list", "None of the above"],
+      "answer": "Calls iter() and handles StopIteration",
+      "explanation": "A for loop gets the iterator via iter() and repeatedly calls next(), catching StopIteration to end the loop."
+    },
+    {
+      "question": "What function allows iterating over keys and values of a dictionary simultaneously?",
+      "options": ["dict.iter()", "dict.keys()", "dict.values()", "dict.items()"],
+      "answer": "dict.items()",
+      "explanation": "The items() method returns a view object that yields (key, value) pairs."
+    }
+  ]
+}

@@ -1,0 +1,260 @@
+{
+  "title": "Pandas",
+  "introduction": {
+    "what_it_is": "Pandas is an open-source data manipulation and analysis library built on top of NumPy. It introduces two highly versatile data structures: Series (1D) and DataFrame (2D), which are designed to work with relational or labeled data easily and intuitively.",
+    "why_important": "It is the industry standard for data wrangling. Data rarely comes perfectly formatted. Pandas provides the tools to clean, transform, aggregate, and analyze massive datasets effortlessly, acting essentially as 'Excel on steroids' through Python code.",
+    "real_world": [
+      "Cleaning messy CSV data from web scraping before feeding it into a machine learning model.",
+      "Aggregating monthly sales data to calculate quarterly revenue reports.",
+      "Merging user data from a SQL database with clickstream data from a JSON API."
+    ]
+  },
+  "detailed_theory": "The foundation of Pandas lies in its two primary data structures:\n\n1. **Series**: A one-dimensional labeled array capable of holding any data type (integers, strings, floats, Python objects, etc.). The axis labels are collectively referred to as the index. You can think of a Series as a single column in an Excel spreadsheet.\n\n2. **DataFrame**: A two-dimensional, size-mutable, potentially heterogeneous tabular data structure with labeled axes (rows and columns). It is a dictionary-like container for Series objects. A DataFrame is analogous to a complete Excel worksheet or an SQL table.\n\nPandas excels at data ingestion. It can effortlessly read and write data from a multitude of formats including CSV, Excel, SQL databases, JSON, and Parquet using functions like `pd.read_csv()`.\n\nOnce data is loaded into a DataFrame, Pandas provides incredibly powerful tools for Data Cleaning and Preparation:\n- **Handling Missing Data**: Functions like `dropna()` and `fillna()` handle NaN (Not a Number) values.\n- **Data Alignment**: Pandas automatically aligns data based on index labels, preventing errors when combining datasets.\n- **Filtering and Selecting**: You can select data using labels (`loc`), positions (`iloc`), or boolean conditions.\n\nFurthermore, Pandas includes a robust 'GroupBy' engine. Similar to SQL's GROUP BY, it allows you to split the data into groups based on some criteria, apply a function (like sum, mean, or count) to each group independently, and then combine the results back into a DataFrame. This \"Split-Apply-Combine\" strategy is central to data analysis.\n\nPandas also has built-in capabilities for time series analysis, providing intelligent date/time indexing and resampling features.",
+  "key_features": {
+    "features": [
+      {
+        "name": "DataFrame Object",
+        "description": "A powerful 2D data structure with integrated indexing."
+      },
+      {
+        "name": "Data Handling capabilities",
+        "description": "Tools for reading/writing data, handling missing values, and reshaping datasets."
+      }
+    ],
+    "advantages": [
+      "Intuitive handling of tabular data with descriptive labels.",
+      "Robust methods for handling missing or messy data.",
+      "Seamless integration with NumPy, Matplotlib, and Scikit-learn."
+    ],
+    "limitations": [
+      "High memory usage. Loading very large datasets can cause Out of Memory errors.",
+      "Steep learning curve due to multiple ways to accomplish the same task (e.g., loc vs iloc).",
+      "Not designed for massive, distributed datasets out-of-the-box (unlike PySpark)."
+    ]
+  },
+  "syntax": {
+    "explanation": "Pandas is installed via `pip install pandas` and is conventionally imported as `pd`.",
+    "breakdown": [
+      "import pandas as pd",
+      "df = pd.read_csv('data.csv')",
+      "df.head()"
+    ],
+    "rules": [
+      "Always import pandas as pd.",
+      "Use .loc for label-based indexing and .iloc for positional indexing to avoid Chained Assignment warnings."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating a DataFrame",
+      "code": "import pandas as pd\n\ndata = {\n    'Name': ['Alice', 'Bob', 'Charlie'],\n    'Age': [25, 30, 35],\n    'City': ['New York', 'Paris', 'London']\n}\n\ndf = pd.DataFrame(data)\nprint(df)",
+      "output": "      Name  Age      City\n0    Alice   25  New York\n1      Bob   30     Paris\n2  Charlie   35    London",
+      "explanation": "A DataFrame is easily created from a Python dictionary, where keys become column headers."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Filtering and Selecting",
+      "code": "import pandas as pd\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]})\n\n# Select a single column (returns a Series)\nnames = df['Name']\n\n# Filter rows where Age is greater than 28\nolder = df[df['Age'] > 28]\nprint(older)",
+      "output": "      Name  Age\n1      Bob   30\n2  Charlie   35",
+      "explanation": "Selecting columns is like accessing dictionary keys. Filtering uses boolean masking similar to NumPy."
+    },
+    {
+      "level": "Advanced",
+      "title": "Group By and Aggregation",
+      "code": "import pandas as pd\n\ndata = {\n    'Department': ['HR', 'IT', 'HR', 'IT', 'Finance'],\n    'Salary': [50000, 70000, 55000, 80000, 90000]\n}\ndf = pd.DataFrame(data)\n\n# Group by department and calculate the mean salary\navg_salary = df.groupby('Department')['Salary'].mean()\nprint(avg_salary)",
+      "output": "Department\nFinance    90000.0\nHR         52500.0\nIT         75000.0\nName: Salary, dtype: float64",
+      "explanation": "The groupby function clusters rows by Department, and .mean() aggregates the Salary data for each cluster."
+    },
+    {
+      "level": "Real-world",
+      "title": "Handling Missing Data",
+      "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    'A': [1, 2, np.nan, 4],\n    'B': [5, np.nan, np.nan, 8]\n})\n\n# Fill missing values with the column mean\ndf_filled = df.fillna(df.mean())\nprint(df_filled)",
+      "output": "          A    B\n0  1.000000  5.0\n1  2.000000  6.5\n2  2.333333  6.5\n3  4.000000  8.0",
+      "explanation": "Real data is often incomplete. Pandas easily detects NaNs and provides methods to fill them logically (e.g., using mean imputation)."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "loc vs iloc Indexing",
+        "headers": ["Method", "Description", "Example"],
+        "rows": [
+          [".loc[]", "Label-based indexing. You use the names of rows/columns.", "df.loc[0, 'Name']"],
+          [".iloc[]", "Integer-based indexing. You use numeric positions.", "df.iloc[0, 1]"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "NumPy Array",
+        "concept_b": "Pandas DataFrame",
+        "explanation": "NumPy arrays are low-level, homogenous, and lack labels, making them purely mathematical. Pandas DataFrames are high-level, heterogeneous (can mix strings and numbers), and possess row/column labels, making them ideal for tabular data."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "pd.read_csv()",
+      "description": "Read a comma-separated values (csv) file into DataFrame.",
+      "parameters": "filepath_or_buffer",
+      "return_value": "DataFrame",
+      "example_usage": "df = pd.read_csv('data.csv')"
+    },
+    {
+      "name": "df.info()",
+      "description": "Print a concise summary of a DataFrame including memory usage and data types.",
+      "parameters": "None",
+      "return_value": "None (prints to console)",
+      "example_usage": "df.info()"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "SettingWithCopyWarning",
+      "description": "Modifying a slice of a DataFrame can lead to unpredictable behavior where changes might not reflect in the original DataFrame.",
+      "wrong_example": "df[df['Age'] > 30]['Status'] = 'Senior' # Triggers warning",
+      "correct_example": "df.loc[df['Age'] > 30, 'Status'] = 'Senior' # Correct",
+      "debugging_tip": "Whenever you see SettingWithCopyWarning, rewrite your code to use .loc for both selecting rows and specifying the column to modify in a single operation."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What are the core data structures in Pandas?",
+        "answer": "Series (1D labeled array) and DataFrame (2D labeled tabular structure)."
+      },
+      {
+        "question": "How do you view the first 5 rows of a DataFrame?",
+        "answer": "Using the df.head() method. You can optionally pass an integer to view more or fewer rows, e.g., df.head(10)."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain the difference between .loc and .iloc.",
+        "answer": ".loc is label-based, meaning you select data based on row/column names. .iloc is integer position-based, meaning you select data based on its numerical index (0-based) regardless of its label."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How does Pandas handle merging data compared to SQL JOINs?",
+        "answer": "Pandas uses the pd.merge() function to combine DataFrames. It operates very similarly to SQL JOINs, supporting parameters like 'how=\"left\"', 'how=\"inner\"', and specifying the key columns using 'on='."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Read a CSV file into a Pandas DataFrame.",
+      "Display the summary statistics (mean, min, max) of a DataFrame using a built-in method.",
+      "Select only a column named 'Price' from a DataFrame.",
+      "Find the number of rows and columns in a DataFrame.",
+      "Drop a column named 'Unnecessary' from a DataFrame."
+    ],
+    "medium": [
+      "Filter a DataFrame to only show rows where 'Category' is 'Electronics' and 'Price' > 100.",
+      "Count the number of missing (NaN) values in each column.",
+      "Replace all missing values in an 'Age' column with the median age.",
+      "Sort a DataFrame descending by the 'Date' column.",
+      "Use groupby to find the total sales per region."
+    ],
+    "hard": [
+      "Perform a Left Join on two DataFrames on a common 'EmployeeID' column.",
+      "Create a Pivot Table showing the average score grouped by 'Class' (rows) and 'Gender' (columns).",
+      "Use the .apply() method to apply a custom function to a column.",
+      "Convert a string 'Date' column into proper datetime objects and extract the month into a new column.",
+      "Identify and remove duplicate rows based on a specific subset of columns."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given a dictionary `data`, create a DataFrame. Add a new column 'Status' which is 'Pass' if Score >= 50, else 'Fail'. Return the modified DataFrame.",
+      "input": "data = {'Name': ['A', 'B', 'C'], 'Score': [45, 80, 50]}",
+      "output": "  Name  Score Status\n0    A     45   Fail\n1    B     80   Pass\n2    C     50   Pass",
+      "constraints": "Use vectorization or np.where, not .apply() or loops for efficiency.",
+      "solution": "import pandas as pd\nimport numpy as np\n\ndata = {'Name': ['A', 'B', 'C'], 'Score': [45, 80, 50]}\ndf = pd.DataFrame(data)\ndf['Status'] = np.where(df['Score'] >= 50, 'Pass', 'Fail')\nprint(df)"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Finance",
+      "explanation": "Importing daily stock prices, calculating moving averages, and handling missing weekend data using forward filling."
+    },
+    {
+      "field": "Data Journalism",
+      "explanation": "Merging government demographic data with polling data to discover trends based on regions and voting history."
+    }
+  ],
+  "best_practices": [
+    "Chain methods for readable data transformation pipelines (e.g., df.dropna().query('Age > 20').groupby('City').mean()).",
+    "Use appropriate data types to save memory. Convert string columns with limited unique values to the 'category' dtype.",
+    "Avoid iterating over rows using iterrows() as it is notoriously slow. Always seek vectorized solutions."
+  ],
+  "summary": [
+    "Pandas provides the Series and DataFrame structures for handling tabular data.",
+    "It is essential for data cleaning, filtering, grouping, and aggregation.",
+    "Data selection is managed precisely using .loc (labels) and .iloc (positions).",
+    "It acts as a bridge between raw messy data and clean inputs for machine learning."
+  ],
+  "quiz": [
+    {
+      "question": "What is a 1-dimensional data structure in Pandas called?",
+      "options": ["DataFrame", "Series", "Array", "Vector"],
+      "answer": "Series",
+      "explanation": "A Series is a 1D labeled array capable of holding any data type."
+    },
+    {
+      "question": "Which method is used to read an Excel file in Pandas?",
+      "options": ["read_excel()", "load_excel()", "open_excel()", "import_excel()"],
+      "answer": "read_excel()",
+      "explanation": "pd.read_excel() is the standard method to load Excel spreadsheets into a DataFrame."
+    },
+    {
+      "question": "What does the df.describe() method do?",
+      "options": ["Prints the data types", "Generates descriptive statistics", "Shows the first 5 rows", "Describes the column names"],
+      "answer": "Generates descriptive statistics",
+      "explanation": "df.describe() provides statistical summaries like mean, std, min, and quartiles for numerical columns."
+    },
+    {
+      "question": "If you want to select data by its numerical row and column index, which accessor do you use?",
+      "options": [".loc", ".iloc", ".ix", ".get"],
+      "answer": ".iloc",
+      "explanation": ".iloc stands for integer location and is used for position-based indexing."
+    },
+    {
+      "question": "How do you drop missing values (NaN) from a DataFrame?",
+      "options": ["df.drop_missing()", "df.remove_nan()", "df.dropna()", "df.clear()"],
+      "answer": "df.dropna()",
+      "explanation": "dropna() removes rows (or columns) that contain missing values."
+    },
+    {
+      "question": "What method groups data based on identical values in a specified column?",
+      "options": ["cluster()", "aggregate()", "groupby()", "sort_values()"],
+      "answer": "groupby()",
+      "explanation": "groupby() groups rows that have the same values into summary rows, similar to SQL."
+    },
+    {
+      "question": "Which parameter ensures an operation modifies the existing DataFrame instead of returning a new one?",
+      "options": ["inplace=True", "modify=True", "save=True", "update=True"],
+      "answer": "inplace=True",
+      "explanation": "Setting inplace=True applies the changes directly to the target DataFrame, saving memory."
+    },
+    {
+      "question": "What happens if you run df['New Col'] = 5?",
+      "options": ["Error", "Creates a column with value 5 only in the first row", "Creates a column where all rows have the value 5", "Appends a row"],
+      "answer": "Creates a column where all rows have the value 5",
+      "explanation": "Broadcasting applies the scalar value 5 to every row in the new column."
+    },
+    {
+      "question": "How can you rename a column 'OldName' to 'NewName'?",
+      "options": ["df.rename(columns={'OldName': 'NewName'})", "df.rename('OldName', 'NewName')", "df.columns['OldName'] = 'NewName'", "df.set_column('OldName', 'NewName')"],
+      "answer": "df.rename(columns={'OldName': 'NewName'})",
+      "explanation": "The rename() method takes a dictionary mapping old names to new names."
+    },
+    {
+      "question": "Which method is heavily discouraged because it is extremely slow in Pandas?",
+      "options": ["apply()", "groupby()", "iterrows()", "merge()"],
+      "answer": "iterrows()",
+      "explanation": "iterrows() loops through rows sequentially in Python, defeating Pandas' fast C-based vectorization."
+    }
+  ]
+}

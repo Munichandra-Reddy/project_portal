@@ -1,0 +1,262 @@
+{
+  "title": "Lambda Expressions",
+  "introduction": {
+    "what_it_is": "A lambda expression is a short block of code which takes in parameters and returns a value. Introduced in Java 8, it represents an anonymous function—a function with no name and no identifier—that can be passed around as if it were an object.",
+    "why_important": "Lambda expressions facilitate functional programming in Java by providing a clear and concise way to represent one method interface (functional interface) using an expression. They help reduce boilerplate code, make code more readable, and enable powerful features like the Stream API for collections.",
+    "real_world": [
+      "Filtering items in a list based on a condition without writing a full class.",
+      "Handling UI events, such as button clicks, where the action logic can be concisely passed as an argument.",
+      "Processing large datasets concurrently using Streams where the operations (map, filter) are defined as lambda expressions."
+    ]
+  },
+  "detailed_theory": "Before Java 8, implementing a functional interface (an interface with exactly one abstract method) required creating an anonymous inner class, which often led to verbose and cluttered code. Lambda expressions solve this by allowing you to treat functionality as a method argument, or code as data. A lambda expression consists of three parts: a comma-separated list of formal parameters enclosed in parentheses, the arrow token `->`, and a body, which consists of a single expression or a statement block. Under the hood, lambda expressions are compiled using the `invokedynamic` instruction introduced in Java 7, which defers the creation of the lambda's functional interface instance to runtime, making them highly efficient compared to anonymous inner classes.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Anonymous",
+        "description": "It doesn't have a name like normal methods do."
+      },
+      {
+        "name": "Functions",
+        "description": "It is not tied to a specific class like normal methods are, but it does have a list of parameters, a body, a return type, and possibly a list of exceptions."
+      },
+      {
+        "name": "Passed around",
+        "description": "A lambda expression can be passed as an argument to a method or stored in a variable."
+      },
+      {
+        "name": "Concise",
+        "description": "You don't need to write a lot of boilerplate code like anonymous inner classes."
+      }
+    ],
+    "advantages": [
+      "Enables functional programming in Java.",
+      "Reduces code verbosity and boilerplate.",
+      "Improves readability of the code.",
+      "Facilitates parallel processing using the Stream API."
+    ],
+    "limitations": [
+      "Can only be used with Functional Interfaces (interfaces with a single abstract method).",
+      "Debugging can be challenging because lambda expressions lack names in stack traces.",
+      "Local variables accessed inside a lambda must be effectively final."
+    ]
+  },
+  "syntax": {
+    "explanation": "The syntax of a lambda expression is `(parameters) -> expression` or `(parameters) -> { statements; }`.",
+    "breakdown": [
+      "`()` : The parameter list. Can be empty, have one parameter (parentheses are optional if type is inferred), or have multiple parameters.",
+      "`->` : The lambda operator, also known as the arrow token. It separates the parameters from the body.",
+      "`expression / { statements }` : The body. Can be a single expression (where `return` is implicitly handled) or a block of statements enclosed in curly braces (where an explicit `return` is required if returning a value)."
+    ],
+    "rules": [
+      "Optional type declaration: The compiler can infer the type of parameters from the context.",
+      "Optional parenthesis around parameter: Parentheses are optional if there is only one parameter without an explicit type.",
+      "Optional curly braces: Braces are optional if the body contains only a single statement.",
+      "Optional return keyword: The compiler automatically returns the value if the body has a single expression."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Zero Parameter Lambda Expression",
+      "code": "interface Sayable {\n    String say();\n}\n\npublic class LambdaBasic {\n    public static void main(String[] args) {\n        Sayable s = () -> \"Hello, Lambda!\";\n        System.out.println(s.say());\n    }\n}",
+      "output": "Hello, Lambda!",
+      "explanation": "This example shows a simple functional interface `Sayable` with no parameters. The lambda expression `() -> \"Hello, Lambda!\"` implements this interface."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Multiple Parameters and Block Body",
+      "code": "interface MathOperation {\n    int operate(int a, int b);\n}\n\npublic class LambdaIntermediate {\n    public static void main(String[] args) {\n        MathOperation addition = (a, b) -> {\n            System.out.println(\"Adding \" + a + \" and \" + b);\n            return a + b;\n        };\n        System.out.println(\"Result: \" + addition.operate(10, 20));\n    }\n}",
+      "output": "Adding 10 and 20\nResult: 30",
+      "explanation": "When a lambda expression has multiple statements in its body, curly braces `{}` and an explicit `return` statement (if returning a value) are required."
+    },
+    {
+      "level": "Advanced",
+      "title": "Lambda with Collections and Streams",
+      "code": "import java.util.Arrays;\nimport java.util.List;\n\npublic class LambdaAdvanced {\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"Alice\", \"Bob\", \"Charlie\", \"David\");\n        \n        // Using lambda to filter and print names starting with 'C'\n        names.stream()\n             .filter(name -> name.startsWith(\"C\"))\n             .forEach(name -> System.out.println(name));\n    }\n}",
+      "output": "Charlie",
+      "explanation": "Lambdas are heavily used with the Java Stream API. Here, `name -> name.startsWith(\"C\")` is a lambda implementing `Predicate`, and `name -> System.out.println(name)` implements `Consumer`."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Anonymous Inner Class vs. Lambda Expression",
+        "headers": [
+          "Feature",
+          "Anonymous Inner Class",
+          "Lambda Expression"
+        ],
+        "rows": [
+          [
+            "Syntax",
+            "Verbose, requires method signature and class body",
+            "Concise, focuses only on parameters and logic"
+          ],
+          [
+            "`this` Keyword",
+            "Refers to the anonymous inner class instance",
+            "Refers to the enclosing class instance"
+          ],
+          [
+            "Performance",
+            "Generates a separate `.class` file at compile time",
+            "Uses `invokedynamic`, no extra `.class` file generated"
+          ],
+          [
+            "State",
+            "Can have state (instance variables)",
+            "Stateless, cannot define instance variables"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Method Reference",
+        "concept_b": "Lambda Expression",
+        "explanation": "A method reference (`ClassName::methodName`) is a shorthand syntax for a lambda expression that simply calls an existing method. For example, `str -> System.out.println(str)` can be written as `System.out::println`."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "Predicate<T>",
+      "description": "Represents a predicate (boolean-valued function) of one argument.",
+      "parameters": "T t",
+      "return_value": "boolean",
+      "example_usage": "Predicate<String> isEmpty = str -> str.isEmpty();"
+    },
+    {
+      "name": "Consumer<T>",
+      "description": "Represents an operation that accepts a single input argument and returns no result.",
+      "parameters": "T t",
+      "return_value": "void",
+      "example_usage": "Consumer<String> print = str -> System.out.println(str);"
+    },
+    {
+      "name": "Function<T, R>",
+      "description": "Represents a function that accepts one argument and produces a result.",
+      "parameters": "T t",
+      "return_value": "R",
+      "example_usage": "Function<String, Integer> length = str -> str.length();"
+    },
+    {
+      "name": "Supplier<T>",
+      "description": "Represents a supplier of results, taking no arguments.",
+      "parameters": "None",
+      "return_value": "T",
+      "example_usage": "Supplier<Double> random = () -> Math.random();"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Modifying Local Variables",
+      "description": "Trying to modify a local variable inside a lambda expression that is not effectively final.",
+      "wrong_example": "int count = 0;\nRunnable r = () -> {\n    count++; // Compilation error\n};",
+      "correct_example": "int[] count = {0};\nRunnable r = () -> {\n    count[0]++; // Workaround using an array or AtomicInteger\n};",
+      "debugging_tip": "Ensure any local variable accessed within a lambda is declared `final` or is never reassigned (effectively final)."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is a Lambda Expression in Java?",
+        "answer": "A lambda expression is an anonymous function introduced in Java 8 that provides a concise way to implement a functional interface."
+      },
+      {
+        "question": "What is a Functional Interface?",
+        "answer": "An interface that contains exactly one abstract method. It can have multiple default or static methods."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What is the difference between an anonymous class and a lambda expression?",
+        "answer": "Anonymous classes create an instance of a new class, generate an extra `.class` file, and their `this` keyword refers to the anonymous class itself. Lambdas do not generate extra `.class` files (using `invokedynamic`) and their `this` keyword refers to the enclosing class."
+      },
+      {
+        "question": "Can a lambda expression throw exceptions?",
+        "answer": "Yes, a lambda expression can throw exceptions if the abstract method of the functional interface it implements declares those exceptions in its `throws` clause."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What does 'effectively final' mean in the context of lambda expressions?",
+        "answer": "A variable is effectively final if its value is never changed after initialization. Lambdas can capture local variables from their enclosing scope only if those variables are effectively final or explicitly marked as `final`."
+      },
+      {
+        "question": "How does the Java compiler implement lambda expressions under the hood?",
+        "answer": "The compiler uses the `invokedynamic` bytecode instruction to defer the creation of the lambda instance to runtime. At runtime, the `LambdaMetafactory` generates a class that implements the target functional interface."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a lambda expression to implement a `Runnable` that prints 'Hello World'.",
+      "Write a lambda expression that takes two integers and returns their product."
+    ],
+    "medium": [
+      "Use a lambda expression with the `Collections.sort()` method to sort a list of strings by their length.",
+      "Write a `Predicate` lambda expression to check if a number is even."
+    ],
+    "hard": [
+      "Implement a custom functional interface `StringManipulator` with a lambda expression that reverses a string.",
+      "Chain multiple `Function` lambda expressions using `andThen()` to first remove spaces from a string and then convert it to uppercase."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a program that uses a lambda expression to find the maximum element in a List of Integers using the Stream API.",
+      "input": "List of integers: [4, 7, 2, 9, 1, 5]",
+      "output": "Maximum value: 9",
+      "constraints": "Must use Streams and Lambda expressions.",
+      "solution": "import java.util.Arrays;\nimport java.util.List;\nimport java.util.Optional;\n\npublic class MaxElement {\n    public static void main(String[] args) {\n        List<Integer> numbers = Arrays.asList(4, 7, 2, 9, 1, 5);\n        Optional<Integer> max = numbers.stream()\n                                       .max((a, b) -> a.compareTo(b));\n        max.ifPresent(val -> System.out.println(\"Maximum value: \" + val));\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "UI Event Handling",
+      "explanation": "In JavaFX or Swing, lambdas are extensively used as ActionListeners to handle user interactions concisely."
+    },
+    {
+      "field": "Data Processing",
+      "explanation": "Used heavily with the Stream API to filter, map, and reduce large collections of data, such as processing records from a database or file."
+    }
+  ],
+  "best_practices": [
+    "Keep lambda expressions short and concise. If the logic is complex, move it to a separate method and use a method reference.",
+    "Avoid specifying parameter types unless necessary; let the compiler infer them.",
+    "Prefer using built-in functional interfaces from `java.util.function` instead of creating custom ones when possible.",
+    "Use parentheses only when necessary (e.g., zero or multiple parameters, or when specifying types)."
+  ],
+  "summary": [
+    "Lambda expressions represent an anonymous function.",
+    "They provide a clear and concise way to implement single-method interfaces (Functional Interfaces).",
+    "Lambdas enable functional programming features and are essential for using the Stream API.",
+    "They eliminate boilerplate code and improve overall code readability and maintainability."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is a valid syntax for a lambda expression?",
+      "options": [
+        "(int x) -> x + 1",
+        "x -> return x + 1;",
+        "x => x + 1",
+        "lambda x: x + 1"
+      ],
+      "answer": "(int x) -> x + 1",
+      "explanation": "The syntax `(int x) -> x + 1` is valid. `x -> return x + 1;` is invalid without curly braces. The others use incorrect operators."
+    },
+    {
+      "question": "What type of interface is required to be implemented by a lambda expression?",
+      "options": [
+        "Marker Interface",
+        "Functional Interface",
+        "Serializable Interface",
+        "Cloneable Interface"
+      ],
+      "answer": "Functional Interface",
+      "explanation": "Lambda expressions are used to implement functional interfaces, which have exactly one abstract method."
+    }
+  ]
+}

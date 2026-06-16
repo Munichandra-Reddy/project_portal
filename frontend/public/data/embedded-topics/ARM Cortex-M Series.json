@@ -1,0 +1,51 @@
+{
+  "title": "ARM Cortex-M Series",
+  "introduction": {
+    "definition": "A group of 32-bit RISC ARM processor cores optimized for low-cost and energy-efficient microcontrollers.",
+    "purpose": "",
+    "importance": ""
+  },
+  "detailed_theory": "Cortex-M0/M0+: Lowest power/area.\nCortex-M3: Balanced performance.\nCortex-M4: Adds DSP instructions and optional FPU.\nCortex-M7: High-performance, double-precision FPU, cache.\nRegisters include R0-R15. Nested Vectored Interrupt Controller (NVIC) manages the interrupt system.",
+  "working_principle": {
+    "steps": [],
+    "internal_operation": "",
+    "signal_flow": ""
+  },
+  "architecture": {
+    "description": "",
+    "block_diagram_text": "",
+    "components": [
+      "Core",
+      "NVIC",
+      "SysTick Timer",
+      "Memory Protection Unit (MPU)"
+    ]
+  },
+  "hdl_code": {
+    "vhdl": "",
+    "verilog": "",
+    "explanation": ""
+  },
+  "truth_table": null,
+  "timing_diagram": null,
+  "examples": [],
+  "visuals": {
+    "tables": [],
+    "comparisons": []
+  },
+  "design_errors": [],
+  "tools": [],
+  "real_world_applications": [],
+  "best_practices": [],
+  "summary": [],
+  "practice_problems": {
+    "easy": [],
+    "medium": [],
+    "hard": []
+  },
+  "interview_questions": {
+    "basic": [],
+    "intermediate": [],
+    "advanced": []
+  }
+}

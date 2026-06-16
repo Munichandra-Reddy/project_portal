@@ -1,0 +1,252 @@
+{
+  "title": "Exception Handling",
+  "introduction": {
+    "what_it_is": "Exception Handling in Java is a powerful mechanism that handles runtime errors, allowing a program to continue its normal execution instead of terminating abruptly. It acts as a safety net that intercepts unexpected events (exceptions) such as dividing a number by zero, attempting to read a missing file, or experiencing network failures.",
+    "why_important": "Without exception handling, a single error would cause the Java Virtual Machine (JVM) to terminate the program immediately, displaying an unfriendly stack trace to the user and potentially leaving resources like files and network connections open. It ensures application robustness, fault tolerance, and clear separation of error-handling code from regular business logic.",
+    "real_world": [
+      "A banking application handling an 'Insufficient Balance' scenario smoothly during an ATM withdrawal.",
+      "A web browser gracefully notifying the user when an internet connection suddenly drops while loading a page.",
+      "A text editor alerting the user instead of crashing when attempting to save a file to a read-only directory."
+    ]
+  },
+  "detailed_theory": "In Java, an exception is an unwanted or unexpected event occurring during execution (runtime) that disrupts the normal flow of instructions. The Java exception handling framework is built on a robust object-oriented class hierarchy rooted in the `java.lang.Throwable` class. There are two main subclasses: `Error` and `Exception`.\n\n1. **Error:** Represents catastrophic, unrecoverable failures that a reasonable application should not try to catch. Examples include `OutOfMemoryError`, `StackOverflowError`, and `VirtualMachineError`.\n2. **Exception:** Represents conditions that a program should catch and handle. It is further divided into:\n   - **Checked Exceptions:** Exceptions checked at compile-time. The compiler forces the programmer to handle them using `try-catch` or declare them using `throws`. Examples: `IOException`, `SQLException`.\n   - **Unchecked Exceptions (Runtime Exceptions):** Exceptions not checked at compile-time. They usually indicate programming bugs. Examples: `NullPointerException`, `ArithmeticException`, `ArrayIndexOutOfBoundsException`.\n\nJava provides five keywords to handle exceptions:\n- **try:** Contains the code that might throw an exception.\n- **catch:** Contains the fallback logic if an exception occurs.\n- **finally:** Executes regardless of whether an exception occurs, making it ideal for resource cleanup.\n- **throw:** Used to manually trigger an exception.\n- **throws:** Declares that a method might throw an exception, passing the responsibility to the caller.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Class Hierarchy",
+        "description": "A well-structured object-oriented hierarchy of exception classes (Throwable, Error, Exception, RuntimeException) allowing developers to handle different types of errors precisely."
+      },
+      {
+        "name": "Separation of Concerns",
+        "description": "Isolates error-handling logic from the main application flow, making code much more readable and maintainable."
+      },
+      {
+        "name": "Stack Trace Propagation",
+        "description": "Exceptions bubble up the method call stack automatically until a matching catch block is found, allowing centralization of error handling."
+      },
+      {
+        "name": "Try-With-Resources",
+        "description": "Introduced in Java 7, it automatically closes resources (like files, streams, or database connections) when the try block exits, preventing resource leaks."
+      }
+    ],
+    "advantages": [
+      "Maintains the normal, uninterrupted flow of an application even when unpredictable errors occur.",
+      "Groups error types logically to allow differentiated and specific handling strategies.",
+      "Provides exact diagnostic information (stack trace) to identify the line and method where the error occurred.",
+      "Ensures guaranteed cleanup of resources using the `finally` block or `try-with-resources`."
+    ],
+    "limitations": [
+      "Can impact application performance if overused for regular control flow, as creating exception objects and unwinding the stack is relatively expensive.",
+      "Improper handling (like empty catch blocks or 'swallowing' exceptions) hides bugs and makes debugging extremely difficult.",
+      "Overuse of checked exceptions can lead to boilerplate code and cluttered method signatures."
+    ]
+  },
+  "syntax": {
+    "explanation": "Exception handling revolves around the `try`, `catch`, and `finally` blocks. You place 'risky' code inside the `try` block. If an exception occurs, control immediately jumps to the appropriate `catch` block. The `finally` block executes unconditionally after the try or catch block finishes.",
+    "breakdown": [
+      "try { ... } : Defines a block of code to test for errors.",
+      "catch (ExceptionType e) { ... } : Defines a block of code to execute if an error of ExceptionType occurs in the try block.",
+      "finally { ... } : Defines a block of code to execute after try and catch, regardless of whether an exception was thrown or handled.",
+      "throw new ExceptionType(\"Message\"); : Manually triggers an instance of an exception.",
+      "returnType methodName() throws ExceptionType { ... } : Declares that the method may throw an exception."
+    ],
+    "rules": [
+      "A `try` block must be followed by at least one `catch` block or one `finally` block.",
+      "When catching multiple exceptions, specific subclasses (e.g., `ArithmeticException`) must appear before their generic parent classes (e.g., `Exception`), otherwise a compile-time error occurs.",
+      "The `finally` block will not execute if `System.exit()` is called inside the try/catch block, or if the JVM crashes.",
+      "You cannot have code directly between `try`, `catch`, and `finally` blocks."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Handling ArithmeticException",
+      "code": "public class BasicException {\n    public static void main(String[] args) {\n        System.out.println(\"Program started.\");\n        try {\n            int data = 100 / 0; // Throws ArithmeticException\n        } catch (ArithmeticException e) {\n            System.out.println(\"Error: Cannot divide by zero!\");\n        }\n        System.out.println(\"Program finished successfully.\");\n    }\n}",
+      "output": "Program started.\nError: Cannot divide by zero!\nProgram finished successfully.",
+      "explanation": "The program attempts to divide a number by zero, which is mathematically invalid in Java for integers. It throws an `ArithmeticException`. Instead of crashing, the JVM finds the `catch` block, executes the error message, and smoothly continues to the final print statement."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Multiple Catch Blocks and Finally",
+      "code": "public class MultiCatchExample {\n    public static void main(String[] args) {\n        try {\n            int[] arr = new int[5];\n            arr[5] = 30 / 0; // ArithmeticException occurs first\n        } catch (ArithmeticException e) {\n            System.out.println(\"Arithmetic Exception occurs\");\n        } catch (ArrayIndexOutOfBoundsException e) {\n            System.out.println(\"ArrayIndexOutOfBounds Exception occurs\");\n        } catch (Exception e) {\n            System.out.println(\"Parent Exception occurs\");\n        } finally {\n            System.out.println(\"Finally block is always executed\");\n        }\n    }\n}",
+      "output": "Arithmetic Exception occurs\nFinally block is always executed",
+      "explanation": "This code tests multiple failure points. Since `30/0` is evaluated before assigning to the array, an `ArithmeticException` is thrown. The first matching `catch` block handles it. The generic `Exception` catch acts as a fallback. The `finally` block runs regardless of the exception being caught."
+    },
+    {
+      "level": "Advanced",
+      "title": "Custom Exceptions and Throw Keyword",
+      "code": "class InvalidAgeException extends Exception {\n    public InvalidAgeException(String errorMessage) {\n        super(errorMessage);\n    }\n}\n\npublic class CustomExceptionExample {\n    static void checkAge(int age) throws InvalidAgeException {\n        if (age < 18) {\n            throw new InvalidAgeException(\"Age is not valid to vote\");\n        } else {\n            System.out.println(\"Welcome to vote\");\n        }\n    }\n\n    public static void main(String[] args) {\n        try {\n            checkAge(15);\n        } catch (InvalidAgeException e) {\n            System.out.println(\"Caught exception: \" + e.getMessage());\n        }\n    }\n}",
+      "output": "Caught exception: Age is not valid to vote",
+      "explanation": "Here, we create a user-defined exception `InvalidAgeException` by extending the `Exception` class. The `checkAge` method manually throws this exception using the `throw` keyword if the age is less than 18. The `throws` keyword in the method signature warns the caller that this exception needs to be handled."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Checked vs Unchecked Exceptions",
+        "headers": ["Feature", "Checked Exceptions", "Unchecked Exceptions"],
+        "rows": [
+          ["Checking Time", "Compile-time", "Runtime"],
+          ["Base Class", "Directly extends Exception (but not RuntimeException)", "Extends RuntimeException"],
+          ["Handling", "Must be explicitly handled (try-catch) or declared (throws)", "Not mandatory to handle or declare"],
+          ["Examples", "IOException, SQLException, ClassNotFoundException", "NullPointerException, ArithmeticException"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "throw",
+        "concept_b": "throws",
+        "explanation": "`throw` is used within a method body to explicitly throw a single exception instance. `throws` is used in a method signature to declare that the method might throw one or multiple exceptions, delegating the responsibility of handling them to the caller."
+      },
+      {
+        "concept_a": "finally",
+        "concept_b": "finalize()",
+        "explanation": "`finally` is a block used in exception handling to execute important code (like closing connections) regardless of exceptions. `finalize()` is a method in the Object class called by the Garbage Collector just before an object is destroyed to perform cleanup."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "getMessage()",
+      "description": "Returns a detailed message string of the Throwable object.",
+      "parameters": "None",
+      "return_value": "String",
+      "example_usage": "e.getMessage(); // Output: / by zero"
+    },
+    {
+      "name": "printStackTrace()",
+      "description": "Prints the Throwable and its backtrace (the sequence of method calls leading to the error) to the standard error stream.",
+      "parameters": "None",
+      "return_value": "void",
+      "example_usage": "e.printStackTrace(); // Prints the full stack trace to console"
+    },
+    {
+      "name": "toString()",
+      "description": "Returns a short description of the Throwable, usually combining the class name and the result of getMessage().",
+      "parameters": "None",
+      "return_value": "String",
+      "example_usage": "System.out.println(e.toString()); // Output: java.lang.ArithmeticException: / by zero"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Swallowing Exceptions",
+      "description": "Catching an exception but leaving the catch block completely empty, which hides the error and makes debugging impossible.",
+      "wrong_example": "try { FileReader f = new FileReader(\"test.txt\"); } catch (IOException e) { /* Do nothing */ }",
+      "correct_example": "try { FileReader f = new FileReader(\"test.txt\"); } catch (IOException e) { e.printStackTrace(); /* or log the error */ }",
+      "debugging_tip": "Always at least log the exception using a logging framework or print the stack trace during development to avoid silent failures."
+    },
+    {
+      "title": "Wrong Order of Catch Blocks",
+      "description": "Placing a catch block for a superclass (like Exception) before a subclass (like ArithmeticException).",
+      "wrong_example": "try { int x = 5/0; } catch (Exception e) { } catch (ArithmeticException e) { } // Compilation Error",
+      "correct_example": "try { int x = 5/0; } catch (ArithmeticException e) { } catch (Exception e) { }",
+      "debugging_tip": "The Java compiler evaluates catch blocks from top to bottom. Always put the most specific exceptions at the top."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between Error and Exception in Java?",
+        "answer": "Errors are critical, irrecoverable system issues (like OutOfMemoryError) that the application shouldn't try to catch. Exceptions are conditions that an application can and should handle to recover gracefully (like IOException)."
+      },
+      {
+        "question": "Is it mandatory to use a catch block after a try block?",
+        "answer": "No, it is not mandatory to use a catch block if a finally block is present. A try block must be followed by either a catch block, a finally block, or both."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Can you explain Try-with-Resources?",
+        "answer": "Introduced in Java 7, try-with-resources is a try statement that declares one or more resources. It ensures that each resource is closed automatically at the end of the statement. Any object that implements `java.lang.AutoCloseable` can be used."
+      },
+      {
+        "question": "Under what condition will the finally block NOT execute?",
+        "answer": "The finally block will not execute if `System.exit(int)` is called, if the JVM crashes, if the thread executing the try/catch block is killed, or if the system undergoes a power failure."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What happens if an exception is thrown inside a finally block?",
+        "answer": "If an exception is thrown inside a finally block and not caught within it, it propagates up the call stack, potentially suppressing any exception that was previously thrown in the try or catch block."
+      },
+      {
+        "question": "What is Exception Chaining?",
+        "answer": "Exception chaining is a technique where one exception causes another. The first exception (the cause) is wrapped inside a new exception. This is done using constructors that take a Throwable cause, allowing the preservation of the original stack trace while providing a more domain-specific error message."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a Java program to intentionally throw a NullPointerException and catch it.",
+      "Create a try-catch block to handle a NumberFormatException when parsing an invalid string to an integer."
+    ],
+    "medium": [
+      "Write a program that opens a file using try-with-resources and reads its contents. Handle the scenario where the file does not exist.",
+      "Create a program with nested try-catch blocks where the inner try handles an ArithmeticException and the outer handles an ArrayIndexOutOfBoundsException."
+    ],
+    "hard": [
+      "Design a custom Checked Exception called 'InvalidTransactionException'. Create a method that transfers money between accounts and throws this exception if the balance goes negative. Handle the exception properly in the main method.",
+      "Write a program that demonstrates exception suppression using try-with-resources when both the try block and the `close()` method throw exceptions."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "You are building a login system. Create a custom exception `InvalidPasswordException`. Write a method `validatePassword(String password)` that throws this exception if the password is less than 8 characters long, does not contain at least one digit, or does not contain at least one uppercase letter. Otherwise, it should print 'Login Successful'.",
+      "input": "Password = 'Secret1'",
+      "output": "Exception in thread 'main' InvalidPasswordException: Password must be at least 8 characters long.",
+      "constraints": "Password must be handled securely. Implement the logic entirely in a single method and use standard Exception inheritance.",
+      "solution": "class InvalidPasswordException extends Exception {\n    public InvalidPasswordException(String msg) { super(msg); }\n}\n\npublic class AuthSystem {\n    static void validatePassword(String pwd) throws InvalidPasswordException {\n        if(pwd.length() < 8) throw new InvalidPasswordException(\"Too short.\");\n        if(!pwd.matches(\".*\\\\d.*\")) throw new InvalidPasswordException(\"Must contain a digit.\");\n        if(!pwd.matches(\".*[A-Z].*\")) throw new InvalidPasswordException(\"Must contain uppercase.\");\n        System.out.println(\"Login Successful\");\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Web Servers & REST APIs",
+      "explanation": "Global exception handlers (like `@ControllerAdvice` in Spring Boot) catch exceptions across all endpoints and return standardized HTTP error responses (e.g., 404 Not Found, 500 Internal Server Error) to the client instead of crashing the server."
+    },
+    {
+      "field": "Database Connectivity (JDBC/Hibernate)",
+      "explanation": "Database operations are highly prone to network failures, constraint violations, or incorrect queries. Exception handling ensures that database connections are safely closed and rolled back, preventing corrupted states."
+    },
+    {
+      "field": "File I/O and Networking",
+      "explanation": "When downloading a file from a remote server, a timeout or lost connection triggers an exception. Exception handling allows the application to retry the download or alert the user gracefully."
+    }
+  ],
+  "best_practices": [
+    "Never swallow exceptions. Always log the exception or provide meaningful feedback to the user.",
+    "Catch the most specific exception first, followed by more generic exceptions.",
+    "Do not use exceptions for standard control flow (like breaking out of a loop); they are meant for exceptional, unexpected conditions.",
+    "Use 'try-with-resources' (Java 7+) to handle IO and database streams to guarantee resource closure.",
+    "Favor standard Java exceptions (like IllegalArgumentException or IllegalStateException) over creating custom exceptions when applicable.",
+    "When throwing custom exceptions, document them clearly using the `@throws` JavaDoc tag."
+  ],
+  "summary": [
+    "Exception handling in Java is essential for building robust, fault-tolerant applications.",
+    "It relies on try, catch, finally, throw, and throws keywords to manage runtime errors seamlessly.",
+    "The exception hierarchy divides issues into Errors (unrecoverable) and Exceptions (recoverable).",
+    "Exceptions are categorized into Checked (compile-time) and Unchecked (runtime).",
+    "Proper use of finally blocks and try-with-resources guarantees that system resources are cleaned up safely."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following classes is the root class of all exceptions and errors in Java?",
+      "options": ["java.lang.Exception", "java.lang.Error", "java.lang.Throwable", "java.lang.Object"],
+      "answer": "java.lang.Throwable",
+      "explanation": "Throwable is the superclass of all errors and exceptions in the Java language. Only objects that are instances of this class (or one of its subclasses) are thrown by the Java Virtual Machine."
+    },
+    {
+      "question": "Which keyword is used to explicitly throw an exception?",
+      "options": ["try", "catch", "throw", "throws"],
+      "answer": "throw",
+      "explanation": "The 'throw' keyword is used inside a method body to explicitly throw a single instance of an exception. 'throws' is used in the method signature."
+    },
+    {
+      "question": "What happens if you place a catch block for 'Exception' before 'IOException'?",
+      "options": ["It compiles and runs fine.", "It gives a compile-time error.", "It gives a runtime error.", "IOException will take precedence automatically."],
+      "answer": "It gives a compile-time error.",
+      "explanation": "Java evaluates catch blocks sequentially. Because 'IOException' is a subclass of 'Exception', the first block catches everything, making the 'IOException' block unreachable code, which causes a compilation error."
+    }
+  ]
+}

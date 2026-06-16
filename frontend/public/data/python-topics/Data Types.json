@@ -1,0 +1,280 @@
+{
+  "title": "Data Types",
+  "introduction": {
+    "what_it_is": "A data type represents the kind of value that tells what operations can be performed on a particular data. Python provides a rich set of built-in data types to handle numbers, text, sequences, mappings, and more.",
+    "why_important": "Understanding data types is crucial because different types of data are stored and manipulated differently. Knowing the type allows you to use the appropriate functions and methods, avoiding errors during computations or data processing.",
+    "real_world": [
+      "Using a String to store an address.",
+      "Using a Float to calculate financial transactions or percentages.",
+      "Using a Dictionary to store a user's profile information as key-value pairs."
+    ]
+  },
+  "detailed_theory": "In Python, every value has a data type. Since everything is an object in Python, data types are actually classes, and variables are instances (objects) of these classes. Python provides several built-in data types categorized into different groups. The most common groups are Numeric types (int, float, complex), Text Type (str), Sequence Types (list, tuple, range), Mapping Type (dict), Set Types (set, frozenset), Boolean Type (bool), and Binary Types (bytes, bytearray, memoryview).\n\n1. **Numeric Types:** Handle numerical data. `int` is for whole numbers, `float` represents real numbers with decimal points, and `complex` handles complex numbers with real and imaginary parts.\n2. **Text Type:** The `str` (string) type represents a sequence of Unicode characters used for textual data, defined within single or double quotes.\n3. **Sequence Types:** These maintain a left-to-right positional ordering. `list` is a mutable (changeable) sequence, `tuple` is an immutable sequence, and `range` generates a sequence of numbers.\n4. **Mapping Type:** The `dict` (dictionary) type represents an unordered collection of key-value pairs, providing highly efficient lookups.\n5. **Set Types:** `set` is an unordered collection of unique items. They are highly useful for mathematical set operations like union and intersection.\n6. **Boolean Type:** The `bool` type represents truth values, `True` and `False`, primarily used in logical operations and conditional statements.\n\nPython handles type conversion automatically in some cases (implicit type conversion) but allows explicit type casting using functions like `int()`, `float()`, and `str()`. Furthermore, data types in Python are either mutable (can be changed after creation, like lists and dicts) or immutable (cannot be changed, like strings, tuples, and ints). Grasping mutability is critical to avoid insidious bugs in your programs.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Built-in Rich Types",
+        "description": "Provides powerful, ready-to-use types like lists, dictionaries, and sets right out of the box."
+      },
+      {
+        "name": "Object-Oriented Nature",
+        "description": "All data types are classes, providing them with useful built-in methods."
+      },
+      {
+        "name": "Dynamic Typing",
+        "description": "A variable can change its data type depending on the new value assigned."
+      }
+    ],
+    "advantages": [
+      "No need to import external libraries for complex data structures like Hash Maps (Dictionaries).",
+      "Flexible type system simplifies coding and syntax.",
+      "Automatic memory management and garbage collection for all data types."
+    ],
+    "limitations": [
+      "Dynamic typing can make it difficult to catch type-related errors before runtime.",
+      "Python's data types, being objects, can consume more memory compared to primitive types in languages like C."
+    ]
+  },
+  "syntax": {
+    "explanation": "You assign values to variables, and Python automatically determines the data type. You can also explicitly cast types.",
+    "breakdown": [
+      "`x = 5` (int)",
+      "`x = \"Hello\"` (str)",
+      "`x = [1, 2, 3]` (list)",
+      "`x = {'name': 'John'}` (dict)"
+    ],
+    "rules": [
+      "Strings must be enclosed in quotes.",
+      "Lists use square brackets `[]`.",
+      "Tuples use parentheses `()`.",
+      "Dictionaries and Sets use curly braces `{}`."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Numeric and String Types",
+      "code": "age = 25          # int\nprice = 19.99     # float\nname = 'Alice'    # str\n\nprint(type(age))\nprint(type(price))\nprint(type(name))",
+      "output": "<class 'int'>\n<class 'float'>\n<class 'str'>",
+      "explanation": "Demonstrates the assignment and type checking of integers, floats, and strings using the `type()` function."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Lists and Dictionaries",
+      "code": "colors = ['red', 'green', 'blue']      # list\nperson = {'name': 'Bob', 'age': 30}    # dict\n\nprint(colors[0])\nprint(person['name'])",
+      "output": "red\nBob",
+      "explanation": "Lists hold ordered sequences, while dictionaries map keys to values."
+    },
+    {
+      "level": "Advanced",
+      "title": "Type Casting",
+      "code": "x_str = '100'\nx_int = int(x_str)       # Convert str to int\nx_float = float(x_int)   # Convert int to float\n\nprint(x_int + 50)\nprint(x_float)",
+      "output": "150\n100.0",
+      "explanation": "Explicitly converting data from one type to another using constructor functions."
+    },
+    {
+      "level": "Real-world",
+      "title": "Data Processing",
+      "code": "log_entries = ['Error', 'Info', 'Error', 'Warning']\nunique_logs = set(log_entries)  # set removes duplicates\nprint(unique_logs)",
+      "output": "{'Warning', 'Error', 'Info'}",
+      "explanation": "Using a Set data type to efficiently remove duplicate entries from a dataset."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Python Data Types",
+        "headers": ["Type Name", "Keyword", "Example"],
+        "rows": [
+          ["Integer", "int", "x = 20"],
+          ["Float", "float", "x = 20.5"],
+          ["String", "str", "x = \"Hello\""],
+          ["List", "list", "x = [\"apple\", \"banana\"]"],
+          ["Dictionary", "dict", "x = {\"name\": \"John\", \"age\": 36}"],
+          ["Tuple", "tuple", "x = (\"apple\", \"banana\")"],
+          ["Set", "set", "x = {\"apple\", \"banana\"}"],
+          ["Boolean", "bool", "x = True"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "List (Mutable)",
+        "concept_b": "Tuple (Immutable)",
+        "explanation": "Lists `[1, 2]` can be changed (items added/removed/modified). Tuples `(1, 2)` cannot be changed once created."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "type()",
+      "description": "Returns the data type of the specified object.",
+      "parameters": "object",
+      "return_value": "Type object",
+      "example_usage": "type('Hello')"
+    },
+    {
+      "name": "isinstance()",
+      "description": "Checks if an object is an instance or subclass of a class or a tuple of classes.",
+      "parameters": "object, classinfo",
+      "return_value": "bool",
+      "example_usage": "isinstance(5, int)"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "TypeError on Concatenation",
+      "description": "Trying to concatenate a string and an integer directly.",
+      "wrong_example": "print('Age: ' + 25)",
+      "correct_example": "print('Age: ' + str(25))",
+      "debugging_tip": "Always explicitly cast integers or floats to strings before concatenating them with other strings."
+    },
+    {
+      "title": "Modifying Immutables",
+      "description": "Attempting to change a character in a string or an item in a tuple.",
+      "wrong_example": "my_tuple = (1, 2)\nmy_tuple[0] = 5",
+      "correct_example": "my_list = [1, 2]\nmy_list[0] = 5",
+      "debugging_tip": "If you need a collection that changes, use a list instead of a tuple."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What are the core numeric types in Python?",
+        "answer": "The core numeric types are int (integers), float (floating-point numbers), and complex (complex numbers)."
+      },
+      {
+        "question": "How do you find the data type of a variable?",
+        "answer": "You can use the built-in type() function. For example, type(my_var)."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain the difference between mutable and immutable data types.",
+        "answer": "Mutable data types can be modified after creation (e.g., lists, dicts, sets). Immutable data types cannot be changed after creation (e.g., strings, tuples, ints, floats)."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What is type casting, and how do implicit and explicit casting differ in Python?",
+        "answer": "Type casting is converting one data type to another. Implicit casting is handled automatically by Python (e.g., adding int and float results in float). Explicit casting requires manual conversion using functions like int() or str()."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "1. Check the type of the value 15.5.",
+      "2. Create a string variable and print its length using len().",
+      "3. Convert the integer 100 into a float.",
+      "4. Create a list containing three colors.",
+      "5. Create a boolean variable set to False."
+    ],
+    "medium": [
+      "1. Write a program to extract the first and last elements of a list.",
+      "2. Create a dictionary storing a book's title, author, and year.",
+      "3. Convert the string '3.14' to a float, then to an int. What happens?",
+      "4. Create a set from a list that contains duplicate items and print it.",
+      "5. Use isinstance() to check if a variable is either a list or a tuple."
+    ],
+    "hard": [
+      "1. Demonstrate immutability by trying to alter a tuple and catching the resulting TypeError.",
+      "2. Write a program that takes user input, tries to convert it to a float, and handles the ValueError if it fails.",
+      "3. Explain the output of `0.1 + 0.2 == 0.3` and relate it to floating-point representation.",
+      "4. Convert a dictionary of keys and values into a list of tuples.",
+      "5. Create a bytearray and modify one of its elements."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given a list of varying data types, write a script to separate them into two lists: one for strings and one for numbers (ints/floats).",
+      "input": "data = ['apple', 10, 3.14, 'banana', 42]",
+      "output": "strings: ['apple', 'banana'], numbers: [10, 3.14, 42]",
+      "constraints": "Use a loop and type checking functions.",
+      "solution": "data = ['apple', 10, 3.14, 'banana', 42]\nstrings = []\nnumbers = []\nfor item in data:\n    if isinstance(item, str):\n        strings.append(item)\n    elif isinstance(item, (int, float)):\n        numbers.append(item)\nprint('strings:', strings)\nprint('numbers:', numbers)"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Database Management",
+      "explanation": "Dictionaries strictly map to JSON objects, making them the standard format for API responses and NoSQL databases like MongoDB."
+    },
+    {
+      "field": "Data Analysis",
+      "explanation": "Floating-point numbers handle precise statistical measures, while lists and tuples form the foundation of series data in pandas."
+    }
+  ],
+  "best_practices": [
+    "Choose the right data structure: Use sets for unique items, dictionaries for fast lookups, lists for ordered data.",
+    "Be mindful of immutability; creating new strings in a large loop can be inefficient compared to joining a list of strings.",
+    "Use type hinting (introduced in Python 3.5) to make code clearer and help with static analysis (e.g., `def greet(name: str) -> str:`).",
+    "Avoid using bare `except` blocks when handling type conversion errors; catch specifically `ValueError` or `TypeError`."
+  ],
+  "summary": [
+    "Data types define the nature of data a variable holds and the operations that can be performed.",
+    "Python has robust built-in types including ints, floats, strings, lists, tuples, dicts, and sets.",
+    "Understanding the difference between mutable and immutable types is crucial for writing bug-free Python code.",
+    "Type casting allows conversion between types, explicitly or implicitly."
+  ],
+  "quiz": [
+    {
+      "question": "Which data type is used to store a sequence of characters?",
+      "options": ["int", "list", "str", "bool"],
+      "answer": "str",
+      "explanation": "The 'str' (string) data type represents text."
+    },
+    {
+      "question": "Which of the following data types is immutable?",
+      "options": ["list", "dictionary", "set", "tuple"],
+      "answer": "tuple",
+      "explanation": "Tuples cannot be modified after they are created, whereas lists, dictionaries, and sets are mutable."
+    },
+    {
+      "question": "What is the result of type(3.14)?",
+      "options": ["<class 'int'>", "<class 'float'>", "<class 'double'>", "<class 'decimal'>"],
+      "answer": "<class 'float'>",
+      "explanation": "Python represents numbers with decimal points using the 'float' type."
+    },
+    {
+      "question": "How do you define a dictionary in Python?",
+      "options": ["x = ['name': 'John']", "x = {'name': 'John'}", "x = ('name': 'John')", "x = <'name': 'John'>"],
+      "answer": "x = {'name': 'John'}",
+      "explanation": "Dictionaries use curly braces {} and key-value pairs separated by a colon."
+    },
+    {
+      "question": "What is the correct way to cast the string '15' to an integer?",
+      "options": ["int('15')", "integer('15')", "cast_int('15')", "parse_int('15')"],
+      "answer": "int('15')",
+      "explanation": "The built-in int() constructor converts string or float values to integers."
+    },
+    {
+      "question": "Which type is best for storing unique items where order doesn't matter?",
+      "options": ["list", "tuple", "dict", "set"],
+      "answer": "set",
+      "explanation": "Sets are unordered collections of unique elements."
+    },
+    {
+      "question": "What will bool(\"\") evaluate to?",
+      "options": ["True", "False", "None", "Error"],
+      "answer": "False",
+      "explanation": "Empty sequences, including empty strings, evaluate to False in Python."
+    },
+    {
+      "question": "Which of these is a mapping type?",
+      "options": ["list", "str", "dict", "tuple"],
+      "answer": "dict",
+      "explanation": "Dictionaries map hashable keys to arbitrary values."
+    },
+    {
+      "question": "What happens if you try to add a string and an integer (e.g., 'Hello' + 5)?",
+      "options": ["It returns 'Hello5'", "It throws a TypeError", "It converts the string to an int", "It returns 'Hello 5'"],
+      "answer": "It throws a TypeError",
+      "explanation": "Python does not implicitly convert integers to strings for concatenation. It must be explicit."
+    },
+    {
+      "question": "What is the type of the value returned by the len() function?",
+      "options": ["float", "str", "int", "bool"],
+      "answer": "int",
+      "explanation": "The len() function returns the number of items in an object as an integer."
+    }
+  ]
+}

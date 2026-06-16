@@ -1,0 +1,452 @@
+{
+  "title": "JDBC (Java Database Connectivity)",
+  "introduction": {
+    "what_it_is": "JDBC (Java Database Connectivity) is a standard Java API that provides a universal interface for connecting Java applications to relational databases. It is part of the Java Standard Edition (Java SE) and is defined in the java.sql and javax.sql packages. JDBC acts as a bridge between Java programs and database management systems (DBMS), allowing developers to execute SQL queries, retrieve results, and manage database transactions programmatically. It abstracts the database-specific communication protocols, enabling Java applications to interact with any database that has a JDBC driver available. JDBC follows a driver-based architecture where database vendors provide specific driver implementations that conform to the JDBC specification.",
+    "why_important": "JDBC is the foundational technology for database access in Java and forms the basis of virtually all Java persistence frameworks including Hibernate, JPA, and Spring Data. Understanding JDBC is essential because it gives developers direct control over SQL execution, connection management, and transaction handling. Even when using higher-level ORM frameworks, JDBC knowledge is crucial for debugging performance issues, writing custom queries, and understanding how data flows between Java applications and databases. It is a core requirement for enterprise Java development and is extensively tested in Java certification exams and technical interviews.",
+    "real_world": [
+      "Enterprise Resource Planning (ERP) systems that manage inventory, sales, and HR data across relational databases",
+      "Banking and financial systems that process millions of transactions daily with strict ACID compliance",
+      "E-commerce platforms that manage product catalogs, user accounts, orders, and payment information",
+      "Healthcare systems that store and retrieve patient records, prescriptions, and medical histories",
+      "Government applications that manage citizen data, tax records, and public service databases"
+    ]
+  },
+  "detailed_theory": "**History and Evolution of JDBC**\\n\\nJDBC was introduced by Sun Microsystems in 1997 as part of JDK 1.1, designed to provide a standard way for Java applications to interact with relational databases. Before JDBC, developers had to use proprietary database APIs, which made code non-portable across different database systems. The JDBC API was inspired by Microsoft's ODBC (Open Database Connectivity) but was designed specifically for Java with an object-oriented approach. Over the years, JDBC has evolved through several versions: JDBC 1.0 (JDK 1.1), JDBC 2.0 (JDK 1.2), JDBC 3.0 (JDK 1.4), JDBC 4.0 (Java 6), JDBC 4.1 (Java 7), JDBC 4.2 (Java 8), and JDBC 4.3 (Java 9). Each version introduced new features such as connection pooling, RowSets, auto-loading of drivers, and support for new SQL types.\\n\\n**JDBC Architecture**\\n\\nThe JDBC architecture consists of two main layers: the JDBC API layer and the JDBC Driver layer. The JDBC API provides the application-to-JDBC Manager connection, while the JDBC Driver API supports the JDBC Manager-to-Driver connection. This two-tier architecture allows Java applications to communicate with any database through a standardized interface. The key components include the DriverManager class (which manages a list of database drivers), the Connection interface (which represents a session with a specific database), the Statement interface (which is used for executing SQL statements), the ResultSet interface (which represents the result of a query), and the SQLException class (which handles database access errors).\\n\\n**JDBC Driver Types**\\n\\nJDBC defines four types of drivers, each with different implementation strategies. **Type 1: JDBC-ODBC Bridge Driver** translates JDBC calls into ODBC calls and was primarily used for testing and prototyping. It was removed in Java 8. **Type 2: Native-API Driver** converts JDBC calls into database-specific native API calls, requiring native libraries to be installed on the client machine. **Type 3: Network Protocol Driver** uses a middle-tier server to convert JDBC calls into database-specific protocols, offering better portability. **Type 4: Thin Driver (Pure Java Driver)** converts JDBC calls directly into database-specific network protocols without any native code, making it the most portable and widely used driver type. Modern applications almost exclusively use Type 4 drivers such as MySQL Connector/J, PostgreSQL JDBC Driver, and Oracle JDBC Thin Driver.\\n\\n**Connection Management**\\n\\nEstablishing a database connection is one of the most resource-intensive operations in JDBC. Each connection involves network socket creation, authentication handshaking, and session initialization. In production applications, connection pooling is used to maintain a pool of pre-established connections that can be reused, dramatically improving performance. Popular connection pooling libraries include HikariCP (the default in Spring Boot), Apache DBCP2, and C3P0. The DataSource interface (javax.sql.DataSource) is the preferred way to obtain connections in enterprise applications, as it supports connection pooling and distributed transactions. Starting from JDBC 4.0, drivers are automatically loaded using the ServiceLoader mechanism, eliminating the need for explicit Class.forName() calls.\\n\\n**Statement Types and Usage**\\n\\nJDBC provides three types of statement objects for executing SQL. **Statement** is the simplest form, used for executing static SQL queries without parameters. It is suitable for one-time queries but is vulnerable to SQL injection attacks when user input is concatenated into SQL strings. **PreparedStatement** extends Statement and uses parameterized queries with placeholder markers (?). It pre-compiles the SQL statement, offering better performance for repeated executions and inherent protection against SQL injection. **CallableStatement** extends PreparedStatement and is used to execute stored procedures in the database. It supports IN, OUT, and INOUT parameters, allowing bidirectional data exchange with database procedures.\\n\\n**ResultSet Processing**\\n\\nThe ResultSet interface represents a table of data returned by executing a SQL query. It maintains a cursor that initially points before the first row. The next() method moves the cursor forward one row and returns false when there are no more rows. ResultSets can be categorized by their scrollability (TYPE_FORWARD_ONLY, TYPE_SCROLL_INSENSITIVE, TYPE_SCROLL_SENSITIVE) and concurrency (CONCUR_READ_ONLY, CONCUR_UPDATABLE). Scroll-sensitive ResultSets reflect changes made to the underlying data during iteration, while scroll-insensitive ones capture a snapshot. Updatable ResultSets allow direct modification of data through the ResultSet object. ResultSet provides typed getter methods like getString(), getInt(), getDouble(), getDate(), etc., which can accept either column index (1-based) or column name.\\n\\n**Transaction Management**\\n\\nBy default, JDBC operates in auto-commit mode, where each SQL statement is treated as a separate transaction and is automatically committed upon execution. For operations that require multiple SQL statements to be treated as a single atomic unit, auto-commit must be disabled using connection.setAutoCommit(false). The developer then explicitly calls connection.commit() to persist changes or connection.rollback() to undo all changes since the last commit. JDBC supports savepoints, which are intermediate points within a transaction that allow partial rollbacks. Transaction isolation levels (READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE) can be set to control the degree of locking and visibility between concurrent transactions, balancing data consistency against performance.\\n\\n**Batch Processing**\\n\\nJDBC supports batch processing for executing multiple SQL statements as a single batch, significantly reducing network round trips and improving performance for bulk operations. Both Statement and PreparedStatement support batch operations through addBatch() and executeBatch() methods. The executeBatch() method returns an int array indicating the update count for each statement. Batch processing is particularly useful for bulk INSERT, UPDATE, or DELETE operations. Most JDBC drivers further optimize batch operations by combining multiple statements into a single network packet.\\n\\n**Metadata and DatabaseMetaData**\\n\\nJDBC provides metadata interfaces that allow applications to discover information about the database and result sets at runtime. DatabaseMetaData provides comprehensive information about the database, including supported SQL syntax, database product name and version, available tables, schemas, and catalogs. ResultSetMetaData provides information about the columns in a ResultSet, including column names, types, precision, and nullability. ParameterMetaData describes the parameters in a PreparedStatement. These metadata interfaces are valuable for building generic database tools, ORMs, and migration utilities.\\n\\n**Modern JDBC Features**\\n\\nJDBC 4.0 (Java 6) introduced automatic driver loading, the RowId type, and national character set support. JDBC 4.1 (Java 7) added try-with-resources support by making Connection, Statement, and ResultSet implement AutoCloseable. JDBC 4.2 (Java 8) introduced support for the new java.time API types (LocalDate, LocalTime, LocalDateTime) and large update counts (executeLargeUpdate()). JDBC 4.3 (Java 9) added the ability to request a Connection from a ConnectionBuilder and the ShardingKey interface for sharded database support. These enhancements have made JDBC more modern and easier to use while maintaining backward compatibility.\\n\\n**JDBC vs ORM Frameworks**\\n\\nWhile ORM frameworks like Hibernate and JPA provide higher-level abstractions for database access, JDBC remains relevant for several reasons. JDBC offers fine-grained control over SQL execution, which is essential for performance-critical queries. It has lower overhead and is more suitable for simple applications or microservices that don't need complex object-relational mapping. JDBC is also the underlying technology used by all Java ORM frameworks, so understanding JDBC is crucial for debugging and optimizing applications that use these frameworks. In practice, many enterprise applications use a combination of ORM for standard CRUD operations and JDBC for complex queries and batch processing.",
+  "key_features": {
+    "features": [
+      {"name": "Database Independence", "description": "JDBC provides a uniform API that works with any relational database that has a JDBC driver, enabling database portability without code changes."},
+      {"name": "PreparedStatement", "description": "Supports parameterized queries that prevent SQL injection, improve performance through statement caching, and handle data type conversions automatically."},
+      {"name": "Transaction Management", "description": "Provides full control over transaction boundaries, isolation levels, savepoints, and commit/rollback operations for ensuring data integrity."},
+      {"name": "Batch Processing", "description": "Allows multiple SQL statements to be grouped and executed as a single batch, dramatically improving performance for bulk database operations."},
+      {"name": "Connection Pooling", "description": "Supports the DataSource interface for connection pooling, enabling efficient reuse of expensive database connections in multi-threaded applications."},
+      {"name": "Metadata Discovery", "description": "Provides DatabaseMetaData and ResultSetMetaData interfaces to programmatically discover database structure, capabilities, and result set schema information."},
+      {"name": "Scrollable ResultSets", "description": "Supports forward-only, scroll-insensitive, and scroll-sensitive result sets, allowing random access navigation through query results."},
+      {"name": "Stored Procedure Support", "description": "CallableStatement interface enables execution of database stored procedures with support for IN, OUT, and INOUT parameters."}
+    ],
+    "advantages": [
+      "Platform-independent database access through a standardized Java API that works across all operating systems",
+      "Direct SQL control allowing developers to write optimized, database-specific queries when needed",
+      "Built-in SQL injection prevention through PreparedStatement parameterized queries",
+      "Comprehensive transaction management with support for isolation levels, savepoints, and distributed transactions",
+      "Automatic driver discovery and loading since JDBC 4.0, simplifying configuration",
+      "Full support for all SQL data types including BLOB, CLOB, ARRAY, and the java.time API types",
+      "Seamless integration with Java's try-with-resources for automatic resource cleanup",
+      "Foundation for all major Java ORM frameworks (Hibernate, JPA, MyBatis), making it essential knowledge"
+    ],
+    "limitations": [
+      "Requires significant boilerplate code for connection management, exception handling, and resource cleanup compared to ORM frameworks",
+      "Manual object-relational mapping is tedious and error-prone when dealing with complex domain models",
+      "SQL queries are typically embedded as strings in Java code, making them harder to maintain and refactor",
+      "No built-in caching mechanism — developers must implement or integrate caching solutions separately",
+      "Database-specific SQL features may break portability, defeating one of JDBC's primary design goals"
+    ]
+  },
+  "syntax": {
+    "explanation": "JDBC follows a consistent workflow: load the driver, establish a connection, create a statement, execute the query, process results, and close resources. Modern JDBC (4.0+) simplifies this by auto-loading drivers and supporting try-with-resources for automatic cleanup.",
+    "breakdown": [
+      "Import java.sql.* or javax.sql.* packages to access JDBC interfaces and classes",
+      "Use DriverManager.getConnection(url, user, password) to establish a database connection with a JDBC URL",
+      "Create a Statement or PreparedStatement object from the Connection to prepare SQL commands",
+      "Execute queries using executeQuery() for SELECT or executeUpdate() for INSERT/UPDATE/DELETE",
+      "Iterate through the ResultSet using next() and retrieve column values using typed getter methods",
+      "Close all resources (ResultSet, Statement, Connection) in reverse order, preferably using try-with-resources"
+    ],
+    "rules": [
+      "Always use PreparedStatement instead of Statement when incorporating user input to prevent SQL injection",
+      "Always close JDBC resources in a finally block or use try-with-resources to prevent resource leaks",
+      "Use connection pooling (HikariCP, DBCP) in production instead of creating connections directly with DriverManager",
+      "Set auto-commit to false when executing multiple related SQL statements that should be treated as a single transaction",
+      "Use column names instead of column indices in ResultSet getter methods for better code readability and maintainability",
+      "Handle SQLException properly by logging the error code, SQL state, and message for effective debugging"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Basic JDBC Connection and Query",
+      "code": "import java.sql.Connection;\nimport java.sql.DriverManager;\nimport java.sql.ResultSet;\nimport java.sql.Statement;\nimport java.sql.SQLException;\n\npublic class BasicJDBCExample {\n    public static void main(String[] args) {\n        String url = \"jdbc:mysql://localhost:3306/school\";\n        String user = \"root\";\n        String password = \"password\";\n\n        try (Connection conn = DriverManager.getConnection(url, user, password);\n             Statement stmt = conn.createStatement();\n             ResultSet rs = stmt.executeQuery(\"SELECT id, name, grade FROM students\")) {\n\n            System.out.println(\"Connected to database successfully!\");\n            System.out.println(\"ID | Name | Grade\");\n            System.out.println(\"-\".repeat(30));\n\n            while (rs.next()) {\n                int id = rs.getInt(\"id\");\n                String name = rs.getString(\"name\");\n                String grade = rs.getString(\"grade\");\n                System.out.printf(\"%d | %s | %s%n\", id, name, grade);\n            }\n        } catch (SQLException e) {\n            System.err.println(\"Database error: \" + e.getMessage());\n            System.err.println(\"SQL State: \" + e.getSQLState());\n            System.err.println(\"Error Code: \" + e.getErrorCode());\n        }\n    }\n}",
+      "output": "Connected to database successfully!\nID | Name | Grade\n------------------------------\n1 | Alice | A\n2 | Bob | B\n3 | Charlie | A",
+      "explanation": "This example demonstrates the fundamental JDBC workflow: establishing a connection using DriverManager, creating a Statement, executing a SELECT query, and iterating through the ResultSet. The try-with-resources statement ensures that Connection, Statement, and ResultSet are automatically closed when the block exits, preventing resource leaks. The ResultSet's next() method advances the cursor and returns false when no more rows are available."
+    },
+    {
+      "level": "Intermediate",
+      "title": "PreparedStatement with CRUD Operations",
+      "code": "import java.sql.Connection;\nimport java.sql.DriverManager;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\n\npublic class PreparedStatementCRUD {\n    private static final String URL = \"jdbc:mysql://localhost:3306/company\";\n    private static final String USER = \"root\";\n    private static final String PASS = \"password\";\n\n    public static void main(String[] args) {\n        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {\n            // CREATE\n            insertEmployee(conn, \"John Doe\", \"Engineering\", 75000.00);\n            insertEmployee(conn, \"Jane Smith\", \"Marketing\", 68000.00);\n            System.out.println(\"Employees inserted successfully.\");\n\n            // READ\n            System.out.println(\"\\nAll Employees:\");\n            listEmployees(conn);\n\n            // UPDATE\n            updateSalary(conn, \"John Doe\", 82000.00);\n            System.out.println(\"\\nAfter salary update:\");\n            listEmployees(conn);\n\n            // DELETE\n            deleteEmployee(conn, \"Jane Smith\");\n            System.out.println(\"\\nAfter deletion:\");\n            listEmployees(conn);\n\n        } catch (SQLException e) {\n            e.printStackTrace();\n        }\n    }\n\n    static void insertEmployee(Connection conn, String name, String dept, double salary)\n            throws SQLException {\n        String sql = \"INSERT INTO employees (name, department, salary) VALUES (?, ?, ?)\";\n        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n            pstmt.setString(1, name);\n            pstmt.setString(2, dept);\n            pstmt.setDouble(3, salary);\n            pstmt.executeUpdate();\n        }\n    }\n\n    static void listEmployees(Connection conn) throws SQLException {\n        String sql = \"SELECT name, department, salary FROM employees\";\n        try (PreparedStatement pstmt = conn.prepareStatement(sql);\n             ResultSet rs = pstmt.executeQuery()) {\n            while (rs.next()) {\n                System.out.printf(\"  %s | %s | $%.2f%n\",\n                    rs.getString(\"name\"),\n                    rs.getString(\"department\"),\n                    rs.getDouble(\"salary\"));\n            }\n        }\n    }\n\n    static void updateSalary(Connection conn, String name, double newSalary)\n            throws SQLException {\n        String sql = \"UPDATE employees SET salary = ? WHERE name = ?\";\n        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n            pstmt.setDouble(1, newSalary);\n            pstmt.setString(2, name);\n            int rowsUpdated = pstmt.executeUpdate();\n            System.out.println(\"Rows updated: \" + rowsUpdated);\n        }\n    }\n\n    static void deleteEmployee(Connection conn, String name) throws SQLException {\n        String sql = \"DELETE FROM employees WHERE name = ?\";\n        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n            pstmt.setString(1, name);\n            int rowsDeleted = pstmt.executeUpdate();\n            System.out.println(\"Rows deleted: \" + rowsDeleted);\n        }\n    }\n}",
+      "output": "Employees inserted successfully.\n\nAll Employees:\n  John Doe | Engineering | $75000.00\n  Jane Smith | Marketing | $68000.00\nRows updated: 1\n\nAfter salary update:\n  John Doe | Engineering | $82000.00\n  Jane Smith | Marketing | $68000.00\nRows deleted: 1\n\nAfter deletion:\n  John Doe | Engineering | $82000.00",
+      "explanation": "This example demonstrates all four CRUD (Create, Read, Update, Delete) operations using PreparedStatement. Each method uses parameterized queries with ? placeholders, which prevents SQL injection by separating SQL logic from data values. The PreparedStatement automatically handles proper escaping and type conversion. The executeUpdate() method returns the number of affected rows, which is useful for verifying that the operation was successful. Each PreparedStatement is used within a try-with-resources block for proper cleanup."
+    },
+    {
+      "level": "Advanced",
+      "title": "Transaction Management with Savepoints and Batch Processing",
+      "code": "import java.sql.Connection;\nimport java.sql.DriverManager;\nimport java.sql.PreparedStatement;\nimport java.sql.Savepoint;\nimport java.sql.SQLException;\nimport java.sql.Statement;\n\npublic class TransactionBatchExample {\n    public static void main(String[] args) {\n        String url = \"jdbc:mysql://localhost:3306/bank\";\n\n        try (Connection conn = DriverManager.getConnection(url, \"root\", \"password\")) {\n            conn.setAutoCommit(false);\n            conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);\n\n            try {\n                // Phase 1: Fund transfer\n                String debitSql = \"UPDATE accounts SET balance = balance - ? WHERE account_id = ?\";\n                String creditSql = \"UPDATE accounts SET balance = balance + ? WHERE account_id = ?\";\n\n                try (PreparedStatement debitStmt = conn.prepareStatement(debitSql);\n                     PreparedStatement creditStmt = conn.prepareStatement(creditSql)) {\n\n                    debitStmt.setDouble(1, 5000.00);\n                    debitStmt.setInt(2, 1001);\n                    debitStmt.executeUpdate();\n\n                    creditStmt.setDouble(1, 5000.00);\n                    creditStmt.setInt(2, 1002);\n                    creditStmt.executeUpdate();\n                }\n                System.out.println(\"Phase 1: Fund transfer completed.\");\n\n                // Create savepoint after successful transfer\n                Savepoint transferComplete = conn.setSavepoint(\"TRANSFER_DONE\");\n\n                // Phase 2: Batch insert transaction logs\n                String logSql = \"INSERT INTO transaction_log (account_id, type, amount, description) VALUES (?, ?, ?, ?)\";\n                try (PreparedStatement logStmt = conn.prepareStatement(logSql)) {\n                    logStmt.setInt(1, 1001);\n                    logStmt.setString(2, \"DEBIT\");\n                    logStmt.setDouble(3, 5000.00);\n                    logStmt.setString(4, \"Transfer to account 1002\");\n                    logStmt.addBatch();\n\n                    logStmt.setInt(1, 1002);\n                    logStmt.setString(2, \"CREDIT\");\n                    logStmt.setDouble(3, 5000.00);\n                    logStmt.setString(4, \"Transfer from account 1001\");\n                    logStmt.addBatch();\n\n                    int[] batchResults = logStmt.executeBatch();\n                    System.out.println(\"Phase 2: \" + batchResults.length + \" log entries inserted.\");\n                } catch (SQLException batchEx) {\n                    System.err.println(\"Batch logging failed, rolling back to savepoint.\");\n                    conn.rollback(transferComplete);\n                }\n\n                conn.commit();\n                System.out.println(\"Transaction committed successfully.\");\n\n            } catch (SQLException ex) {\n                conn.rollback();\n                System.err.println(\"Transaction rolled back: \" + ex.getMessage());\n            }\n        } catch (SQLException e) {\n            e.printStackTrace();\n        }\n    }\n}",
+      "output": "Phase 1: Fund transfer completed.\nPhase 2: 2 log entries inserted.\nTransaction committed successfully.",
+      "explanation": "This advanced example demonstrates transaction management with savepoints and batch processing in a banking scenario. Auto-commit is disabled to group multiple operations into a single transaction. The transaction isolation level is set to READ_COMMITTED to prevent dirty reads. A savepoint is created after the fund transfer so that if the logging phase fails, only the logs are rolled back while preserving the transfer. The batch processing groups multiple INSERT statements into a single execution, reducing network round trips. This pattern is common in financial systems where data integrity is paramount."
+    },
+    {
+      "level": "Real-world",
+      "title": "Generic DAO Pattern with Connection Pooling",
+      "code": "import java.sql.*;\nimport java.util.ArrayList;\nimport java.util.List;\n\n// Generic DAO interface\ninterface GenericDAO<T> {\n    T findById(int id) throws SQLException;\n    List<T> findAll() throws SQLException;\n    int save(T entity) throws SQLException;\n    int update(T entity) throws SQLException;\n    int delete(int id) throws SQLException;\n}\n\n// Product entity\nclass Product {\n    private int id;\n    private String name;\n    private String category;\n    private double price;\n    private int quantity;\n\n    public Product() {}\n\n    public Product(String name, String category, double price, int quantity) {\n        this.name = name;\n        this.category = category;\n        this.price = price;\n        this.quantity = quantity;\n    }\n\n    // Getters and setters\n    public int getId() { return id; }\n    public void setId(int id) { this.id = id; }\n    public String getName() { return name; }\n    public void setName(String name) { this.name = name; }\n    public String getCategory() { return category; }\n    public void setCategory(String category) { this.category = category; }\n    public double getPrice() { return price; }\n    public void setPrice(double price) { this.price = price; }\n    public int getQuantity() { return quantity; }\n    public void setQuantity(int quantity) { this.quantity = quantity; }\n\n    @Override\n    public String toString() {\n        return String.format(\"Product[id=%d, name=%s, category=%s, price=%.2f, qty=%d]\",\n            id, name, category, price, quantity);\n    }\n}\n\n// Product DAO implementation\nclass ProductDAO implements GenericDAO<Product> {\n    private final Connection connection;\n\n    public ProductDAO(Connection connection) {\n        this.connection = connection;\n    }\n\n    @Override\n    public Product findById(int id) throws SQLException {\n        String sql = \"SELECT * FROM products WHERE id = ?\";\n        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {\n            pstmt.setInt(1, id);\n            try (ResultSet rs = pstmt.executeQuery()) {\n                if (rs.next()) {\n                    return mapRow(rs);\n                }\n            }\n        }\n        return null;\n    }\n\n    @Override\n    public List<Product> findAll() throws SQLException {\n        List<Product> products = new ArrayList<>();\n        String sql = \"SELECT * FROM products ORDER BY id\";\n        try (Statement stmt = connection.createStatement();\n             ResultSet rs = stmt.executeQuery(sql)) {\n            while (rs.next()) {\n                products.add(mapRow(rs));\n            }\n        }\n        return products;\n    }\n\n    @Override\n    public int save(Product product) throws SQLException {\n        String sql = \"INSERT INTO products (name, category, price, quantity) VALUES (?, ?, ?, ?)\";\n        try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {\n            pstmt.setString(1, product.getName());\n            pstmt.setString(2, product.getCategory());\n            pstmt.setDouble(3, product.getPrice());\n            pstmt.setInt(4, product.getQuantity());\n            int rows = pstmt.executeUpdate();\n\n            try (ResultSet keys = pstmt.getGeneratedKeys()) {\n                if (keys.next()) {\n                    product.setId(keys.getInt(1));\n                }\n            }\n            return rows;\n        }\n    }\n\n    @Override\n    public int update(Product product) throws SQLException {\n        String sql = \"UPDATE products SET name=?, category=?, price=?, quantity=? WHERE id=?\";\n        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {\n            pstmt.setString(1, product.getName());\n            pstmt.setString(2, product.getCategory());\n            pstmt.setDouble(3, product.getPrice());\n            pstmt.setInt(4, product.getQuantity());\n            pstmt.setInt(5, product.getId());\n            return pstmt.executeUpdate();\n        }\n    }\n\n    @Override\n    public int delete(int id) throws SQLException {\n        String sql = \"DELETE FROM products WHERE id = ?\";\n        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {\n            pstmt.setInt(1, id);\n            return pstmt.executeUpdate();\n        }\n    }\n\n    private Product mapRow(ResultSet rs) throws SQLException {\n        Product p = new Product();\n        p.setId(rs.getInt(\"id\"));\n        p.setName(rs.getString(\"name\"));\n        p.setCategory(rs.getString(\"category\"));\n        p.setPrice(rs.getDouble(\"price\"));\n        p.setQuantity(rs.getInt(\"quantity\"));\n        return p;\n    }\n}\n\n// Main application\npublic class ProductApp {\n    public static void main(String[] args) {\n        String url = \"jdbc:mysql://localhost:3306/store\";\n\n        try (Connection conn = DriverManager.getConnection(url, \"root\", \"password\")) {\n            ProductDAO dao = new ProductDAO(conn);\n\n            // Save products\n            dao.save(new Product(\"Laptop\", \"Electronics\", 999.99, 50));\n            dao.save(new Product(\"Headphones\", \"Electronics\", 149.99, 200));\n            dao.save(new Product(\"Coffee Maker\", \"Appliances\", 79.99, 100));\n\n            // List all products\n            System.out.println(\"All Products:\");\n            for (Product p : dao.findAll()) {\n                System.out.println(\"  \" + p);\n            }\n\n            // Find by ID\n            Product laptop = dao.findById(1);\n            System.out.println(\"\\nFound: \" + laptop);\n\n            // Update price\n            if (laptop != null) {\n                laptop.setPrice(899.99);\n                dao.update(laptop);\n                System.out.println(\"Updated: \" + dao.findById(1));\n            }\n        } catch (SQLException e) {\n            e.printStackTrace();\n        }\n    }\n}",
+      "output": "All Products:\n  Product[id=1, name=Laptop, category=Electronics, price=999.99, qty=50]\n  Product[id=2, name=Headphones, category=Electronics, price=149.99, qty=200]\n  Product[id=3, name=Coffee Maker, category=Appliances, price=79.99, qty=100]\n\nFound: Product[id=1, name=Laptop, category=Electronics, price=999.99, qty=50]\nUpdated: Product[id=1, name=Laptop, category=Electronics, price=899.99, qty=50]",
+      "explanation": "This real-world example implements the DAO (Data Access Object) design pattern, which is the standard way to abstract and encapsulate database access in enterprise Java applications. The GenericDAO interface defines a contract for CRUD operations, while ProductDAO provides the MySQL-specific implementation. The mapRow() method handles ResultSet-to-Object mapping, centralizing this logic in one place. The save() method demonstrates retrieving auto-generated keys after an INSERT. This pattern separates business logic from database access, making the code more testable, maintainable, and adaptable to different database technologies."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "JDBC Driver Types Comparison",
+        "headers": ["Driver Type", "Name", "Architecture", "Performance", "Portability", "Status"],
+        "rows": [
+          ["Type 1", "JDBC-ODBC Bridge", "Java → ODBC → DB", "Slowest", "Low (needs ODBC)", "Removed in Java 8"],
+          ["Type 2", "Native-API", "Java → Native API → DB", "Good", "Low (needs native libs)", "Rarely used"],
+          ["Type 3", "Network Protocol", "Java → Middleware → DB", "Good", "High", "Occasionally used"],
+          ["Type 4", "Thin/Pure Java", "Java → DB Protocol", "Best", "Highest", "Standard choice"]
+        ]
+      },
+      {
+        "title": "JDBC Statement Types",
+        "headers": ["Feature", "Statement", "PreparedStatement", "CallableStatement"],
+        "rows": [
+          ["SQL Type", "Static SQL", "Parameterized SQL", "Stored Procedures"],
+          ["SQL Injection", "Vulnerable", "Protected", "Protected"],
+          ["Pre-compilation", "No", "Yes", "Yes"],
+          ["Performance (repeated)", "Low", "High", "High"],
+          ["Parameters", "None", "IN only", "IN, OUT, INOUT"],
+          ["Best Use Case", "One-time queries", "Repeated queries", "Stored procedures"]
+        ]
+      },
+      {
+        "title": "Transaction Isolation Levels",
+        "headers": ["Isolation Level", "Dirty Read", "Non-Repeatable Read", "Phantom Read", "Performance"],
+        "rows": [
+          ["READ_UNCOMMITTED", "Possible", "Possible", "Possible", "Fastest"],
+          ["READ_COMMITTED", "Prevented", "Possible", "Possible", "Fast"],
+          ["REPEATABLE_READ", "Prevented", "Prevented", "Possible", "Moderate"],
+          ["SERIALIZABLE", "Prevented", "Prevented", "Prevented", "Slowest"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Statement",
+        "concept_b": "PreparedStatement",
+        "explanation": "Statement executes static SQL strings and is suitable for one-time ad-hoc queries. PreparedStatement uses parameterized queries with ? placeholders, preventing SQL injection and improving performance for repeated executions through pre-compilation. Always prefer PreparedStatement in production code, especially when handling user input."
+      },
+      {
+        "concept_a": "DriverManager",
+        "concept_b": "DataSource",
+        "explanation": "DriverManager is the basic facility for establishing database connections and is suitable for simple applications. DataSource is the preferred approach for enterprise applications as it supports connection pooling, distributed transactions, and can be configured through JNDI. DataSource provides better performance and resource management in production environments."
+      },
+      {
+        "concept_a": "JDBC",
+        "concept_b": "Hibernate/JPA",
+        "explanation": "JDBC provides low-level, direct database access with full SQL control but requires manual object-relational mapping and significant boilerplate code. Hibernate/JPA provides high-level ORM with automatic mapping, caching, and lazy loading but may generate suboptimal SQL. JDBC is preferred for performance-critical queries and simple applications, while Hibernate/JPA is better for complex domain models."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "DriverManager.getConnection()",
+      "description": "Establishes a connection to the database using the specified JDBC URL, username, and password. This is the primary method for obtaining database connections in standalone applications.",
+      "parameters": "String url, String user, String password — the JDBC URL specifying the database, and credentials for authentication",
+      "return_value": "Connection — a Connection object representing the session with the database",
+      "example_usage": "Connection conn = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/mydb\", \"root\", \"pass\");"
+    },
+    {
+      "name": "Connection.prepareStatement()",
+      "description": "Creates a PreparedStatement object for sending parameterized SQL statements to the database. The SQL statement is pre-compiled for efficient repeated execution.",
+      "parameters": "String sql — the SQL statement with ? placeholders for parameters",
+      "return_value": "PreparedStatement — a PreparedStatement object containing the pre-compiled SQL statement",
+      "example_usage": "PreparedStatement pstmt = conn.prepareStatement(\"SELECT * FROM users WHERE id = ?\");"
+    },
+    {
+      "name": "PreparedStatement.executeQuery()",
+      "description": "Executes the SQL SELECT query in this PreparedStatement object and returns the result set generated by the query.",
+      "parameters": "None (parameters are set via setXxx() methods before calling)",
+      "return_value": "ResultSet — a ResultSet object containing the data produced by the query",
+      "example_usage": "pstmt.setInt(1, 100); ResultSet rs = pstmt.executeQuery();"
+    },
+    {
+      "name": "PreparedStatement.executeUpdate()",
+      "description": "Executes the SQL INSERT, UPDATE, or DELETE statement in this PreparedStatement object. Can also execute DDL statements.",
+      "parameters": "None (parameters are set via setXxx() methods before calling)",
+      "return_value": "int — the number of rows affected by the SQL statement",
+      "example_usage": "pstmt.setString(1, \"John\"); int rows = pstmt.executeUpdate();"
+    },
+    {
+      "name": "ResultSet.next()",
+      "description": "Moves the cursor forward one row from its current position. A ResultSet cursor is initially positioned before the first row.",
+      "parameters": "None",
+      "return_value": "boolean — true if the new current row is valid; false if there are no more rows",
+      "example_usage": "while (rs.next()) { String name = rs.getString(\"name\"); }"
+    },
+    {
+      "name": "ResultSet.getString()",
+      "description": "Retrieves the value of the designated column in the current row as a Java String. Can accept either column index (1-based) or column name.",
+      "parameters": "String columnLabel or int columnIndex — the column identifier",
+      "return_value": "String — the column value; null if the SQL value is NULL",
+      "example_usage": "String name = rs.getString(\"name\"); // or rs.getString(1);"
+    },
+    {
+      "name": "Connection.setAutoCommit()",
+      "description": "Sets this connection's auto-commit mode. When disabled, changes must be explicitly committed or rolled back.",
+      "parameters": "boolean autoCommit — true to enable auto-commit (default); false to disable",
+      "return_value": "void",
+      "example_usage": "conn.setAutoCommit(false); // Start manual transaction management"
+    },
+    {
+      "name": "Connection.commit()",
+      "description": "Makes all changes made since the previous commit/rollback permanent and releases any database locks held by this Connection.",
+      "parameters": "None",
+      "return_value": "void",
+      "example_usage": "conn.commit(); // Persist all changes in the current transaction"
+    },
+    {
+      "name": "PreparedStatement.addBatch()",
+      "description": "Adds the current set of parameters to the batch of commands for this PreparedStatement. Used with executeBatch() for efficient bulk operations.",
+      "parameters": "None (uses the currently set parameters)",
+      "return_value": "void",
+      "example_usage": "pstmt.setString(1, \"item\"); pstmt.addBatch(); // Add to batch"
+    },
+    {
+      "name": "Connection.setSavepoint()",
+      "description": "Creates a savepoint within the current transaction that can be used for partial rollback. Useful for complex transactions where only part may need to be undone.",
+      "parameters": "String name — optional name for the savepoint",
+      "return_value": "Savepoint — a Savepoint object representing the savepoint",
+      "example_usage": "Savepoint sp = conn.setSavepoint(\"PHASE_1_COMPLETE\");"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Not Closing JDBC Resources (Resource Leak)",
+      "description": "Failing to close Connection, Statement, and ResultSet objects leads to resource leaks, eventually exhausting database connections and causing application failures. This is one of the most common and dangerous JDBC mistakes.",
+      "wrong_example": "Connection conn = DriverManager.getConnection(url, user, pass);\nStatement stmt = conn.createStatement();\nResultSet rs = stmt.executeQuery(\"SELECT * FROM users\");\nwhile (rs.next()) {\n    System.out.println(rs.getString(\"name\"));\n}\n// Resources are NEVER closed — serious leak!",
+      "correct_example": "try (Connection conn = DriverManager.getConnection(url, user, pass);\n     Statement stmt = conn.createStatement();\n     ResultSet rs = stmt.executeQuery(\"SELECT * FROM users\")) {\n    while (rs.next()) {\n        System.out.println(rs.getString(\"name\"));\n    }\n} // All resources automatically closed",
+      "debugging_tip": "Monitor your database server's active connection count. If it keeps increasing, you have a connection leak. Use try-with-resources (Java 7+) to guarantee resource cleanup. In older code, use finally blocks to close resources in reverse order."
+    },
+    {
+      "title": "SQL Injection via String Concatenation",
+      "description": "Building SQL queries by concatenating user input directly into SQL strings allows attackers to inject malicious SQL code, potentially accessing, modifying, or deleting data.",
+      "wrong_example": "String username = request.getParameter(\"username\");\nString sql = \"SELECT * FROM users WHERE username = '\" + username + \"'\";\nStatement stmt = conn.createStatement();\nResultSet rs = stmt.executeQuery(sql);\n// If username = \"' OR '1'='1\", all users are returned!",
+      "correct_example": "String username = request.getParameter(\"username\");\nString sql = \"SELECT * FROM users WHERE username = ?\";\ntry (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n    pstmt.setString(1, username);\n    ResultSet rs = pstmt.executeQuery();\n    // Safe — input is properly escaped\n}",
+      "debugging_tip": "Search your codebase for SQL queries that use string concatenation (+) with variables. Replace all such instances with PreparedStatement parameterized queries. Use static analysis tools like FindBugs or SonarQube to detect SQL injection vulnerabilities."
+    },
+    {
+      "title": "Using Wrong Column Index (1-Based vs 0-Based)",
+      "description": "JDBC uses 1-based column indexing, unlike Java arrays which are 0-based. Using index 0 throws an SQLException, and this mismatch is a common source of confusion.",
+      "wrong_example": "ResultSet rs = stmt.executeQuery(\"SELECT id, name FROM users\");\nwhile (rs.next()) {\n    int id = rs.getInt(0);    // Wrong! Column index starts at 1\n    String name = rs.getString(1); // This gets 'id', not 'name'\n}",
+      "correct_example": "ResultSet rs = stmt.executeQuery(\"SELECT id, name FROM users\");\nwhile (rs.next()) {\n    int id = rs.getInt(1);       // First column\n    String name = rs.getString(2); // Second column\n    // Or better yet, use column names:\n    int id2 = rs.getInt(\"id\");\n    String name2 = rs.getString(\"name\");\n}",
+      "debugging_tip": "Always prefer using column names instead of indices for better readability and to avoid off-by-one errors. If you must use indices, remember they start at 1 in JDBC."
+    },
+    {
+      "title": "Forgetting to Handle Transactions Properly",
+      "description": "When auto-commit is disabled for transaction management, forgetting to call commit() or rollback() leaves the transaction open, potentially causing lock timeouts and data inconsistency.",
+      "wrong_example": "conn.setAutoCommit(false);\ntry {\n    pstmt1.executeUpdate();\n    pstmt2.executeUpdate();\n    conn.commit();\n} catch (SQLException e) {\n    // Forgot to rollback! Transaction remains open\n    e.printStackTrace();\n}",
+      "correct_example": "conn.setAutoCommit(false);\ntry {\n    pstmt1.executeUpdate();\n    pstmt2.executeUpdate();\n    conn.commit();\n} catch (SQLException e) {\n    conn.rollback(); // Always rollback on failure\n    e.printStackTrace();\n} finally {\n    conn.setAutoCommit(true); // Restore default behavior\n}",
+      "debugging_tip": "If you see database lock timeouts or data appearing inconsistent, check that every code path that disables auto-commit has proper rollback in the catch block. Consider using a template pattern or Spring's @Transactional annotation to manage transactions declaratively."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {"question": "What is JDBC and why is it used?", "answer": "JDBC (Java Database Connectivity) is a standard Java API that provides a uniform interface for connecting Java applications to relational databases. It is part of the java.sql and javax.sql packages. JDBC allows developers to execute SQL queries, update data, and manage transactions from Java code. It abstracts database-specific protocols through a driver-based architecture, enabling database-independent code."},
+      {"question": "What are the different types of JDBC drivers?", "answer": "JDBC defines four driver types: Type 1 (JDBC-ODBC Bridge) translates JDBC calls to ODBC calls, Type 2 (Native-API) uses database-specific native libraries, Type 3 (Network Protocol) uses middleware to translate calls, and Type 4 (Thin/Pure Java) communicates directly with the database using its network protocol. Type 4 is the most commonly used as it requires no native code and offers the best performance and portability."},
+      {"question": "What are the main components of JDBC architecture?", "answer": "The main JDBC components are: DriverManager (manages database drivers and creates connections), Connection (represents a session with the database), Statement/PreparedStatement/CallableStatement (used to execute SQL), ResultSet (holds query results), and SQLException (handles database errors). The JDBC API layer handles the application interface while the Driver layer handles database-specific communication."},
+      {"question": "What is the difference between Statement and PreparedStatement?", "answer": "Statement is used for executing static SQL queries without parameters and is suitable for one-time queries. PreparedStatement uses parameterized SQL with ? placeholders, offering SQL injection protection and better performance for repeated executions through pre-compilation. PreparedStatement also handles data type conversions automatically and is the recommended choice for production code."},
+      {"question": "How do you establish a database connection in JDBC?", "answer": "A JDBC connection is established using DriverManager.getConnection() with three parameters: the JDBC URL (specifying the database type, host, port, and database name), username, and password. For example: Connection conn = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/mydb\", \"user\", \"pass\"). Since JDBC 4.0, drivers are auto-loaded, so explicit Class.forName() is no longer required."},
+      {"question": "What is a ResultSet and how do you iterate through it?", "answer": "A ResultSet represents a table of data returned by a SQL query. It maintains a cursor that initially points before the first row. You iterate using the next() method which moves the cursor forward and returns false when no more rows exist. Data is retrieved using typed getter methods like getString(), getInt(), getDouble() with either column name or 1-based column index."},
+      {"question": "What is the purpose of the try-with-resources statement in JDBC?", "answer": "Try-with-resources (Java 7+) automatically closes resources that implement AutoCloseable when the block exits, whether normally or due to an exception. JDBC Connection, Statement, and ResultSet all implement AutoCloseable. This eliminates the need for explicit close() calls in finally blocks and prevents resource leaks, which is one of the most common JDBC bugs."},
+      {"question": "What is SQL injection and how does JDBC prevent it?", "answer": "SQL injection is a security vulnerability where attackers insert malicious SQL code through user input concatenated into SQL strings. JDBC prevents this through PreparedStatement, which separates SQL structure from data values using ? placeholders. The driver automatically escapes special characters in parameter values, making it impossible for user input to alter the SQL query structure."},
+      {"question": "What is auto-commit in JDBC?", "answer": "Auto-commit is a JDBC connection mode where each individual SQL statement is treated as a transaction and is automatically committed immediately after execution. It is enabled by default. Auto-commit can be disabled using connection.setAutoCommit(false) when you need to group multiple statements into a single transaction, requiring explicit commit() or rollback() calls."},
+      {"question": "What is the role of the JDBC URL?", "answer": "The JDBC URL is a string that identifies the database to connect to. It follows the format jdbc:<subprotocol>:<subname>, where subprotocol identifies the driver/database type and subname provides connection details. For example, jdbc:mysql://localhost:3306/mydb specifies MySQL on localhost port 3306 with database mydb. Each database vendor defines its own URL format."}
+    ],
+    "intermediate": [
+      {"question": "Explain connection pooling in JDBC and its benefits.", "answer": "Connection pooling maintains a cache of pre-established database connections that can be reused by multiple requests, avoiding the overhead of creating new connections each time. Benefits include reduced latency, better resource utilization, and configurable pool sizes. Popular implementations include HikariCP, Apache DBCP2, and C3P0. Connection pools are configured through the DataSource interface and are essential for any production application."},
+      {"question": "What is the difference between executeQuery(), executeUpdate(), and execute()?", "answer": "executeQuery() is used for SELECT statements and returns a ResultSet. executeUpdate() is used for INSERT, UPDATE, DELETE, and DDL statements, returning an int representing the affected row count. execute() can run any SQL statement and returns a boolean — true if the result is a ResultSet (use getResultSet()), false if it's an update count (use getUpdateCount()). execute() is useful when the SQL type is unknown at compile time."},
+      {"question": "How does batch processing work in JDBC?", "answer": "Batch processing groups multiple SQL statements and sends them to the database as a single batch, reducing network round trips. You add statements using addBatch() and execute them all at once using executeBatch(), which returns an int array of update counts. For PreparedStatement, you set parameters and call addBatch() for each entry, then executeBatch(). This is significantly faster for bulk INSERT, UPDATE, or DELETE operations."},
+      {"question": "What are JDBC transaction isolation levels?", "answer": "JDBC supports four isolation levels: READ_UNCOMMITTED (allows dirty reads), READ_COMMITTED (prevents dirty reads), REPEATABLE_READ (prevents dirty and non-repeatable reads), and SERIALIZABLE (prevents all concurrency anomalies). Higher isolation provides more consistency but reduces concurrency. Set via connection.setTransactionIsolation(). The default varies by database — MySQL uses REPEATABLE_READ, Oracle uses READ_COMMITTED."},
+      {"question": "What are savepoints in JDBC transactions?", "answer": "Savepoints are intermediate points within a transaction that allow partial rollback without undoing the entire transaction. Created using connection.setSavepoint(\"name\"), they enable rolling back to a specific point using connection.rollback(savepoint) while preserving changes made before the savepoint. They are released using connection.releaseSavepoint(). Savepoints are useful for complex transactions with multiple independent phases."},
+      {"question": "How do you retrieve auto-generated keys after an INSERT?", "answer": "To retrieve auto-generated keys, pass Statement.RETURN_GENERATED_KEYS as the second argument to prepareStatement(). After executeUpdate(), call getGeneratedKeys() to obtain a ResultSet containing the generated keys. For example: PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); pstmt.executeUpdate(); ResultSet keys = pstmt.getGeneratedKeys(); if (keys.next()) int id = keys.getInt(1);"},
+      {"question": "Explain the DAO (Data Access Object) design pattern in JDBC.", "answer": "The DAO pattern separates data access logic from business logic by creating dedicated classes for database operations. Each DAO class handles CRUD operations for a specific entity, encapsulating SQL queries and ResultSet-to-object mapping. This promotes separation of concerns, testability (DAOs can be mocked), and maintainability. A typical DAO interface defines methods like findById(), findAll(), save(), update(), and delete()."},
+      {"question": "What is DatabaseMetaData and how is it used?", "answer": "DatabaseMetaData provides comprehensive information about the database, obtained via connection.getMetaData(). It includes methods to discover the database product name/version, supported SQL features, available tables (getTables()), columns (getColumns()), primary keys (getPrimaryKeys()), and foreign keys. It's essential for building generic database tools, ORM frameworks, and migration utilities that need to work across different database systems."},
+      {"question": "How do you handle BLOB and CLOB data in JDBC?", "answer": "BLOBs (Binary Large Objects) store binary data like images, while CLOBs (Character Large Objects) store large text. Use PreparedStatement.setBlob()/setClob() with InputStream/Reader for insertion, and ResultSet.getBlob()/getClob() for retrieval. The Blob and Clob interfaces provide methods like getBinaryStream(), getCharacterStream(), and length(). For large data, use streaming to avoid loading everything into memory at once."},
+      {"question": "What is the difference between DriverManager and DataSource?", "answer": "DriverManager is the basic facility for creating connections, suitable for simple applications. DataSource is an enterprise-grade alternative that supports connection pooling, distributed transactions, and JNDI lookup. DataSource provides better performance and resource management. In production, DataSource (implementations like HikariDataSource) should always be used. DriverManager creates a new connection each time, while DataSource can return pooled connections."}
+    ],
+    "advanced": [
+      {"question": "How does PreparedStatement pre-compilation work internally?", "answer": "When a PreparedStatement is created, the SQL template is sent to the database server which parses, validates, and creates an execution plan. This compiled plan is cached and reused for subsequent executions with different parameters, avoiding repeated parsing and optimization. The parameters are sent separately from the SQL structure, which is why SQL injection is prevented. Some drivers also cache PreparedStatements client-side for additional performance."},
+      {"question": "Explain JDBC's role in distributed transactions using JTA.", "answer": "In distributed transactions spanning multiple databases, JDBC works with JTA (Java Transaction API) through XADataSource and XAConnection. The transaction manager coordinates using the Two-Phase Commit protocol: in phase 1 (prepare), each resource confirms readiness; in phase 2 (commit), all resources commit if all prepared successfully, or rollback if any failed. XAResource interface is the bridge between JDBC connections and the JTA transaction manager."},
+      {"question": "What is connection leak detection and how do you implement it?", "answer": "Connection leak detection identifies connections that are borrowed from the pool but never returned. HikariCP provides leakDetectionThreshold configuration which logs a warning with the stack trace of the code that borrowed the connection if it's not returned within the specified time. Custom implementation involves wrapping connections with a proxy that tracks creation time and stack trace, with a background thread scanning for stale connections."},
+      {"question": "How do you optimize JDBC performance for high-throughput applications?", "answer": "Key optimizations include: using connection pooling (HikariCP), batch processing for bulk operations, PreparedStatement caching, appropriate fetch size (setFetchSize()), streaming large ResultSets with TYPE_FORWARD_ONLY, using database-specific bulk insert syntax, minimizing network round trips, proper indexing on queried columns, and connection pool tuning (optimal size is typically CPU cores * 2 + spindle count). Also consider using database-specific features like MySQL's rewriteBatchedStatements=true."},
+      {"question": "Explain how JDBC handles character encoding and Unicode.", "answer": "JDBC handles encoding through the driver and connection URL parameters. For MySQL, useUnicode=true&characterEncoding=UTF-8 in the JDBC URL ensures proper Unicode handling. PreparedStatement.setString() uses Java's internal UTF-16 encoding, and the driver converts to the database's character set. National character set types (NCHAR, NVARCHAR) are handled via setNString()/getNString() methods added in JDBC 4.0. Mismatched encodings can cause garbled text or data loss."},
+      {"question": "What are JDBC RowSets and how do they differ from ResultSets?", "answer": "RowSets (javax.sql.rowset) extend ResultSet with JavaBeans features, event notification, and scrollability. JdbcRowSet is a connected wrapper around ResultSet. CachedRowSet is a disconnected, serializable implementation that can work offline and sync changes later. WebRowSet provides XML serialization. FilteredRowSet supports in-memory filtering. JoinRowSet supports SQL JOIN-like operations on RowSets. They simplify data handling but add memory overhead for cached implementations."},
+      {"question": "How do you implement database connection failover in JDBC?", "answer": "Connection failover can be implemented at multiple levels. Driver-level: MySQL Connector/J supports failover URLs like jdbc:mysql://primary,secondary/db with autoReconnect=true. Pool-level: HikariCP can test connections before checkout using connectionTestQuery. Application-level: implement a connection wrapper with retry logic that catches communication exceptions and re-establishes connections. For read replicas, use separate DataSources with routing logic based on read/write operations."},
+      {"question": "What are the security best practices for JDBC connections?", "answer": "Security best practices include: always use PreparedStatement to prevent SQL injection, store credentials in encrypted configuration files or vaults (never in source code), use SSL/TLS encrypted connections (useSSL=true), apply the principle of least privilege for database users, validate and sanitize all input even when using PreparedStatement, use connection pooling to limit maximum connections, implement proper error handling that doesn't expose database details, and audit database access."},
+      {"question": "How does JDBC 4.2+ integrate with the java.time API?", "answer": "JDBC 4.2 added native support for java.time types. You can use PreparedStatement.setObject() with LocalDate, LocalTime, LocalDateTime, OffsetTime, and OffsetDateTime without explicit conversion. ResultSet.getObject(column, LocalDate.class) directly returns java.time types. This eliminates the awkward conversions between java.sql.Date/Time/Timestamp and the modern date-time API. The mapping is: LocalDate ↔ DATE, LocalTime ↔ TIME, LocalDateTime ↔ TIMESTAMP."},
+      {"question": "Explain the internal workflow of a JDBC query from Java to database and back.", "answer": "The workflow is: (1) Java code calls executeQuery() on a Statement, (2) the JDBC driver serializes the SQL into the database's wire protocol, (3) the request is sent over a TCP socket to the database server, (4) the database parses, optimizes, and executes the query, (5) results are serialized into the wire protocol and sent back, (6) the JDBC driver deserializes the response into a ResultSet object, buffering rows according to fetchSize, (7) Java code reads data through getter methods which perform type conversions from database types to Java types."}
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a JDBC program to connect to a MySQL database and print the connection details.",
+      "Create a program that creates a table named 'students' with columns: id (INT), name (VARCHAR), grade (CHAR) using JDBC.",
+      "Write a program to insert 5 student records into the 'students' table using Statement.",
+      "Write a program to retrieve and display all records from a 'products' table using a SELECT query.",
+      "Create a program that counts the total number of records in a table using COUNT(*).",
+      "Write a program to update the grade of a specific student using PreparedStatement.",
+      "Create a program to delete a record from a table based on the primary key.",
+      "Write a program that demonstrates the use of ResultSet.getInt() and ResultSet.getString() methods.",
+      "Create a program to check if a specific table exists in the database using DatabaseMetaData.",
+      "Write a program that handles SQLException and prints the error code, SQL state, and message."
+    ],
+    "medium": [
+      "Implement a complete CRUD application for managing an employee database with PreparedStatement.",
+      "Write a program that uses batch processing to insert 1000 records efficiently.",
+      "Create a program demonstrating transaction management with commit and rollback.",
+      "Implement a search function that finds records based on partial name matching using LIKE with PreparedStatement.",
+      "Write a program that retrieves and displays table metadata (column names, types, sizes) using ResultSetMetaData.",
+      "Create a connection utility class that reads database configuration from a properties file.",
+      "Implement pagination for displaying database records (LIMIT and OFFSET) with user navigation.",
+      "Write a program that performs a JOIN query between two related tables and displays the results.",
+      "Create a program that exports database table data to a CSV file using JDBC.",
+      "Implement a program that uses CallableStatement to execute a stored procedure with IN and OUT parameters."
+    ],
+    "hard": [
+      "Implement a complete DAO pattern with generic CRUD operations for multiple entity types.",
+      "Create a simple connection pool implementation from scratch with configurable pool size.",
+      "Build a database migration tool that reads SQL files and executes them in order with version tracking.",
+      "Implement an audit trail system that logs all database changes with timestamps and user information.",
+      "Create a multi-threaded application that demonstrates connection pooling with concurrent database access.",
+      "Build a generic SQL query builder that constructs parameterized queries from method calls.",
+      "Implement a database backup utility that exports schema and data to SQL files using JDBC metadata.",
+      "Create a real-time database change notification system using database triggers and JDBC.",
+      "Build a performance benchmarking tool that compares Statement vs PreparedStatement vs batch processing.",
+      "Implement a simple ORM framework that maps Java objects to database tables using reflection and annotations."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a Java program using JDBC that implements a student grade management system. The program should: (1) Create a 'students' table if it doesn't exist, (2) Insert sample student data, (3) Calculate and display the average grade for each subject, (4) Find and display the top-performing student.",
+      "input": "Students: Alice (Math:95, Science:88), Bob (Math:78, Science:92), Charlie (Math:88, Science:85)",
+      "output": "Table created successfully.\n3 students inserted.\n\nAverage Grades by Subject:\nMath: 87.00\nScience: 88.33\n\nTop Student: Alice (Average: 91.50)",
+      "constraints": "Use PreparedStatement for all database operations. Handle all SQLExceptions. Use try-with-resources for resource management.",
+      "solution": "import java.sql.*;\n\npublic class StudentGradeSystem {\n    private static final String URL = \"jdbc:mysql://localhost:3306/school\";\n    private static final String USER = \"root\";\n    private static final String PASS = \"password\";\n\n    public static void main(String[] args) {\n        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {\n            createTable(conn);\n            insertStudents(conn);\n            showAverageBySubject(conn);\n            showTopStudent(conn);\n        } catch (SQLException e) {\n            e.printStackTrace();\n        }\n    }\n\n    static void createTable(Connection conn) throws SQLException {\n        String sql = \"CREATE TABLE IF NOT EXISTS students (\" +\n                     \"id INT AUTO_INCREMENT PRIMARY KEY, \" +\n                     \"name VARCHAR(100), \" +\n                     \"subject VARCHAR(50), \" +\n                     \"grade DOUBLE)\";\n        try (Statement stmt = conn.createStatement()) {\n            stmt.executeUpdate(sql);\n            System.out.println(\"Table created successfully.\");\n        }\n    }\n\n    static void insertStudents(Connection conn) throws SQLException {\n        String sql = \"INSERT INTO students (name, subject, grade) VALUES (?, ?, ?)\";\n        String[][] data = {\n            {\"Alice\", \"Math\", \"95\"}, {\"Alice\", \"Science\", \"88\"},\n            {\"Bob\", \"Math\", \"78\"}, {\"Bob\", \"Science\", \"92\"},\n            {\"Charlie\", \"Math\", \"88\"}, {\"Charlie\", \"Science\", \"85\"}\n        };\n        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n            for (String[] row : data) {\n                pstmt.setString(1, row[0]);\n                pstmt.setString(2, row[1]);\n                pstmt.setDouble(3, Double.parseDouble(row[2]));\n                pstmt.addBatch();\n            }\n            pstmt.executeBatch();\n            System.out.println(\"3 students inserted.\");\n        }\n    }\n\n    static void showAverageBySubject(Connection conn) throws SQLException {\n        String sql = \"SELECT subject, AVG(grade) as avg_grade FROM students GROUP BY subject\";\n        System.out.println(\"\\nAverage Grades by Subject:\");\n        try (Statement stmt = conn.createStatement();\n             ResultSet rs = stmt.executeQuery(sql)) {\n            while (rs.next()) {\n                System.out.printf(\"%s: %.2f%n\", rs.getString(\"subject\"), rs.getDouble(\"avg_grade\"));\n            }\n        }\n    }\n\n    static void showTopStudent(Connection conn) throws SQLException {\n        String sql = \"SELECT name, AVG(grade) as avg_grade FROM students \" +\n                     \"GROUP BY name ORDER BY avg_grade DESC LIMIT 1\";\n        try (Statement stmt = conn.createStatement();\n             ResultSet rs = stmt.executeQuery(sql)) {\n            if (rs.next()) {\n                System.out.printf(\"\\nTop Student: %s (Average: %.2f)%n\",\n                    rs.getString(\"name\"), rs.getDouble(\"avg_grade\"));\n            }\n        }\n    }\n}"
+    },
+    {
+      "statement": "Create a JDBC-based inventory management system that supports adding products, updating stock quantities, recording transactions with proper transaction management, and generating inventory reports. Use batch processing for bulk stock updates.",
+      "input": "Add products: Laptop($999, qty:50), Mouse($29, qty:200), Keyboard($79, qty:150)\nBulk update: Laptop-10, Mouse-50, Keyboard-30\nGenerate report",
+      "output": "Products added successfully.\n\nBulk stock update completed.\nTransaction committed.\n\nInventory Report:\nLaptop     | $999.00  | Stock: 40  | Value: $39,960.00\nMouse      | $29.00   | Stock: 150 | Value: $4,350.00\nKeyboard   | $79.00   | Stock: 120 | Value: $9,480.00\n\nTotal Inventory Value: $53,790.00",
+      "constraints": "Implement proper transaction management for stock updates. Use batch processing. Handle negative stock scenarios by rolling back the transaction.",
+      "solution": "import java.sql.*;\n\npublic class InventoryManager {\n    private static final String URL = \"jdbc:mysql://localhost:3306/inventory\";\n    private static final String USER = \"root\";\n    private static final String PASS = \"password\";\n\n    public static void main(String[] args) {\n        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {\n            setupTable(conn);\n            addProducts(conn);\n            bulkStockUpdate(conn);\n            generateReport(conn);\n        } catch (SQLException e) {\n            e.printStackTrace();\n        }\n    }\n\n    static void setupTable(Connection conn) throws SQLException {\n        String sql = \"CREATE TABLE IF NOT EXISTS products (\" +\n                     \"id INT AUTO_INCREMENT PRIMARY KEY, \" +\n                     \"name VARCHAR(100) UNIQUE, \" +\n                     \"price DOUBLE, \" +\n                     \"quantity INT)\";\n        try (Statement stmt = conn.createStatement()) {\n            stmt.executeUpdate(sql);\n        }\n    }\n\n    static void addProducts(Connection conn) throws SQLException {\n        String sql = \"INSERT INTO products (name, price, quantity) VALUES (?, ?, ?)\";\n        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n            Object[][] products = {{\"Laptop\", 999.00, 50}, {\"Mouse\", 29.00, 200}, {\"Keyboard\", 79.00, 150}};\n            for (Object[] p : products) {\n                pstmt.setString(1, (String) p[0]);\n                pstmt.setDouble(2, (Double) p[1]);\n                pstmt.setInt(3, (Integer) p[2]);\n                pstmt.addBatch();\n            }\n            pstmt.executeBatch();\n            System.out.println(\"Products added successfully.\");\n        }\n    }\n\n    static void bulkStockUpdate(Connection conn) throws SQLException {\n        conn.setAutoCommit(false);\n        try {\n            String sql = \"UPDATE products SET quantity = quantity - ? WHERE name = ? AND quantity >= ?\";\n            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {\n                Object[][] updates = {{10, \"Laptop\"}, {50, \"Mouse\"}, {30, \"Keyboard\"}};\n                for (Object[] u : updates) {\n                    int qty = (Integer) u[0];\n                    pstmt.setInt(1, qty);\n                    pstmt.setString(2, (String) u[1]);\n                    pstmt.setInt(3, qty);\n                    pstmt.addBatch();\n                }\n                int[] results = pstmt.executeBatch();\n                for (int result : results) {\n                    if (result == 0) {\n                        conn.rollback();\n                        System.out.println(\"Insufficient stock. Transaction rolled back.\");\n                        return;\n                    }\n                }\n            }\n            conn.commit();\n            System.out.println(\"\\nBulk stock update completed.\");\n            System.out.println(\"Transaction committed.\");\n        } catch (SQLException e) {\n            conn.rollback();\n            throw e;\n        } finally {\n            conn.setAutoCommit(true);\n        }\n    }\n\n    static void generateReport(Connection conn) throws SQLException {\n        String sql = \"SELECT name, price, quantity, (price * quantity) as value FROM products ORDER BY name\";\n        double totalValue = 0;\n        System.out.println(\"\\nInventory Report:\");\n        try (Statement stmt = conn.createStatement();\n             ResultSet rs = stmt.executeQuery(sql)) {\n            while (rs.next()) {\n                double value = rs.getDouble(\"value\");\n                totalValue += value;\n                System.out.printf(\"%-10s | $%.2f  | Stock: %-3d | Value: $%,.2f%n\",\n                    rs.getString(\"name\"), rs.getDouble(\"price\"),\n                    rs.getInt(\"quantity\"), value);\n            }\n        }\n        System.out.printf(\"\\nTotal Inventory Value: $%,.2f%n\", totalValue);\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Applications",
+      "explanation": "Enterprise applications use JDBC extensively for managing complex business data across multiple database tables. ERP systems, CRM platforms, and supply chain management tools rely on JDBC for executing complex JOIN queries, managing hierarchical data, and ensuring data integrity through transaction management. Many enterprise frameworks like Spring use JDBC as their underlying database access mechanism."
+    },
+    {
+      "field": "Banking Systems",
+      "explanation": "Banking applications depend on JDBC for processing financial transactions with strict ACID compliance. Fund transfers, loan processing, and account management all require proper transaction management with appropriate isolation levels. JDBC's savepoint support is crucial for multi-step financial operations where partial rollback may be necessary. Connection pooling ensures the system can handle thousands of concurrent transactions."
+    },
+    {
+      "field": "Android Development",
+      "explanation": "While Android primarily uses SQLite through the Room persistence library, understanding JDBC concepts is valuable for Android developers who need to connect to remote databases. Android apps that interact with backend servers use JDBC on the server side for database operations. The DAO pattern commonly used in Android Room is directly derived from JDBC DAO patterns."
+    },
+    {
+      "field": "Web Applications",
+      "explanation": "Web applications built with Java Servlets, JSP, or modern frameworks like Spring MVC use JDBC for persisting user data, session information, and application state. E-commerce platforms use JDBC for product catalogs, shopping carts, order processing, and user authentication. Connection pooling is critical in web applications to handle concurrent HTTP requests efficiently."
+    },
+    {
+      "field": "Microservices",
+      "explanation": "In microservices architectures, each service typically manages its own database using JDBC. Services use lightweight connection pools (like HikariCP) to efficiently manage database connections. JDBC enables services to implement the Database-per-Service pattern, where each microservice has full control over its data access layer. Batch processing optimizes bulk data operations within individual services."
+    },
+    {
+      "field": "Cloud Applications",
+      "explanation": "Cloud-native Java applications use JDBC to connect to managed database services like AWS RDS, Google Cloud SQL, and Azure SQL Database. JDBC connection URLs are configured through environment variables or cloud configuration services. Connection pooling is especially important in cloud environments where database connections may traverse network boundaries with higher latency. JDBC drivers for cloud databases often include additional features like automatic failover and read replica routing."
+    }
+  ],
+  "best_practices": [
+    "Always use PreparedStatement instead of Statement when working with user input to prevent SQL injection attacks",
+    "Use try-with-resources for all JDBC resources (Connection, Statement, ResultSet) to prevent resource leaks",
+    "Implement connection pooling using HikariCP or similar libraries in production applications instead of creating connections directly",
+    "Use batch processing for bulk INSERT, UPDATE, or DELETE operations to minimize network round trips",
+    "Store database credentials in encrypted configuration files, environment variables, or secrets management systems — never hardcode them",
+    "Set appropriate fetch size using setFetchSize() when processing large result sets to control memory usage",
+    "Use column names instead of column indices in ResultSet getter methods for better code maintainability",
+    "Implement proper transaction management with explicit commit/rollback boundaries for data consistency",
+    "Log SQL exceptions completely including error code, SQL state, and message for effective debugging",
+    "Use the DAO (Data Access Object) pattern to separate database access logic from business logic"
+  ],
+  "summary": [
+    "JDBC is the standard Java API for connecting to relational databases, providing a uniform interface through the java.sql and javax.sql packages",
+    "Type 4 (Thin/Pure Java) drivers are the standard choice for modern applications, offering the best performance and portability",
+    "PreparedStatement should always be used over Statement for parameterized queries, SQL injection prevention, and better performance",
+    "Try-with-resources ensures proper cleanup of Connection, Statement, and ResultSet objects, preventing resource leaks",
+    "Transaction management requires disabling auto-commit, and every transaction must have proper commit and rollback handling",
+    "Connection pooling (HikariCP) is essential for production applications to efficiently manage expensive database connections",
+    "Batch processing significantly improves performance for bulk database operations by reducing network round trips",
+    "The DAO pattern is the standard design approach for organizing JDBC code in enterprise applications",
+    "JDBC 4.2+ supports java.time API types, and drivers are auto-loaded since JDBC 4.0",
+    "JDBC remains the foundation of all Java persistence frameworks including Hibernate, JPA, and Spring Data"
+  ],
+  "quiz": [
+    {
+      "question": "Which type of JDBC driver converts JDBC calls directly into database-specific network protocols?",
+      "options": ["A) Type 1 - JDBC-ODBC Bridge", "B) Type 2 - Native API", "C) Type 3 - Network Protocol", "D) Type 4 - Thin Driver"],
+      "answer": "D) Type 4 - Thin Driver",
+      "explanation": "Type 4 (Thin Driver) is a pure Java driver that converts JDBC calls directly into database-specific network protocols without requiring any native code or middleware. It is the most commonly used driver type for its portability and performance."
+    },
+    {
+      "question": "What does PreparedStatement.executeUpdate() return?",
+      "options": ["A) A ResultSet object", "B) A boolean value", "C) An int representing the number of affected rows", "D) void - it returns nothing"],
+      "answer": "C) An int representing the number of affected rows",
+      "explanation": "executeUpdate() is used for INSERT, UPDATE, and DELETE statements and returns an integer indicating the number of rows that were affected by the SQL operation. For DDL statements, it typically returns 0."
+    },
+    {
+      "question": "Which interface should be used to execute stored procedures in JDBC?",
+      "options": ["A) Statement", "B) PreparedStatement", "C) CallableStatement", "D) StoredProcedureStatement"],
+      "answer": "C) CallableStatement",
+      "explanation": "CallableStatement extends PreparedStatement and is specifically designed for executing stored procedures in the database. It supports IN, OUT, and INOUT parameters, enabling bidirectional data exchange with database procedures."
+    },
+    {
+      "question": "What is the default auto-commit mode for a JDBC Connection?",
+      "options": ["A) Auto-commit is disabled (false)", "B) Auto-commit is enabled (true)", "C) It depends on the database", "D) It depends on the JDBC driver"],
+      "answer": "B) Auto-commit is enabled (true)",
+      "explanation": "By default, a JDBC Connection operates in auto-commit mode where each individual SQL statement is treated as a transaction and automatically committed after execution. You must explicitly disable it with setAutoCommit(false) for manual transaction management."
+    },
+    {
+      "question": "Which method is used to move the ResultSet cursor to the next row?",
+      "options": ["A) rs.moveNext()", "B) rs.advance()", "C) rs.next()", "D) rs.forward()"],
+      "answer": "C) rs.next()",
+      "explanation": "The next() method moves the cursor forward one row from its current position. It returns true if the new current row is valid and false if there are no more rows. The cursor is initially positioned before the first row."
+    },
+    {
+      "question": "What is the primary advantage of using PreparedStatement over Statement?",
+      "options": ["A) It can execute DDL statements", "B) It supports auto-commit", "C) It prevents SQL injection and offers better performance", "D) It automatically closes connections"],
+      "answer": "C) It prevents SQL injection and offers better performance",
+      "explanation": "PreparedStatement uses parameterized queries with ? placeholders that separate SQL structure from data, preventing SQL injection. It also pre-compiles the SQL statement, and the compiled plan is cached and reused for repeated executions, improving performance."
+    },
+    {
+      "question": "In JDBC, column indices in ResultSet are:",
+      "options": ["A) 0-based (starting from 0)", "B) 1-based (starting from 1)", "C) Depends on the database vendor", "D) Depends on the JDBC driver version"],
+      "answer": "B) 1-based (starting from 1)",
+      "explanation": "JDBC uses 1-based column indexing, unlike Java arrays which are 0-based. The first column in a ResultSet has index 1, the second has index 2, and so on. Using index 0 will throw an SQLException."
+    },
+    {
+      "question": "Which transaction isolation level provides the highest level of isolation?",
+      "options": ["A) READ_UNCOMMITTED", "B) READ_COMMITTED", "C) REPEATABLE_READ", "D) SERIALIZABLE"],
+      "answer": "D) SERIALIZABLE",
+      "explanation": "SERIALIZABLE provides the highest isolation level, preventing dirty reads, non-repeatable reads, and phantom reads. Transactions are completely isolated from each other, as if they were executed serially. However, it has the highest performance overhead due to extensive locking."
+    },
+    {
+      "question": "What is the purpose of connection.setSavepoint()?",
+      "options": ["A) To save the current connection settings", "B) To create a point for partial rollback within a transaction", "C) To backup the database", "D) To checkpoint the connection pool"],
+      "answer": "B) To create a point for partial rollback within a transaction",
+      "explanation": "setSavepoint() creates an intermediate checkpoint within a transaction. If an error occurs later, you can rollback to the savepoint (connection.rollback(savepoint)) instead of rolling back the entire transaction, preserving changes made before the savepoint."
+    },
+    {
+      "question": "Since which JDBC version are drivers automatically loaded without Class.forName()?",
+      "options": ["A) JDBC 2.0", "B) JDBC 3.0", "C) JDBC 4.0", "D) JDBC 4.2"],
+      "answer": "C) JDBC 4.0",
+      "explanation": "JDBC 4.0, introduced in Java 6, added automatic driver loading using the Java ServiceLoader mechanism. Drivers that include a META-INF/services/java.sql.Driver file are automatically discovered and loaded, eliminating the need for explicit Class.forName() calls."
+    }
+  ]
+}

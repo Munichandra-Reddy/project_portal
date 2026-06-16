@@ -1,0 +1,370 @@
+{
+  "title": "ArrayList",
+  "introduction": {
+    "what_it_is": "ArrayList is a resizable array implementation of the List interface in Java, found in the java.util package. Unlike standard arrays, ArrayList can dynamically grow or shrink in size as elements are added or removed. It maintains insertion order and allows duplicate elements, providing index-based access to its elements.",
+    "why_important": "ArrayList is one of the most widely used data structures in Java because it combines the random access speed of arrays with the flexibility of dynamic sizing. It eliminates the need to know the size of a collection in advance and provides a rich set of methods for manipulating collections of objects, making it essential knowledge for any Java developer.",
+    "real_world": [
+      "Shopping cart systems where items can be added or removed dynamically during a user session",
+      "Student management systems that maintain a list of enrolled students with dynamic additions and removals",
+      "News feed applications that load and display a variable number of posts or articles"
+    ]
+  },
+  "detailed_theory": "ArrayList is one of the fundamental collection classes in Java, part of the Java Collections Framework introduced in Java 1.2. It resides in the java.util package and implements the List interface, which itself extends the Collection interface. Understanding ArrayList thoroughly is crucial for any Java developer because it is the go-to data structure for ordered, dynamic collections.\n\nAt its core, ArrayList uses a regular Java array as its internal storage mechanism. When you create an ArrayList without specifying a capacity, it initializes an internal array with a default capacity of 10. As you add elements and the array runs out of space, ArrayList automatically creates a new, larger array (typically 1.5 times the current size) and copies all existing elements into it. This process is called 'resizing' or 'growing' and happens transparently without any intervention from the programmer.\n\nArrayList maintains the insertion order of elements, meaning elements are stored and retrieved in the exact order they were added. This is a critical distinction from other collections like HashSet, which does not guarantee order. ArrayList also permits duplicate elements and allows storing null values, giving developers flexibility in what they can store.\n\nThe indexing in ArrayList is zero-based, just like regular Java arrays. The first element is at index 0, the second at index 1, and so on. This allows for constant-time O(1) random access to any element by its index, which is one of the primary advantages of ArrayList over linked data structures like LinkedList.\n\nWhen comparing ArrayList with arrays, the key difference is flexibility. A standard array has a fixed size once declared, and you cannot add more elements than its declared length. ArrayList solves this problem by abstracting away the resizing logic. However, this convenience comes at a cost: each element in an ArrayList is stored as an Object reference, meaning primitive types like int or double must be auto-boxed into their wrapper classes (Integer, Double, etc.). This auto-boxing and unboxing can introduce performance overhead compared to primitive arrays.\n\nArrayList is not thread-safe. If multiple threads access an ArrayList concurrently and at least one modifies it structurally, it must be synchronized externally. Alternatively, Java provides Vector (a legacy synchronized ArrayList) and Collections.synchronizedList() wrapper, as well as CopyOnWriteArrayList in the java.util.concurrent package for thread-safe scenarios.\n\nPerformance characteristics of ArrayList are worth understanding in detail. Adding an element to the end of the list is amortized O(1) because most additions simply place an element at the next available index. However, when resizing occurs, it's O(n). Inserting or removing elements in the middle of the list is O(n) because all subsequent elements must be shifted. Searching for an element by value requires O(n) time as it involves scanning the list, but accessing by index is O(1).\n\nArrayList implements several important interfaces beyond List. It implements Serializable, allowing ArrayList instances to be serialized to byte streams for storage or network transmission. It implements Cloneable, enabling shallow copies via the clone() method. It also implements RandomAccess, a marker interface that signals to algorithms that random access to elements is efficient, allowing collections framework algorithms to optimize their behavior when working with ArrayList.\n\nThe generics support in ArrayList (introduced in Java 5) is a key feature. Using ArrayList<String> instead of a raw ArrayList<> provides type safety at compile time, preventing ClassCastException at runtime. The compiler can catch type mismatches before the program runs, making code safer and more readable.\n\nIterating over an ArrayList can be done in multiple ways: using a traditional for loop with index, using an enhanced for-each loop, using an Iterator, using ListIterator (which supports bidirectional traversal and modification during iteration), or using Java 8+ Stream API for functional-style operations. Each approach has its use cases, with Stream API being powerful for transformations and filtering.\n\nArrayList also supports the subList() method, which returns a view of a portion of the list. Changes to the subList are reflected in the original ArrayList and vice versa. This is useful for bulk operations on a specific range of elements.\n\nIn terms of memory, ArrayList stores object references, not objects themselves (for reference types). The internal array holds references, and the actual objects reside in the heap. When an ArrayList is created with a large initial capacity but few elements are added, memory may be wasted. The trimToSize() method can be called to reduce the internal array to the actual number of elements, freeing unused memory.\n\nUnderstanding when to use ArrayList versus other collections is important. Use ArrayList when you need fast random access by index, when you primarily add or remove elements from the end, and when you don't need thread safety built-in. Use LinkedList when you frequently insert or delete in the middle. Use HashSet when you need unique elements without caring about order.",
+  "key_features": {
+    "features": [
+      {"name": "Dynamic Resizing", "description": "ArrayList automatically increases its capacity when elements are added beyond the current capacity, eliminating the need for manual resizing."},
+      {"name": "Index-Based Access", "description": "Provides O(1) constant-time access to any element using its zero-based index, similar to regular arrays."},
+      {"name": "Ordered Collection", "description": "Maintains the insertion order of elements, so elements are retrieved in the same order they were added."},
+      {"name": "Allows Duplicates", "description": "Unlike Set collections, ArrayList can store duplicate elements and multiple null values."},
+      {"name": "Generics Support", "description": "Supports Java generics for type-safe collections, preventing ClassCastException at compile time."},
+      {"name": "Rich API", "description": "Provides a comprehensive set of methods for adding, removing, searching, sorting, and iterating over elements."},
+      {"name": "Iterator Support", "description": "Implements Iterable, supporting for-each loops and fail-fast iterators that detect concurrent modifications."},
+      {"name": "Serializable", "description": "Implements Serializable interface, allowing ArrayList objects to be serialized and deserialized for persistence or network transfer."}
+    ],
+    "advantages": [
+      "Dynamic size eliminates the need to predict collection size in advance",
+      "Fast O(1) random access by index, making it ideal for read-heavy workloads",
+      "Rich built-in methods reduce boilerplate code for common operations",
+      "Generics support provides compile-time type safety",
+      "Works seamlessly with Java Collections utility methods like Collections.sort() and Collections.binarySearch()",
+      "Easy to iterate using multiple approaches including for-each, Iterator, and Stream API",
+      "Allows null values and duplicate elements for flexible data storage"
+    ],
+    "limitations": [
+      "Not thread-safe; requires external synchronization for concurrent access",
+      "Inserting or deleting elements in the middle is slow (O(n)) due to element shifting",
+      "Primitive types must be auto-boxed into wrapper objects, adding memory and performance overhead",
+      "Resizing operation copies all elements to a new array, which can be expensive for very large lists",
+      "Memory wastage when capacity far exceeds the actual number of stored elements"
+    ]
+  },
+  "syntax": {
+    "explanation": "ArrayList can be declared and instantiated using generic type parameters for type safety. The most common declaration pattern uses the List interface on the left side (programming to an interface) and ArrayList on the right side for flexibility.",
+    "breakdown": [
+      "import java.util.ArrayList; — imports the ArrayList class from the java.util package",
+      "List<Type> listName — declares a reference of type List (interface) for flexibility",
+      "new ArrayList<>() — creates an ArrayList instance using diamond operator for type inference",
+      "new ArrayList<>(initialCapacity) — creates an ArrayList with a specific initial capacity",
+      "new ArrayList<>(existingCollection) — creates an ArrayList pre-populated with elements from another collection",
+      "<Type> — the generic type parameter specifying what type of objects the list will hold"
+    ],
+    "rules": [
+      "Always import java.util.ArrayList (or java.util.*) before using ArrayList",
+      "Use generics (e.g., ArrayList<String>) to ensure type safety and avoid raw type warnings",
+      "Prefer declaring the variable as List<Type> rather than ArrayList<Type> to program to the interface",
+      "Indices are zero-based: the first element is at index 0, the last at size()-1",
+      "Accessing an index out of bounds throws IndexOutOfBoundsException",
+      "Structural modification during iteration (without using Iterator.remove()) causes ConcurrentModificationException"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating and Manipulating an ArrayList",
+      "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class BasicArrayList {\n    public static void main(String[] args) {\n        // Create an ArrayList of Strings\n        List<String> fruits = new ArrayList<>();\n\n        // Add elements\n        fruits.add(\"Apple\");\n        fruits.add(\"Banana\");\n        fruits.add(\"Cherry\");\n        fruits.add(\"Date\");\n\n        // Print the list\n        System.out.println(\"Fruits: \" + fruits);\n\n        // Access by index\n        System.out.println(\"First fruit: \" + fruits.get(0));\n        System.out.println(\"Third fruit: \" + fruits.get(2));\n\n        // Size of the list\n        System.out.println(\"Number of fruits: \" + fruits.size());\n\n        // Remove an element by value\n        fruits.remove(\"Banana\");\n        System.out.println(\"After removing Banana: \" + fruits);\n\n        // Remove by index\n        fruits.remove(0);\n        System.out.println(\"After removing index 0: \" + fruits);\n\n        // Check if element exists\n        System.out.println(\"Contains Cherry: \" + fruits.contains(\"Cherry\"));\n\n        // Update an element\n        fruits.set(0, \"Mango\");\n        System.out.println(\"After update: \" + fruits);\n    }\n}",
+      "output": "Fruits: [Apple, Banana, Cherry, Date]\nFirst fruit: Apple\nThird fruit: Cherry\nNumber of fruits: 4\nAfter removing Banana: [Apple, Cherry, Date]\nAfter removing index 0: [Cherry, Date]\nContains Cherry: true\nAfter update: [Mango, Date]",
+      "explanation": "This example demonstrates the fundamental operations of ArrayList: creating an instance, adding elements with add(), accessing elements by index with get(), finding the size with size(), removing elements by value and index with remove(), checking membership with contains(), and updating elements with set()."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Sorting, Searching, and Iterating an ArrayList",
+      "code": "import java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.Iterator;\nimport java.util.List;\n\npublic class IntermediateArrayList {\n    public static void main(String[] args) {\n        List<Integer> numbers = new ArrayList<>();\n        numbers.add(45);\n        numbers.add(12);\n        numbers.add(78);\n        numbers.add(23);\n        numbers.add(56);\n        numbers.add(12); // duplicate\n\n        System.out.println(\"Original: \" + numbers);\n\n        // Sort in ascending order\n        Collections.sort(numbers);\n        System.out.println(\"Sorted ascending: \" + numbers);\n\n        // Sort in descending order\n        Collections.sort(numbers, Collections.reverseOrder());\n        System.out.println(\"Sorted descending: \" + numbers);\n\n        // Binary search (list must be sorted ascending first)\n        Collections.sort(numbers);\n        int index = Collections.binarySearch(numbers, 45);\n        System.out.println(\"Index of 45: \" + index);\n\n        // Iterate using Iterator (safe removal)\n        Iterator<Integer> it = numbers.iterator();\n        while (it.hasNext()) {\n            int num = it.next();\n            if (num < 30) {\n                it.remove(); // Safe removal during iteration\n            }\n        }\n        System.out.println(\"After removing numbers < 30: \" + numbers);\n\n        // Iterate using for-each\n        System.out.print(\"Elements: \");\n        for (int n : numbers) {\n            System.out.print(n + \" \");\n        }\n        System.out.println();\n\n        // Find min and max\n        System.out.println(\"Min: \" + Collections.min(numbers));\n        System.out.println(\"Max: \" + Collections.max(numbers));\n    }\n}",
+      "output": "Original: [45, 12, 78, 23, 56, 12]\nSorted ascending: [12, 12, 23, 45, 56, 78]\nSorted descending: [78, 56, 45, 23, 12, 12]\nIndex of 45: 3\nAfter removing numbers < 30: [45, 56, 78]\nElements: 45 56 78 \nMin: 45\nMax: 78",
+      "explanation": "This intermediate example shows sorting with Collections.sort() and reverseOrder(), binary search with binarySearch(), safe element removal during iteration using an Iterator (which avoids ConcurrentModificationException), for-each iteration, and finding minimum/maximum using Collections utility methods."
+    },
+    {
+      "level": "Advanced",
+      "title": "ArrayList with Custom Objects, Comparators, and Streams",
+      "code": "import java.util.ArrayList;\nimport java.util.Comparator;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\nclass Employee {\n    String name;\n    int age;\n    double salary;\n\n    Employee(String name, int age, double salary) {\n        this.name = name;\n        this.age = age;\n        this.salary = salary;\n    }\n\n    @Override\n    public String toString() {\n        return name + \"(age=\" + age + \", salary=\" + salary + \")\";\n    }\n}\n\npublic class AdvancedArrayList {\n    public static void main(String[] args) {\n        List<Employee> employees = new ArrayList<>();\n        employees.add(new Employee(\"Alice\", 30, 75000));\n        employees.add(new Employee(\"Bob\", 25, 55000));\n        employees.add(new Employee(\"Charlie\", 35, 90000));\n        employees.add(new Employee(\"Diana\", 28, 68000));\n        employees.add(new Employee(\"Eve\", 32, 82000));\n\n        // Sort by salary (ascending)\n        employees.sort(Comparator.comparingDouble(e -> e.salary));\n        System.out.println(\"Sorted by salary: \" + employees);\n\n        // Sort by age (descending)\n        employees.sort(Comparator.comparingInt((Employee e) -> e.age).reversed());\n        System.out.println(\"Sorted by age desc: \" + employees);\n\n        // Filter employees with salary > 70000 using Streams\n        List<Employee> highEarners = employees.stream()\n            .filter(e -> e.salary > 70000)\n            .collect(Collectors.toList());\n        System.out.println(\"High earners: \" + highEarners);\n\n        // Get names of employees under 30\n        List<String> youngNames = employees.stream()\n            .filter(e -> e.age < 30)\n            .map(e -> e.name)\n            .collect(Collectors.toList());\n        System.out.println(\"Young employees: \" + youngNames);\n\n        // Calculate total salary\n        double totalSalary = employees.stream()\n            .mapToDouble(e -> e.salary)\n            .sum();\n        System.out.println(\"Total salary: \" + totalSalary);\n\n        // Average age\n        double avgAge = employees.stream()\n            .mapToInt(e -> e.age)\n            .average()\n            .orElse(0);\n        System.out.println(\"Average age: \" + avgAge);\n    }\n}",
+      "output": "Sorted by salary: [Bob(age=25, salary=55000.0), Diana(age=28, salary=68000.0), Alice(age=30, salary=75000.0), Eve(age=32, salary=82000.0), Charlie(age=35, salary=90000.0)]\nSorted by age desc: [Charlie(age=35, salary=90000.0), Eve(age=32, salary=82000.0), Alice(age=30, salary=75000.0), Diana(age=28, salary=68000.0), Bob(age=25, salary=55000.0)]\nHigh earners: [Charlie(age=35, salary=90000.0), Eve(age=32, salary=82000.0), Alice(age=30, salary=75000.0)]\nYoung employees: [Diana, Bob]\nTotal salary: 370000.0\nAverage age: 30.0",
+      "explanation": "This advanced example demonstrates ArrayList with custom objects, using Comparator with lambda expressions for multi-field sorting, and Java 8 Stream API for filtering, mapping, collecting results, and computing aggregate statistics like sum and average."
+    },
+    {
+      "level": "Real-world",
+      "title": "Shopping Cart System Using ArrayList",
+      "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Optional;\n\nclass CartItem {\n    private String productName;\n    private int quantity;\n    private double pricePerUnit;\n\n    public CartItem(String productName, int quantity, double pricePerUnit) {\n        this.productName = productName;\n        this.quantity = quantity;\n        this.pricePerUnit = pricePerUnit;\n    }\n\n    public String getProductName() { return productName; }\n    public int getQuantity() { return quantity; }\n    public void setQuantity(int quantity) { this.quantity = quantity; }\n    public double getPricePerUnit() { return pricePerUnit; }\n    public double getTotalPrice() { return quantity * pricePerUnit; }\n\n    @Override\n    public String toString() {\n        return String.format(\"%-15s x%d @ $%.2f = $%.2f\",\n            productName, quantity, pricePerUnit, getTotalPrice());\n    }\n}\n\nclass ShoppingCart {\n    private List<CartItem> items = new ArrayList<>();\n\n    public void addItem(String name, int qty, double price) {\n        Optional<CartItem> existing = items.stream()\n            .filter(i -> i.getProductName().equalsIgnoreCase(name))\n            .findFirst();\n        if (existing.isPresent()) {\n            existing.get().setQuantity(existing.get().getQuantity() + qty);\n            System.out.println(\"Updated quantity for: \" + name);\n        } else {\n            items.add(new CartItem(name, qty, price));\n            System.out.println(\"Added to cart: \" + name);\n        }\n    }\n\n    public void removeItem(String name) {\n        boolean removed = items.removeIf(i -> i.getProductName().equalsIgnoreCase(name));\n        System.out.println(removed ? \"Removed: \" + name : \"Item not found: \" + name);\n    }\n\n    public void displayCart() {\n        System.out.println(\"\\n=== Shopping Cart ===\");\n        if (items.isEmpty()) {\n            System.out.println(\"Cart is empty.\");\n            return;\n        }\n        items.forEach(System.out::println);\n        double total = items.stream().mapToDouble(CartItem::getTotalPrice).sum();\n        System.out.printf(\"Total: $%.2f%n\", total);\n        System.out.println(\"Items in cart: \" + items.size());\n    }\n}\n\npublic class ShoppingCartApp {\n    public static void main(String[] args) {\n        ShoppingCart cart = new ShoppingCart();\n        cart.addItem(\"Laptop\", 1, 999.99);\n        cart.addItem(\"Mouse\", 2, 29.99);\n        cart.addItem(\"Keyboard\", 1, 79.99);\n        cart.addItem(\"Mouse\", 1, 29.99); // Should update quantity\n        cart.displayCart();\n        cart.removeItem(\"Keyboard\");\n        cart.displayCart();\n    }\n}",
+      "output": "Added to cart: Laptop\nAdded to cart: Mouse\nAdded to cart: Keyboard\nUpdated quantity for: Mouse\n\n=== Shopping Cart ===\nLaptop          x1 @ $999.99 = $999.99\nMouse           x3 @ $29.99 = $89.97\nKeyboard        x1 @ $79.99 = $79.99\nTotal: $1169.95\nItems in cart: 3\nRemoved: Keyboard\n\n=== Shopping Cart ===\nLaptop          x1 @ $999.99 = $999.99\nMouse           x3 @ $29.99 = $89.97\nTotal: $1089.96\nItems in cart: 2",
+      "explanation": "This real-world example models a shopping cart system. The ShoppingCart uses an ArrayList<CartItem> to store items. It demonstrates practical patterns: using Stream to check if an item already exists before adding (and updating quantity instead), using removeIf() for declarative removal, and using Stream with mapToDouble().sum() for computing the cart total."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "ArrayList Method Reference",
+        "headers": ["Method", "Description", "Time Complexity"],
+        "rows": [
+          ["add(E e)", "Appends element to end of list", "O(1) amortized"],
+          ["add(int index, E e)", "Inserts element at specified index", "O(n)"],
+          ["get(int index)", "Returns element at specified index", "O(1)"],
+          ["set(int index, E e)", "Replaces element at specified index", "O(1)"],
+          ["remove(int index)", "Removes element at specified index", "O(n)"],
+          ["remove(Object o)", "Removes first occurrence of specified element", "O(n)"],
+          ["size()", "Returns number of elements in list", "O(1)"],
+          ["contains(Object o)", "Returns true if list contains specified element", "O(n)"],
+          ["indexOf(Object o)", "Returns index of first occurrence of element", "O(n)"],
+          ["clear()", "Removes all elements from list", "O(n)"],
+          ["isEmpty()", "Returns true if list contains no elements", "O(1)"],
+          ["sort(Comparator c)", "Sorts list according to specified comparator", "O(n log n)"],
+          ["subList(int from, int to)", "Returns a view of a portion of the list", "O(1)"],
+          ["toArray()", "Returns an array containing all elements", "O(n)"],
+          ["addAll(Collection c)", "Appends all elements of collection to end", "O(k)"]
+        ]
+      },
+      {
+        "title": "ArrayList vs Array Comparison",
+        "headers": ["Feature", "Array", "ArrayList"],
+        "rows": [
+          ["Size", "Fixed at creation", "Dynamic (auto-resizes)"],
+          ["Type", "Can store primitives", "Stores objects only (autoboxing for primitives)"],
+          ["Performance", "Slightly faster", "Small overhead due to object wrapping"],
+          ["Methods", "No built-in methods", "Rich API (add, remove, sort, etc.)"],
+          ["Null values", "Allowed", "Allowed"],
+          ["Generics", "Not supported", "Fully supported"],
+          ["Memory", "Less overhead", "More overhead per element"],
+          ["Syntax", "int[] arr = new int[10]", "List<Integer> list = new ArrayList<>()"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "ArrayList",
+        "concept_b": "LinkedList",
+        "explanation": "ArrayList uses an internal array for O(1) random access by index but O(n) for insertions/deletions in the middle. LinkedList uses doubly-linked nodes for O(1) insertions/deletions at ends but O(n) for random access. Use ArrayList for read-heavy workloads and LinkedList for frequent insertions/deletions."
+      },
+      {
+        "concept_a": "ArrayList",
+        "concept_b": "Vector",
+        "explanation": "Both use dynamic arrays internally. Vector is synchronized (thread-safe) but slower due to synchronization overhead. ArrayList is unsynchronized and faster for single-threaded use. Vector is considered legacy; use Collections.synchronizedList(new ArrayList<>()) or CopyOnWriteArrayList for thread-safe needs."
+      }
+    ]
+  },
+  "methods": [
+    {"name": "add(E e)", "description": "Appends the specified element to the end of the ArrayList", "parameters": "E e - the element to be added", "return_value": "boolean - always true (as per Collection contract)", "example_usage": "list.add(\"Hello\"); // adds Hello at the end"},
+    {"name": "add(int index, E element)", "description": "Inserts the specified element at the specified position, shifting subsequent elements to the right", "parameters": "int index - position to insert; E element - element to insert", "return_value": "void", "example_usage": "list.add(1, \"World\"); // inserts World at index 1"},
+    {"name": "get(int index)", "description": "Returns the element at the specified position in the list", "parameters": "int index - index of the element to return", "return_value": "E - the element at the specified index", "example_usage": "String s = list.get(0); // gets first element"},
+    {"name": "set(int index, E element)", "description": "Replaces the element at the specified position with the specified element", "parameters": "int index - index of element to replace; E element - new element", "return_value": "E - the element previously at the specified position", "example_usage": "list.set(2, \"Java\"); // replaces element at index 2"},
+    {"name": "remove(int index)", "description": "Removes the element at the specified position, shifting subsequent elements left", "parameters": "int index - index of element to remove", "return_value": "E - the element that was removed", "example_usage": "list.remove(0); // removes first element"},
+    {"name": "remove(Object o)", "description": "Removes the first occurrence of the specified element from the list", "parameters": "Object o - element to be removed", "return_value": "boolean - true if the list contained the element", "example_usage": "list.remove(\"Apple\"); // removes first Apple"},
+    {"name": "size()", "description": "Returns the number of elements currently in the ArrayList", "parameters": "None", "return_value": "int - the number of elements", "example_usage": "int count = list.size();"},
+    {"name": "contains(Object o)", "description": "Returns true if the list contains the specified element (uses equals() method)", "parameters": "Object o - element whose presence is to be tested", "return_value": "boolean - true if element is present", "example_usage": "boolean found = list.contains(\"Java\");"},
+    {"name": "indexOf(Object o)", "description": "Returns the index of the first occurrence of the specified element, or -1 if not found", "parameters": "Object o - element to search for", "return_value": "int - index of first occurrence or -1", "example_usage": "int idx = list.indexOf(\"Java\");"},
+    {"name": "sort(Comparator<? super E> c)", "description": "Sorts the list according to the order specified by the comparator", "parameters": "Comparator c - comparator to determine order (null for natural ordering)", "return_value": "void", "example_usage": "list.sort(Comparator.naturalOrder());"},
+    {"name": "subList(int fromIndex, int toIndex)", "description": "Returns a view of the portion of the list between fromIndex (inclusive) and toIndex (exclusive)", "parameters": "int fromIndex - start index; int toIndex - end index (exclusive)", "return_value": "List<E> - a view of the specified range", "example_usage": "List<String> sub = list.subList(1, 4);"},
+    {"name": "clear()", "description": "Removes all elements from the ArrayList", "parameters": "None", "return_value": "void", "example_usage": "list.clear(); // empties the list"},
+    {"name": "toArray()", "description": "Returns an array containing all elements of the list in proper sequence", "parameters": "None (or T[] a - array to store elements)", "return_value": "Object[] or T[] - array of elements", "example_usage": "Object[] arr = list.toArray();"},
+    {"name": "addAll(Collection<? extends E> c)", "description": "Appends all elements of the specified collection to the end of the list", "parameters": "Collection c - collection whose elements are to be added", "return_value": "boolean - true if the list changed", "example_usage": "list.addAll(anotherList);"},
+    {"name": "trimToSize()", "description": "Trims the capacity of the ArrayList to its current size, minimizing storage", "parameters": "None", "return_value": "void", "example_usage": "list.trimToSize(); // frees unused capacity"}
+  ],
+  "mistakes": [
+    {
+      "title": "Modifying ArrayList During Iteration",
+      "description": "Adding or removing elements from an ArrayList while iterating over it with a for-each loop or Iterator (using list.remove() instead of iterator.remove()) causes ConcurrentModificationException.",
+      "wrong_example": "List<String> list = new ArrayList<>(Arrays.asList(\"A\", \"B\", \"C\"));\nfor (String s : list) {\n    if (s.equals(\"B\")) {\n        list.remove(s); // WRONG - ConcurrentModificationException!\n    }\n}",
+      "correct_example": "List<String> list = new ArrayList<>(Arrays.asList(\"A\", \"B\", \"C\"));\nIterator<String> it = list.iterator();\nwhile (it.hasNext()) {\n    String s = it.next();\n    if (s.equals(\"B\")) {\n        it.remove(); // CORRECT - safe removal via Iterator\n    }\n}\n// Or use: list.removeIf(s -> s.equals(\"B\")); // Java 8+",
+      "debugging_tip": "Look for ConcurrentModificationException in the stack trace. Always use Iterator.remove() for safe removal during iteration, or use the removeIf() method for declarative conditional removal."
+    },
+    {
+      "title": "Removing by Index vs Removing by Value (Integer Lists)",
+      "description": "When working with an ArrayList<Integer>, calling remove() with an int argument removes by index, while calling it with an Integer object removes by value. This confusion leads to wrong elements being removed.",
+      "wrong_example": "List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 10, 20));\nlist.remove(10); // WRONG! Removes element at INDEX 10, throws IndexOutOfBoundsException",
+      "correct_example": "List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 10, 20));\nlist.remove(Integer.valueOf(10)); // CORRECT - removes the value 10\n// Result: [1, 2, 3, 20]",
+      "debugging_tip": "When working with Integer lists, always wrap the value in Integer.valueOf() when you want to remove by value. Use an explicit cast: list.remove((Integer) 10). If you get IndexOutOfBoundsException, check whether you intended to remove by value or by index."
+    },
+    {
+      "title": "Using Raw ArrayList Without Generics",
+      "description": "Using a raw ArrayList (without type parameter) bypasses compile-time type checking, which can lead to ClassCastException at runtime when retrieving elements.",
+      "wrong_example": "ArrayList list = new ArrayList(); // raw type - no generics\nlist.add(\"Hello\");\nlist.add(42);\nString s = (String) list.get(1); // ClassCastException at runtime!",
+      "correct_example": "List<String> list = new ArrayList<>(); // CORRECT - typed ArrayList\nlist.add(\"Hello\");\nlist.add(\"World\");\n// list.add(42); // Compile error - caught at compile time!\nString s = list.get(0); // No cast needed, type-safe",
+      "debugging_tip": "Always use generics with ArrayList. Enable compiler warnings for raw types (-Xlint:unchecked). If you see unchecked cast warnings, refactor to use generics. ClassCastException at runtime with collections usually indicates missing or incorrect generics."
+    },
+    {
+      "title": "Not Using Initial Capacity for Known-Size Lists",
+      "description": "When the approximate number of elements is known in advance, not specifying an initial capacity causes unnecessary array resizing and memory copying, degrading performance.",
+      "wrong_example": "List<Integer> list = new ArrayList<>(); // default capacity 10\nfor (int i = 0; i < 1000000; i++) {\n    list.add(i); // many resizing operations occur!\n}",
+      "correct_example": "List<Integer> list = new ArrayList<>(1000000); // pre-allocated capacity\nfor (int i = 0; i < 1000000; i++) {\n    list.add(i); // no resizing needed!\n}",
+      "debugging_tip": "When loading large datasets, always estimate the collection size and pass it as the initial capacity. This avoids repeated resizing (each resize copies all elements) and improves performance significantly for large lists."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {"question": "What is ArrayList in Java?", "answer": "ArrayList is a resizable-array implementation of the List interface in the java.util package. It allows dynamic sizing, maintains insertion order, permits duplicates and null values, and provides index-based access to elements. Internally, it uses a regular Java array that grows automatically when needed."},
+      {"question": "What is the default initial capacity of an ArrayList?", "answer": "The default initial capacity of an ArrayList is 10. When the list is created without specifying a capacity (new ArrayList<>()), it initializes with an internal array of size 10. When elements exceed this capacity, the array is resized to approximately 1.5 times the current size."},
+      {"question": "How do you add elements to an ArrayList?", "answer": "You can add elements using: add(E e) to append at the end, add(int index, E element) to insert at a specific position, addAll(Collection c) to add all elements of another collection, and addAll(int index, Collection c) to insert all elements at a specific position."},
+      {"question": "How do you remove elements from an ArrayList?", "answer": "Elements can be removed using: remove(int index) to remove by position, remove(Object o) to remove the first occurrence of a value, removeAll(Collection c) to remove all elements in a collection, removeIf(Predicate p) to remove elements matching a condition, and clear() to remove all elements."},
+      {"question": "What is the difference between size() and capacity in ArrayList?", "answer": "size() returns the number of elements currently stored in the ArrayList. Capacity is the length of the internal array — the number of elements it can hold before resizing. size() is always <= capacity. You cannot directly query capacity through the public API, but you can set it at construction or via ensureCapacity()."},
+      {"question": "Does ArrayList allow null values?", "answer": "Yes, ArrayList allows null values. You can add null to an ArrayList, and it can contain multiple null entries. However, calling methods like indexOf(null) will work correctly. Be cautious when iterating and calling methods on elements, as NullPointerException can occur if you don't handle nulls."},
+      {"question": "How do you iterate over an ArrayList?", "answer": "There are multiple ways: (1) Traditional for loop: for(int i=0; i<list.size(); i++), (2) Enhanced for-each loop: for(String s : list), (3) Iterator: while(it.hasNext()) { it.next(); }, (4) ListIterator for bidirectional, (5) forEach with lambda: list.forEach(System.out::println), (6) Stream API: list.stream().forEach(...)."},
+      {"question": "Is ArrayList thread-safe?", "answer": "No, ArrayList is not thread-safe. If multiple threads access and modify an ArrayList concurrently, it can lead to data corruption or ConcurrentModificationException. For thread safety, use Collections.synchronizedList(new ArrayList<>()), CopyOnWriteArrayList, or Vector."},
+      {"question": "How do you convert an ArrayList to an array?", "answer": "Use the toArray() method: Object[] arr = list.toArray(); or for a typed array: String[] arr = list.toArray(new String[0]); The second form is preferred as it returns a typed array, avoiding the need to cast every element."},
+      {"question": "What happens when you try to access an invalid index in ArrayList?", "answer": "Accessing an invalid index (negative or >= size()) throws IndexOutOfBoundsException. For example, if a list has 5 elements (indices 0-4), calling list.get(5) or list.get(-1) throws this exception. Always check that 0 <= index < list.size() before accessing."}
+    ],
+    "intermediate": [
+      {"question": "Explain the internal resizing mechanism of ArrayList.", "answer": "When elements exceed the current capacity, ArrayList creates a new array with a new capacity calculated as (oldCapacity * 3/2 + 1) in Java 6 and roughly (oldCapacity * 1.5) in later versions. It then copies all existing elements to the new array using Arrays.copyOf() (which internally uses System.arraycopy()). The old array is garbage collected. This is O(n) but happens infrequently enough that amortized cost of add() is O(1)."},
+      {"question": "What is the difference between ArrayList and LinkedList?", "answer": "ArrayList uses an internal dynamic array, providing O(1) random access by index, O(n) insertion/deletion in the middle. LinkedList uses doubly-linked nodes, providing O(n) access by index (must traverse from head), O(1) insertion/deletion at beginning/end. ArrayList is better for frequent reads; LinkedList for frequent insertions/deletions at ends. ArrayList also has better cache locality."},
+      {"question": "What is ConcurrentModificationException and when does it occur in ArrayList?", "answer": "ConcurrentModificationException occurs when an ArrayList is structurally modified while being iterated (using for-each or Iterator), except through the Iterator's own remove() method. ArrayList maintains a modCount field that tracks structural modifications. The Iterator checks this count on each call to next(); if it changed, the exception is thrown. Solution: use Iterator.remove(), removeIf(), or collect items to remove and remove after iteration."},
+      {"question": "How does the fail-fast behavior of ArrayList's Iterator work?", "answer": "ArrayList's Iterator is fail-fast: it checks the modCount (modification count) of the list against an expectedModCount captured at iterator creation. If they differ (indicating structural modification outside the iterator), it immediately throws ConcurrentModificationException. This is a best-effort mechanism — it's not guaranteed in all concurrent scenarios but helps catch bugs in single-threaded code."},
+      {"question": "What is the difference between ArrayList.remove(int) and ArrayList.remove(Object)?", "answer": "remove(int index) removes the element at the given index position. remove(Object o) removes the first occurrence of the specified object using equals() comparison. For ArrayList<Integer>, remove(5) removes the element at index 5, while remove(Integer.valueOf(5)) removes the integer value 5. This distinction is critical to avoid bugs with Integer lists."},
+      {"question": "How do you sort an ArrayList of custom objects?", "answer": "Two approaches: (1) Make the class implement Comparable<T> and override compareTo(), then use Collections.sort(list). (2) Pass a Comparator to Collections.sort(list, comparator) or list.sort(comparator). With Java 8+, use lambda comparators: list.sort((a, b) -> a.getName().compareTo(b.getName())) or Comparator.comparing(Employee::getName)."},
+      {"question": "What is the subList() method and what are its implications?", "answer": "subList(fromIndex, toIndex) returns a view (not a copy) of the portion of the list from fromIndex (inclusive) to toIndex (exclusive). Changes to the subList are reflected in the original list and vice versa. This can cause unexpected behavior. To get an independent copy, use new ArrayList<>(list.subList(from, to)). Structural modification of the original list while a subList view is in use throws ConcurrentModificationException."},
+      {"question": "How does ArrayList implement the RandomAccess marker interface?", "answer": "RandomAccess is an empty marker interface that signals algorithms that the implementation supports efficient random access. ArrayList implements it because its get(index) is O(1). Collections framework algorithms check for this interface (using instanceof) to choose optimal algorithms — for example, Collections.binarySearch() uses index-based access for RandomAccess lists instead of the slower iterator-based approach."},
+      {"question": "How do you make an ArrayList unmodifiable?", "answer": "Use Collections.unmodifiableList(list) to wrap the list in an unmodifiable view. Any attempt to add, remove, or set elements throws UnsupportedOperationException. The original list can still be modified through the original reference. In Java 9+, List.of() and List.copyOf() create truly immutable lists that also disallow null values."},
+      {"question": "Explain the difference between ArrayList.clone() and creating a new ArrayList from another list.", "answer": "ArrayList.clone() performs a shallow copy — it creates a new ArrayList with the same element references. If elements are mutable objects, modifying an element in the clone affects the original. new ArrayList<>(originalList) also creates a shallow copy. For a deep copy, you must manually clone each element. clone() is generally discouraged in favor of copy constructors or factory methods."}
+    ],
+    "advanced": [
+      {"question": "How does ArrayList handle serialization and what is the significance of the serialVersionUID?", "answer": "ArrayList implements Serializable, so it can be serialized. The internal elementData array is marked transient to avoid serializing empty array slots. ArrayList overrides writeObject() and readObject() to serialize only the actual elements (up to size), not unused capacity. serialVersionUID ensures version compatibility during deserialization — if the class changes, deserialization of old data may fail with InvalidClassException if serialVersionUID doesn't match."},
+      {"question": "What are the performance implications of frequent insertions at the beginning of an ArrayList vs LinkedList?", "answer": "Inserting at the beginning of an ArrayList is O(n) because all existing elements must be shifted one position to the right. For a list of 1 million elements, this means 1 million array operations per insertion. LinkedList performs this in O(1) by updating node references. However, LinkedList has higher memory overhead (two pointers per node) and poor cache locality. For bulk beginning insertions, consider using Deque (ArrayDeque) or reversing the insertion order."},
+      {"question": "Explain how ArrayList interacts with the Java memory model in a multi-threaded context.", "answer": "ArrayList provides no memory visibility guarantees across threads. Without synchronization, changes made by one thread to an ArrayList may not be visible to other threads due to CPU caching and compiler reordering. Even simple operations like size() followed by get() can be non-atomic. Use CopyOnWriteArrayList for read-heavy concurrent scenarios (it creates a new copy on every write), or wrap with Collections.synchronizedList() and synchronize on the list for compound operations."},
+      {"question": "How does the Java Garbage Collector interact with ArrayList when elements are removed?", "answer": "When elements are removed from an ArrayList, the internal array slots are set to null explicitly by ArrayList to allow GC to collect the objects (otherwise the array would hold strong references). This is sometimes called 'nulling out'. If ArrayList held strong references to removed elements, they couldn't be GC'd even if no other reference existed. This is why you see code like elementData[size] = null in the ArrayList source."},
+      {"question": "What is the impact of using ArrayList with Java generics type erasure?", "answer": "Java generics use type erasure: the generic type information (e.g., <String>) is removed at compile time. At runtime, an ArrayList<String> is just an ArrayList. This means you cannot use instanceof to check parameterized types (e.g., list instanceof ArrayList<String> is illegal), cannot create generic arrays (new T[10] is illegal), and generic type information isn't available at runtime via reflection without workarounds like TypeToken (Guava) or Class<T> parameters."},
+      {"question": "How would you implement a thread-safe ArrayList with minimal locking for a mostly-read scenario?", "answer": "Use CopyOnWriteArrayList from java.util.concurrent. It achieves thread safety by making a fresh copy of the underlying array on every write operation (add, set, remove). Reads require no locking since they operate on a stable snapshot. This is ideal for scenarios with many reads and few writes. The trade-offs are: writes are expensive (O(n) copy), iterators never throw ConcurrentModificationException (they work on a snapshot), and memory usage is higher during writes."},
+      {"question": "Explain the time complexity of all ArrayList operations in detail.", "answer": "get(i): O(1) — direct array index access. set(i,e): O(1) — direct array assignment. add(e) at end: O(1) amortized (O(n) rarely during resize). add(i,e) at index: O(n) — must shift n-i elements right. remove(i): O(n) — must shift elements left. remove(Object): O(n) — scan + shift. contains(), indexOf(): O(n) — linear scan. size(), isEmpty(): O(1). sort(): O(n log n) — uses TimSort. clear(): O(n) — must null out references. toArray(): O(n)."},
+      {"question": "How do you efficiently remove all elements from an ArrayList that match a complex condition?", "answer": "Java 8+ provides removeIf(Predicate<? super E> filter) which is the most idiomatic: list.removeIf(e -> e.getAge() > 60 && e.getSalary() < 30000). Internally it uses a single pass through the array, rebuilding it in-place — much more efficient than removing one by one (each O(n) shift) or using Iterator.remove() in a loop. For even more complex filtering, collect matching elements first with stream().filter().collect(), then removeAll()."},
+      {"question": "What are the differences between ArrayList's iterator(), listIterator(), and spliterator()?", "answer": "iterator() returns a fail-fast Iterator for forward-only traversal. listIterator() returns a ListIterator supporting bidirectional traversal (next/previous), indexed access, and modification (add/set/remove) during iteration. spliterator() returns a Spliterator designed for parallel iteration — it can split its elements into multiple parts that can be processed in parallel by Stream.parallel(). Spliterator for ArrayList reports ORDERED, SIZED, SUBSIZED, and RANDOM_ACCESS characteristics."},
+      {"question": "How does ArrayList's ensureCapacity() work and when should you use it?", "answer": "ensureCapacity(int minCapacity) ensures the ArrayList's internal array has at least minCapacity space, pre-allocating if needed. It's useful when you know you're about to add many elements — calling it once avoids multiple incremental resizings. For example, before a loop adding 100,000 elements: list.ensureCapacity(100000). This avoids ~17 resize+copy operations (since default capacity is 10 and grows by ~50% each time). Similar benefit can be achieved by passing initial capacity to the constructor."},
+      {"question": "Describe a scenario where using ArrayList would be a poor design choice and what you would use instead.", "answer": "ArrayList is a poor choice when: (1) Frequent insertions/deletions in the middle — use LinkedList or Deque instead. (2) Need for unique elements — use HashSet (O(1) lookup) or LinkedHashSet (ordered unique). (3) Need thread safety with many writes — use CopyOnWriteArrayList for read-heavy or Collections.synchronizedList() for balanced. (4) Need key-value mapping — use HashMap. (5) Need sorted unique elements — use TreeSet. (6) Fixed-size performance-critical numeric data — use primitive arrays or IntStream. (7) Priority-based access — use PriorityQueue."}
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create an ArrayList of 5 integers and print them in reverse order.",
+      "Write a program to check if an ArrayList is empty and print an appropriate message.",
+      "Create an ArrayList of strings and find the length of the longest string.",
+      "Write a program to count the occurrences of a specific element in an ArrayList.",
+      "Create an ArrayList, add 10 elements, then print only even-indexed elements.",
+      "Write a program to copy all elements from one ArrayList to another.",
+      "Create an ArrayList of integers and replace all negative values with their absolute values.",
+      "Write a program to find the sum and average of all elements in an ArrayList<Double>.",
+      "Create an ArrayList of strings and print elements that start with a vowel.",
+      "Write a program to check if two ArrayLists contain the same elements regardless of order."
+    ],
+    "medium": [
+      "Write a program to remove all duplicate elements from an ArrayList while maintaining insertion order.",
+      "Implement a method that rotates an ArrayList to the right by k positions.",
+      "Write a program that merges two sorted ArrayLists into a single sorted ArrayList without using Collections.sort().",
+      "Create a program that finds the second largest element in an ArrayList of integers.",
+      "Write a method that flattens an ArrayList of ArrayLists into a single ArrayList.",
+      "Implement a frequency map from an ArrayList using only ArrayList (no Map allowed).",
+      "Write a program to partition an ArrayList into two lists: one with even numbers and one with odd numbers.",
+      "Create a program that finds all pairs in an ArrayList whose sum equals a given target.",
+      "Write a method to reverse a portion of an ArrayList between two given indices.",
+      "Implement a method that returns the most frequent element in an ArrayList<Integer>."
+    ],
+    "hard": [
+      "Implement a thread-safe bounded queue using ArrayList with wait/notify for producer-consumer pattern.",
+      "Write a program that implements the merge sort algorithm on an ArrayList without using any helper libraries.",
+      "Design a custom ArrayList class with O(1) deletion from any position using a swap-with-last approach.",
+      "Implement a sliding window maximum algorithm using ArrayList to find the max in every window of size k.",
+      "Write a method that finds the longest increasing subsequence in an ArrayList<Integer>.",
+      "Implement a sparse matrix using an ArrayList of ArrayLists with operations for addition and multiplication.",
+      "Create a program that serializes and deserializes an ArrayList of custom objects using only manual byte manipulation.",
+      "Implement a priority queue using ArrayList as the backing store, with O(log n) insert and O(log n) extract-min.",
+      "Write a program to find all permutations of an ArrayList<Character> and store them in another ArrayList.",
+      "Design a LRU (Least Recently Used) cache using ArrayList that evicts the least recently accessed element when full."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given an ArrayList of integers, find and return a new ArrayList containing only the elements that appear exactly once (no duplicates). Maintain the original order of first appearances.",
+      "input": "ArrayList: [1, 2, 3, 2, 4, 3, 5, 1, 6]",
+      "output": "Unique elements: [4, 5, 6]",
+      "constraints": "ArrayList size 1 to 10^5; elements between -10^6 and 10^6; Time complexity O(n)",
+      "solution": "import java.util.*;\n\npublic class UniqueElements {\n    public static List<Integer> findUnique(List<Integer> input) {\n        Map<Integer, Integer> freq = new LinkedHashMap<>();\n        for (int num : input) {\n            freq.put(num, freq.getOrDefault(num, 0) + 1);\n        }\n        List<Integer> result = new ArrayList<>();\n        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {\n            if (entry.getValue() == 1) {\n                result.add(entry.getKey());\n            }\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        List<Integer> input = new ArrayList<>(Arrays.asList(1, 2, 3, 2, 4, 3, 5, 1, 6));\n        System.out.println(\"Unique elements: \" + findUnique(input));\n    }\n}"
+    },
+    {
+      "statement": "Given an ArrayList of student names and scores, find the top 3 scorers and return their names in descending order of score. If two students have the same score, sort alphabetically.",
+      "input": "Names: [Alice, Bob, Charlie, Diana, Eve], Scores: [85, 92, 78, 92, 88]",
+      "output": "Top 3: [Bob, Diana, Eve]",
+      "constraints": "ArrayList size >= 3; Scores between 0 and 100",
+      "solution": "import java.util.*;\n\nclass Student {\n    String name;\n    int score;\n    Student(String name, int score) {\n        this.name = name;\n        this.score = score;\n    }\n}\n\npublic class TopStudents {\n    public static List<String> getTop3(List<String> names, List<Integer> scores) {\n        List<Student> students = new ArrayList<>();\n        for (int i = 0; i < names.size(); i++) {\n            students.add(new Student(names.get(i), scores.get(i)));\n        }\n        students.sort(Comparator.comparingInt((Student s) -> s.score)\n            .reversed()\n            .thenComparing(s -> s.name));\n        List<String> result = new ArrayList<>();\n        for (int i = 0; i < 3; i++) {\n            result.add(students.get(i).name);\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"Alice\", \"Bob\", \"Charlie\", \"Diana\", \"Eve\");\n        List<Integer> scores = Arrays.asList(85, 92, 78, 92, 88);\n        System.out.println(\"Top 3: \" + getTop3(names, scores));\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {"field": "Enterprise Applications", "explanation": "Enterprise Java applications use ArrayList extensively to hold query results from databases, manage lists of business entities like orders, invoices, and customers, and process bulk data operations in service layers."},
+    {"field": "Banking Systems", "explanation": "Banking systems use ArrayList to maintain transaction histories, store account statements for a period, hold a list of pending transfers or approvals, and process batch operations on customer accounts."},
+    {"field": "Android Development", "explanation": "Android applications use ArrayList as the underlying data source for RecyclerView and ListView adapters, displaying dynamic lists of items like messages, contacts, or products. The ArrayList is updated as new data arrives from APIs."},
+    {"field": "Web Applications", "explanation": "Spring Boot and other web frameworks use ArrayList to collect and return lists of API response objects, paginated query results, validation error messages, and configuration items loaded at startup."},
+    {"field": "Microservices", "explanation": "Microservices use ArrayList to aggregate responses from multiple downstream services, buffer incoming messages for batch processing, and maintain in-memory caches of frequently accessed reference data within a service instance."},
+    {"field": "Cloud Applications", "explanation": "Cloud-based applications use ArrayList when processing data streams from IoT devices, aggregating metrics for monitoring dashboards, storing job queues for background processing, and managing session-level user data in stateful services."}
+  ],
+  "best_practices": [
+    "Always use generics with ArrayList (e.g., ArrayList<String>) to ensure compile-time type safety and avoid ClassCastException at runtime.",
+    "Declare variables using the List interface rather than ArrayList (e.g., List<String> list = new ArrayList<>()) to make it easy to swap implementations later.",
+    "Specify an initial capacity when the approximate size is known to avoid costly resizing operations and improve performance.",
+    "Use Iterator.remove() or removeIf() for conditional element removal during iteration to avoid ConcurrentModificationException.",
+    "For thread-safe scenarios, use CopyOnWriteArrayList (read-heavy) or Collections.synchronizedList() (balanced read-write) instead of manually synchronizing ArrayList.",
+    "Prefer addAll() over repeated add() calls in a loop when adding multiple elements from another collection for better performance.",
+    "Call trimToSize() after bulk population if the ArrayList will remain mostly read-only, to free unused capacity memory.",
+    "Use subList() for operating on ranges, but create a copy with new ArrayList<>(list.subList(from, to)) if you need an independent list.",
+    "Avoid storing mutable objects in an ArrayList if the list is shared, as changes to objects affect all references to that list.",
+    "Consider using Collections.unmodifiableList() or List.copyOf() to return defensive copies from methods, preventing callers from modifying internal lists."
+  ],
+  "summary": [
+    "ArrayList is a dynamic, resizable array implementation of the List interface in Java's Collections Framework, supporting ordered storage with duplicates and null values.",
+    "It provides O(1) amortized addition at the end and O(1) index-based access, making it ideal for read-heavy workloads, while insertion/deletion in the middle is O(n).",
+    "ArrayList is not thread-safe; use CopyOnWriteArrayList, Collections.synchronizedList(), or explicit synchronization for concurrent access.",
+    "Always use generics with ArrayList to get compile-time type safety, and prefer programming to the List interface rather than the ArrayList implementation.",
+    "The Java Collections utility class provides powerful methods (sort, binarySearch, min, max, frequency, shuffle) that work seamlessly with ArrayList, and Java 8+ Stream API enables powerful functional operations."
+  ],
+  "quiz": [
+    {
+      "question": "What is the default initial capacity of an ArrayList in Java?",
+      "options": ["A. 5", "B. 10", "C. 16", "D. 20"],
+      "answer": "B. 10",
+      "explanation": "The default initial capacity of an ArrayList is 10. When elements are added beyond this capacity, the internal array is resized to approximately 1.5 times the current capacity."
+    },
+    {
+      "question": "Which of the following methods removes an element by VALUE from an ArrayList<Integer>?",
+      "options": ["A. list.remove(5)", "B. list.remove(Integer.valueOf(5))", "C. list.delete(5)", "D. list.erase(5)"],
+      "answer": "B. list.remove(Integer.valueOf(5))",
+      "explanation": "list.remove(5) with a primitive int argument calls remove(int index) which removes by position. list.remove(Integer.valueOf(5)) calls remove(Object o) which removes by value. Always use Integer.valueOf() when removing by value from an Integer list."
+    },
+    {
+      "question": "What exception is thrown when you modify an ArrayList during iteration using a for-each loop?",
+      "options": ["A. IndexOutOfBoundsException", "B. IllegalStateException", "C. ConcurrentModificationException", "D. UnsupportedOperationException"],
+      "answer": "C. ConcurrentModificationException",
+      "explanation": "Modifying an ArrayList structurally (add/remove) while iterating with a for-each loop triggers the fail-fast Iterator to throw ConcurrentModificationException. Use Iterator.remove() or removeIf() for safe removal during iteration."
+    },
+    {
+      "question": "What is the time complexity of the get(int index) method of ArrayList?",
+      "options": ["A. O(log n)", "B. O(n)", "C. O(n log n)", "D. O(1)"],
+      "answer": "D. O(1)",
+      "explanation": "ArrayList uses an internal array, and array index access is O(1) constant time. This is one of the key advantages of ArrayList over LinkedList, which requires O(n) traversal for index access."
+    },
+    {
+      "question": "Which interface does ArrayList implement that enables efficient random access algorithms?",
+      "options": ["A. Serializable", "B. Cloneable", "C. RandomAccess", "D. Iterable"],
+      "answer": "C. RandomAccess",
+      "explanation": "ArrayList implements the RandomAccess marker interface, which signals that the implementation supports efficient O(1) random access. Collections framework algorithms check for this interface to choose the most efficient traversal strategy."
+    },
+    {
+      "question": "How do you create a thread-safe version of ArrayList suitable for a read-heavy concurrent scenario?",
+      "options": ["A. new ArrayList<>()", "B. new Vector<>()", "C. new CopyOnWriteArrayList<>()", "D. Collections.synchronizedList(new ArrayList<>())"],
+      "answer": "C. new CopyOnWriteArrayList<>()",
+      "explanation": "CopyOnWriteArrayList is ideal for read-heavy concurrent scenarios because reads require no locking (they operate on a stable snapshot). It creates a fresh copy of the array on every write. Vector and synchronizedList use locking for every operation, which is less efficient for mostly-read workloads."
+    },
+    {
+      "question": "What does the subList() method return?",
+      "options": ["A. A new independent ArrayList", "B. A view of the original list backed by the same data", "C. An array of elements", "D. An immutable copy of the range"],
+      "answer": "B. A view of the original list backed by the same data",
+      "explanation": "subList(fromIndex, toIndex) returns a view — not a copy — of the specified range. Changes to the subList are reflected in the original list and vice versa. To get an independent copy, wrap it: new ArrayList<>(list.subList(from, to))."
+    },
+    {
+      "question": "Which method is the most efficient way to remove all elements that satisfy a condition in Java 8+?",
+      "options": ["A. Using a for loop with remove(index)", "B. Using Iterator.remove()", "C. Using removeIf(Predicate)", "D. Using clear() and re-adding elements"],
+      "answer": "C. Using removeIf(Predicate)",
+      "explanation": "removeIf(Predicate) is the most efficient approach in Java 8+. It performs a single pass through the list and rebuilds it in-place, avoiding the O(n) element shifting that occurs with remove(index) in a loop. It's also more readable and idiomatic."
+    },
+    {
+      "question": "What will happen when ArrayList's internal array is full and a new element is added?",
+      "options": ["A. An ArrayIndexOutOfBoundsException is thrown", "B. The element is silently discarded", "C. The list creates a new larger array and copies all elements", "D. The oldest element is automatically removed"],
+      "answer": "C. The list creates a new larger array and copies all elements",
+      "explanation": "When ArrayList's capacity is exceeded, it automatically creates a new array (roughly 1.5x the current size) and copies all existing elements using Arrays.copyOf(). This operation is O(n) but happens infrequently enough that the amortized cost of add() is O(1)."
+    },
+    {
+      "question": "What is printed by: List<String> list = new ArrayList<>(Arrays.asList(\"A\",\"B\",\"C\")); list.add(1,\"X\"); System.out.println(list);",
+      "options": ["A. [A, B, C, X]", "B. [A, X, C]", "C. [A, X, B, C]", "D. [X, A, B, C]"],
+      "answer": "C. [A, X, B, C]",
+      "explanation": "add(int index, E element) inserts the element at the specified position, shifting the element currently at that position and all subsequent elements to the right. Inserting 'X' at index 1 places it between 'A' and 'B', resulting in [A, X, B, C]."
+    }
+  ]
+}

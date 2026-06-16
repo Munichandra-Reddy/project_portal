@@ -1,0 +1,263 @@
+{
+  "title": "Dictionaries",
+  "introduction": {
+    "what_it_is": "A Dictionary is a collection of key-value pairs.",
+    "why_important": "Dictionaries provide incredibly fast lookups by key, making them perfect for mapping relationships between data points.",
+    "real_world": [
+      "A phonebook mapping names to phone numbers",
+      "Storing user profile information (username, email, preferences)",
+      "Caching API responses using the request URL as the key"
+    ]
+  },
+  "detailed_theory": "Dictionaries, often referred to as dicts, are one of Python's most powerful and frequently used data structures. They are associative arrays or hash maps that store data in key-value pairs. Each key is mapped to a specific value, allowing you to quickly retrieve the value by looking up the key.\n\nDictionaries are defined using curly braces `{}`, with keys and values separated by a colon `:`, and pairs separated by commas. For example, `{'name': 'Alice', 'age': 25}`. The keys in a dictionary must be unique and immutable (such as strings, numbers, or tuples). If you assign a value to an already existing key, the old value is overwritten. The values, however, can be of any data type, including lists or even other dictionaries.\n\nThe real power of dictionaries lies in their speed. Like sets, dictionaries are implemented using hash tables. This means that retrieving, adding, or deleting a key-value pair takes O(1) constant time on average, regardless of how large the dictionary is. This makes dictionaries the go-to structure for indexing data or when you need fast, random access.\n\nPython provides numerous ways to interact with dictionaries. You can extract all keys using `.keys()`, all values using `.values()`, or both using `.items()`. Dictionaries also support dictionary comprehensions, which allow you to create new dictionaries concisely based on iterables.\n\nStarting from Python 3.7, dictionaries maintain their insertion order. While you shouldn't rely on dictionaries for ordered sequences (use lists or tuples for that), this feature is highly convenient for predictable iteration and serialization to formats like JSON.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Key-Value Pairs",
+        "description": "Data is stored as mapped pairs, allowing mapping relationships."
+      },
+      {
+        "name": "Fast Lookups",
+        "description": "Uses hash tables to find values by key almost instantly."
+      },
+      {
+        "name": "Mutable",
+        "description": "You can add, modify, or remove key-value pairs after creation."
+      }
+    ],
+    "advantages": [
+      "Highly optimized data retrieval",
+      "Extremely flexible mapping structure for unstructured data",
+      "Maintains insertion order (Python 3.7+)"
+    ],
+    "limitations": [
+      "Uses more memory than lists or tuples",
+      "Keys must be immutable and hashable"
+    ]
+  },
+  "syntax": {
+    "explanation": "Dictionaries are created using curly braces with key-value pairs separated by colons.",
+    "breakdown": [
+      "`{}`: Curly braces denote the dictionary.",
+      "`key: value`: A mapping between a unique key and its corresponding value.",
+      "`,`: Separates multiple key-value pairs."
+    ],
+    "rules": [
+      "Keys must be immutable types (strings, numbers, tuples).",
+      "Keys must be unique; duplicates will overwrite earlier values.",
+      "Values can be of any type, including mutable ones."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating and Accessing a Dictionary",
+      "code": "user = {'name': 'Alice', 'age': 30}\nprint(user['name'])\nprint(user.get('email', 'Not Found'))",
+      "output": "Alice\nNot Found",
+      "explanation": "Accessing by key throws an error if missing. Using `.get()` provides a safe fallback."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Iterating Over a Dictionary",
+      "code": "scores = {'Alice': 90, 'Bob': 85}\nfor name, score in scores.items():\n    print(f'{name} scored {score}')",
+      "output": "Alice scored 90\nBob scored 85",
+      "explanation": "The `.items()` method yields both the key and the value, making iteration straightforward."
+    },
+    {
+      "level": "Advanced",
+      "title": "Dictionary Comprehension",
+      "code": "squares = {x: x**2 for x in range(1, 4)}\nprint(squares)",
+      "output": "{1: 1, 2: 4, 3: 9}",
+      "explanation": "Creates a dictionary concisely in a single line using an expression."
+    },
+    {
+      "level": "Real-world",
+      "title": "Counting Frequency of Words",
+      "code": "text = 'apple banana apple'\nword_count = {}\nfor word in text.split():\n    word_count[word] = word_count.get(word, 0) + 1\nprint(word_count)",
+      "output": "{'apple': 2, 'banana': 1}",
+      "explanation": "A common pattern for tallying frequencies safely using the `.get()` method."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Dictionary Methods",
+        "headers": ["Method", "Description", "Example"],
+        "rows": [
+          ["keys()", "Returns a view of all keys", "`d.keys()`"],
+          ["values()", "Returns a view of all values", "`d.values()`"],
+          ["items()", "Returns a view of key-value tuples", "`d.items()`"],
+          ["get(k, default)", "Safely gets value for key k", "`d.get('age', 0)`"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "dict[key]",
+        "concept_b": "dict.get(key)",
+        "explanation": "Direct access raises a KeyError if the key doesn't exist. The `get()` method returns None (or a specified default) instead."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "update()",
+      "description": "Updates the dictionary with elements from another dictionary or iterable of key-value pairs.",
+      "parameters": "other (dict or iterable)",
+      "return_value": "None",
+      "example_usage": "d = {'a': 1}\nd.update({'b': 2})\nprint(d) # {'a': 1, 'b': 2}"
+    },
+    {
+      "name": "pop()",
+      "description": "Removes specified key and returns its value.",
+      "parameters": "key, default (optional)",
+      "return_value": "The value of the removed key",
+      "example_usage": "d = {'a': 1}\nval = d.pop('a')\nprint(val) # 1"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using a Mutable Object as a Key",
+      "description": "Lists cannot be used as dictionary keys because they are unhashable.",
+      "wrong_example": "my_dict = {[1, 2]: 'values'}",
+      "correct_example": "my_dict = {(1, 2): 'values'}",
+      "debugging_tip": "Convert mutable sequences to tuples if you need to use them as dictionary keys."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What happens if you assign a value to an existing key in a dictionary?",
+        "answer": "The new value overwrites the old value associated with that key."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What is the difference between `d.keys()` and iterating over `d`?",
+        "answer": "Iterating over `d` directly yields the keys, just like iterating over `d.keys()`. Both provide the keys, but `.keys()` explicitly creates a dictionary view object."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How are dictionaries implemented in Python to achieve O(1) lookup?",
+        "answer": "They use a hash table. The key's hash value determines its index in an underlying array, allowing direct access without scanning the elements."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a dictionary with your name and age.",
+      "Add a new key 'city' to the dictionary.",
+      "Change the value of 'age'.",
+      "Remove the 'city' key.",
+      "Use `.get()` to try accessing a key that doesn't exist."
+    ],
+    "medium": [
+      "Write a loop that prints all keys and values from a dictionary.",
+      "Merge two dictionaries into one.",
+      "Write a dictionary comprehension that maps numbers 1-5 to their cubes.",
+      "Find the key with the maximum value in a dictionary.",
+      "Sort a dictionary by its values."
+    ],
+    "hard": [
+      "Write a function to invert a dictionary (swap keys and values). Handle duplicate values by grouping keys into a list.",
+      "Implement a nested dictionary representing a company hierarchy.",
+      "Write a function that counts the frequency of characters in a string using a dictionary.",
+      "Flatten a deeply nested dictionary.",
+      "Implement a basic caching decorator using a dictionary to store function results."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given a string, find the first non-repeating character in it and return its index. If it does not exist, return -1.",
+      "input": "s = 'leetcode'",
+      "output": "0",
+      "constraints": "Optimize for O(n) time complexity.",
+      "solution": "def first_uniq_char(s):\n    counts = {}\n    for char in s:\n        counts[char] = counts.get(char, 0) + 1\n    for i, char in enumerate(s):\n        if counts[char] == 1:\n            return i\n    return -1"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "JSON Parsing",
+      "explanation": "JSON data maps almost perfectly to Python dictionaries, making them the standard structure for parsing API responses."
+    },
+    {
+      "field": "Configuration Management",
+      "explanation": "Application settings are frequently loaded into dictionaries, mapping setting names to their configurations."
+    }
+  ],
+  "best_practices": [
+    "Use `.get()` instead of bracket notation when you are unsure if the key exists.",
+    "Use dictionary comprehensions for creating dicts efficiently.",
+    "Leverage `.items()` when you need both keys and values in a loop.",
+    "Use the `collections.defaultdict` if you find yourself constantly initializing missing keys."
+  ],
+  "summary": [
+    "Dictionaries store data as key-value pairs.",
+    "They are created using `{}` with colons separating keys and values.",
+    "Keys must be unique and immutable; values can be anything.",
+    "Dictionaries offer extremely fast lookups using hash tables."
+  ],
+  "quiz": [
+    {
+      "question": "Which syntax is used to create an empty dictionary?",
+      "options": ["[]", "dict[]", "{}", "()"],
+      "answer": "{}",
+      "explanation": "Empty curly braces `{}` or the `dict()` constructor create an empty dictionary."
+    },
+    {
+      "question": "Which data type is NOT allowed as a dictionary key?",
+      "options": ["String", "Integer", "Tuple", "List"],
+      "answer": "List",
+      "explanation": "Dictionary keys must be hashable and immutable. Lists are mutable."
+    },
+    {
+      "question": "What method would you use to safely retrieve a value without throwing a KeyError?",
+      "options": ["fetch()", "retrieve()", "get()", "value()"],
+      "answer": "get()",
+      "explanation": "The `.get()` method returns None or a default value if the key is not found."
+    },
+    {
+      "question": "How do you add a new key-value pair to a dictionary named `d`?",
+      "options": ["d.add('key', 'value')", "d.insert('key', 'value')", "d['key'] = 'value'", "d.append('key', 'value')"],
+      "answer": "d['key'] = 'value'",
+      "explanation": "You assign a value to a new key directly using bracket notation."
+    },
+    {
+      "question": "What method returns a view of all the key-value pairs as tuples?",
+      "options": ["keys()", "values()", "pairs()", "items()"],
+      "answer": "items()",
+      "explanation": "The `.items()` method returns a view object that displays a list of a given dictionary's (key, value) tuple pairs."
+    },
+    {
+      "question": "What happens if you assign a value to a key that already exists?",
+      "options": ["An error is raised", "The new value overwrites the old value", "The key is duplicated", "The assignment is ignored"],
+      "answer": "The new value overwrites the old value",
+      "explanation": "Dictionary keys must be unique. Reusing a key overwrites the existing value."
+    },
+    {
+      "question": "What is the time complexity of looking up a value by its key?",
+      "options": ["O(n)", "O(log n)", "O(1)", "O(n^2)"],
+      "answer": "O(1)",
+      "explanation": "Due to the underlying hash table implementation, dictionary lookups are generally O(1)."
+    },
+    {
+      "question": "Which of these removes a key and returns its value?",
+      "options": ["delete()", "remove()", "discard()", "pop()"],
+      "answer": "pop()",
+      "explanation": "The `.pop(key)` method removes the specified key and returns the associated value."
+    },
+    {
+      "question": "Is dictionary order guaranteed in modern Python?",
+      "options": ["Yes, always", "No, never", "Yes, in Python 3.7+ it maintains insertion order", "Yes, they are automatically sorted alphabetically"],
+      "answer": "Yes, in Python 3.7+ it maintains insertion order",
+      "explanation": "Since Python 3.7, dictionaries formally preserve the order in which items were inserted."
+    },
+    {
+      "question": "What does the `update()` method do?",
+      "options": ["Updates Python version", "Refreshes the dictionary from memory", "Merges another dictionary's key-value pairs into the current one", "Converts values to uppercase"],
+      "answer": "Merges another dictionary's key-value pairs into the current one",
+      "explanation": "The `.update()` method updates the dictionary with the key/value pairs from other dictionary or iterable."
+    }
+  ]
+}

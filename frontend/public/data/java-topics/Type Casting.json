@@ -1,0 +1,524 @@
+{
+  "title": "Type Casting in Java",
+  "introduction": {
+    "what_it_is": "Type casting in Java is the process of converting a value from one data type to another. Java is a strongly-typed language, meaning every variable has a specific type, and sometimes you need to convert between types — for example, converting an int to a double for division, or converting a double to an int to drop the fractional part. Java supports both primitive type casting and object (reference) type casting.",
+    "why_important": "Type casting is essential in Java programming because you often work with data that needs to be used in different contexts. Without type casting, you could not perform certain arithmetic operations, store results in different variable types, work with inheritance hierarchies, or interface with legacy APIs that use different types. Understanding when to cast and when not to cast prevents common bugs like data loss and ClassCastException.",
+    "real_world": [
+      "Converting a user's decimal input (double) to an integer for array indexing or loop counters",
+      "Casting a generic Object returned from a collection to a specific type like String or Customer in pre-generics Java code",
+      "Converting pixel measurements from double to int when drawing graphics on screen in Android or JavaFX applications"
+    ]
+  },
+  "detailed_theory": "Type casting in Java is a fundamental concept that allows programmers to convert data from one type to another. Java is statically typed — every variable, parameter, and return value has a fixed type determined at compile time. Understanding type casting helps you work flexibly with Java's type system while avoiding common pitfalls.\n\n## Categories of Type Casting\n\nJava type casting falls into two major categories:\n1. **Primitive Type Casting** — Converting between primitive data types (int, double, char, etc.)\n2. **Reference/Object Type Casting** — Converting between object types in an inheritance hierarchy\n\n## Primitive Type Casting\n\n### Widening Conversion (Implicit Casting)\nWidening conversion happens when you convert a smaller (or less precise) type to a larger (or more precise) type. Java performs this automatically because no data is lost. The widening path is:\n\n`byte → short → int → long → float → double`\n`char → int → long → float → double`\n\nExamples:\n- `int` to `double`: `int x = 5; double d = x;` (automatic)\n- `int` to `long`: `int i = 100; long l = i;` (automatic)\n- `char` to `int`: `char c = 'A'; int code = c;` (gives 65, automatic)\n\nWidening is also called **implicit casting** because you do not need any syntax — just assign the smaller type to the larger type variable.\n\n### Narrowing Conversion (Explicit Casting)\nNarrowing conversion converts a larger or more precise type to a smaller or less precise type. This requires an explicit cast because data may be lost. You must use the cast operator: `(targetType)`\n\nExamples:\n- `double` to `int`: `double d = 9.99; int i = (int) d;` — result is 9 (fractional part truncated, NOT rounded)\n- `long` to `int`: `long l = 1_000_000_000L; int i = (int) l;` — may overflow\n- `double` to `byte`: `double d = 300.5; byte b = (byte) d;` — truncated to int first (300), then overflow (44)\n\n**Important:** Narrowing casting truncates (chops off the decimal part), it does NOT round. `(int) 9.99` gives `9`, not `10`.\n\n**Overflow in narrowing:** If the value is too large for the target type, it overflows. For example, `(byte) 200` gives `-56` because byte range is -128 to 127.\n\n### Char and Int Conversions\nJava characters are represented as 16-bit Unicode numbers, so `char` and `int` can be interconverted:\n- `char c = 'A'; int code = c;` → 65 (widening, automatic)\n- `int code = 66; char c = (char) code;` → 'B' (narrowing, requires cast)\n- Arithmetic on chars promotes to int: `'A' + 1` gives `66` (int), cast back: `(char)('A' + 1)` gives `'B'`\n\n## Reference Type Casting\n\nObject casting occurs within inheritance hierarchies. The reference type determines what methods you can call at compile time, while the actual object type determines behavior at runtime.\n\n### Upcasting (Implicit)\nUpcasting converts a subclass reference to a superclass reference. It is always safe and done automatically:\n```java\nAnimal animal = new Dog(); // Dog IS-A Animal, upcasting is automatic\n```\nAfter upcasting, you can only call methods defined in the Animal class, even though the Dog's overridden methods will execute at runtime (polymorphism).\n\n### Downcasting (Explicit)\nDowncasting converts a superclass reference to a subclass reference. It requires an explicit cast and can throw `ClassCastException` at runtime if the actual object is not of the target type:\n```java\nAnimal animal = new Dog();\nDog dog = (Dog) animal; // OK — actual object IS a Dog\nCat cat = (Cat) animal; // Throws ClassCastException — animal is NOT a Cat\n```\n\n### The instanceof Operator\nBefore downcasting, always use `instanceof` to check the actual type:\n```java\nif (animal instanceof Dog) {\n    Dog dog = (Dog) animal; // safe to cast\n    dog.fetch();\n}\n```\n\n**Pattern Matching for instanceof (Java 16+):** Combines the check and cast:\n```java\nif (animal instanceof Dog dog) {\n    dog.fetch(); // dog is directly available as Dog type\n}\n```\n\n## Type Casting with Wrapper Classes\n\nJava provides wrapper classes for primitives (Integer, Double, Character, etc.). **Autoboxing** automatically converts primitives to wrappers; **Unboxing** converts back:\n- `Integer boxed = 42;` (autoboxing: int → Integer)\n- `int primitive = boxed;` (unboxing: Integer → int)\n\nYou can explicitly parse strings to numeric types:\n- `int i = Integer.parseInt(\"123\");`\n- `double d = Double.parseDouble(\"3.14\");`\n- `String s = String.valueOf(42);` or `Integer.toString(42)`\n\n## Casting in Arithmetic Expressions\n\nIn mixed-type expressions, Java promotes operands to the widest type:\n- If any operand is `double`, the result is `double`\n- If any operand is `float`, the result is `float`\n- If any operand is `long`, the result is `long`\n- Otherwise, `int` (even if both operands are `byte` or `short`)\n\nCommon pitfall: Integer division:\n```java\nint a = 7, b = 2;\ndouble result = a / b;       // result is 3.0 (integer division, then widening)\ndouble correct = (double) a / b; // result is 3.5 (casting a to double first)\n```\n\n## Common Pitfalls\n\n1. **Data Loss:** Narrowing casts can silently lose data\n2. **Truncation vs Rounding:** `(int) 9.9` is `9`, not `10`\n3. **Overflow:** `(byte) 200` gives `-56` due to overflow\n4. **ClassCastException:** Downcasting to wrong type throws runtime exception\n5. **Integer Division:** `7 / 2` gives `3`, not `3.5` — cast one operand to double\n6. **NullPointerException with Unboxing:** Unboxing a null Integer throws NullPointerException",
+  "key_features": {
+    "features": [
+      {"name": "Widening (Implicit) Casting", "description": "Automatically converts a smaller type to a larger type (e.g., int to double) without any data loss. No explicit syntax required."},
+      {"name": "Narrowing (Explicit) Casting", "description": "Manually converts a larger type to a smaller type using the cast operator (targetType). May result in data loss or overflow."},
+      {"name": "Upcasting", "description": "Automatically converts a subclass object reference to a superclass type reference. Always safe and used for polymorphism."},
+      {"name": "Downcasting", "description": "Explicitly converts a superclass reference to a subclass type. Requires explicit cast and can throw ClassCastException if incorrect."},
+      {"name": "instanceof Operator", "description": "Checks if an object is an instance of a specific class before downcasting, preventing ClassCastException at runtime."},
+      {"name": "Autoboxing and Unboxing", "description": "Automatic conversion between primitive types and their wrapper classes (int ↔ Integer, double ↔ Double, etc.)."},
+      {"name": "Pattern Matching instanceof (Java 16+)", "description": "Combines instanceof check and cast in one expression: if (obj instanceof Dog dog) { dog.fetch(); }"}
+    ],
+    "advantages": [
+      "Enables flexible and polymorphic programming through upcasting and downcasting",
+      "Widening conversions are automatic and safe, simplifying numeric computations",
+      "Autoboxing/unboxing reduces boilerplate when working with collections and generics",
+      "instanceof prevents ClassCastException by verifying type before casting",
+      "Type casting enables reuse of code written for superclass types with subclass objects"
+    ],
+    "limitations": [
+      "Narrowing casts can silently lose precision or cause data overflow without compile error",
+      "Downcasting can cause ClassCastException if the actual object type does not match, causing runtime crash",
+      "Excessive casting may indicate a design problem — overuse of downcasting breaks the Liskov Substitution Principle",
+      "Unboxing a null wrapper object throws NullPointerException, a subtle runtime bug",
+      "Integer division truncation can cause calculation errors if not handled carefully"
+    ]
+  },
+  "syntax": {
+    "explanation": "Widening (implicit) casting requires no syntax — just assign. Narrowing (explicit) casting uses the cast operator: (targetType). Object casting follows the same syntax but operates on class references.",
+    "breakdown": [
+      "double d = intVar; — Widening (implicit): int automatically becomes double",
+      "int i = (int) doubleVar; — Narrowing (explicit): cast operator (int) truncates the double",
+      "Animal a = new Dog(); — Upcasting (implicit): Dog reference stored as Animal",
+      "Dog d = (Dog) animalVar; — Downcasting (explicit): cast operator required",
+      "if (obj instanceof Dog) { Dog d = (Dog) obj; } — Safe downcast with instanceof check",
+      "if (obj instanceof Dog dog) { dog.fetch(); } — Pattern matching instanceof (Java 16+)",
+      "Integer boxed = 42; — Autoboxing: int primitive to Integer wrapper",
+      "int primitive = boxed; — Unboxing: Integer wrapper to int primitive"
+    ],
+    "rules": [
+      "Widening conversions are automatic — no cast operator needed",
+      "Narrowing conversions require explicit cast operator (targetType) — compiler will error without it",
+      "Narrowing truncates decimal parts — it does NOT round (e.g., (int)9.9 == 9, not 10)",
+      "Always check with instanceof before downcasting to avoid ClassCastException",
+      "In arithmetic, cast at least one operand to double for floating-point division: (double)a / b",
+      "Casting does not modify the original variable — it creates a new value of the target type",
+      "You can only cast within an inheritance hierarchy — casting unrelated types is a compile error",
+      "Never cast null with unboxing — it will throw NullPointerException"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Widening and Narrowing Primitive Casting",
+      "code": "public class BasicCasting {\n    public static void main(String[] args) {\n        // Widening: automatic, no cast needed\n        int myInt = 100;\n        long myLong = myInt;       // int → long (widening)\n        float myFloat = myLong;    // long → float (widening)\n        double myDouble = myFloat; // float → double (widening)\n        \n        System.out.println(\"int    : \" + myInt);\n        System.out.println(\"long   : \" + myLong);\n        System.out.println(\"float  : \" + myFloat);\n        System.out.println(\"double : \" + myDouble);\n        \n        System.out.println();\n        \n        // Narrowing: explicit cast required\n        double pi = 3.14159;\n        int truncated = (int) pi;    // double → int (truncates decimal)\n        \n        double big = 9.99;\n        int nine = (int) big;        // 9, NOT 10 (truncation, not rounding)\n        \n        long bigLong = 10_000_000_000L;\n        int overflow = (int) bigLong; // data loss / overflow\n        \n        System.out.println(\"double  : \" + pi);\n        System.out.println(\"(int)pi : \" + truncated);\n        System.out.println(\"(int)9.99 : \" + nine + \"  (not rounded!)\");\n        System.out.println(\"(int) 10_000_000_000L : \" + overflow + \"  (overflow!)\");\n        \n        // char <-> int\n        char ch = 'A';\n        int ascii = ch;             // widening: char → int\n        char next = (char)(ch + 1); // narrowing: int → char\n        System.out.println(\"\\n'A' as int: \" + ascii);\n        System.out.println(\"Next char : \" + next);\n    }\n}",
+      "output": "int    : 100\nlong   : 100\nfloat  : 100.0\ndouble : 100.0\n\ndouble  : 3.14159\n(int)pi : 3\n(int)9.99 : 9  (not rounded!)\n(int) 10_000_000_000L : 1410065408  (overflow!)\n\n'A' as int: 65\nNext char : B",
+      "explanation": "Demonstrates widening (automatic, no cast needed) and narrowing (explicit cast required). Key insight: narrowing truncates — (int)9.99 gives 9, not 10. Narrowing large values can overflow silently as shown with the long→int conversion. char-int conversion shows Unicode values."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Type Casting in Arithmetic and Division",
+      "code": "public class ArithmeticCasting {\n    public static void main(String[] args) {\n        int a = 7, b = 2;\n        \n        // Integer division — WRONG if you want decimal result\n        double result1 = a / b;\n        System.out.println(\"7 / 2 = \" + result1);  // 3.0 (integer division then widening)\n        \n        // Correct: cast one operand to double first\n        double result2 = (double) a / b;\n        System.out.println(\"(double)7 / 2 = \" + result2);  // 3.5\n        \n        double result3 = a / (double) b;\n        System.out.println(\"7 / (double)2 = \" + result3);  // 3.5\n        \n        // Using literal\n        double result4 = a / 2.0;\n        System.out.println(\"7 / 2.0 = \" + result4);  // 3.5\n        \n        // Mixing types in expressions\n        int x = 10;\n        long y = 20L;\n        float z = 3.5f;\n        double w = 2.0;\n        \n        // Result promoted to widest type in expression\n        System.out.println(\"\\nx + y = \" + (x + y));      // long\n        System.out.println(\"x + z = \" + (x + z));       // float\n        System.out.println(\"x + w = \" + (x + w));       // double\n        \n        // Rounding a double (not truncating)\n        double price = 9.75;\n        int rounded = (int) Math.round(price); // use Math.round for rounding\n        int truncated = (int) price;           // truncates to 9\n        System.out.println(\"\\nPrice: \" + price);\n        System.out.println(\"Rounded: \" + rounded);\n        System.out.println(\"Truncated: \" + truncated);\n    }\n}",
+      "output": "7 / 2 = 3.0\n(double)7 / 2 = 3.5\n7 / (double)2 = 3.5\n7 / 2.0 = 3.5\n\nx + y = 30\nx + z = 13.5\nx + w = 12.0\n\nPrice: 9.75\nRounded: 10\nTruncated: 9",
+      "explanation": "The critical lesson: int/int gives int result even stored in double. Cast before dividing. Use Math.round() for rounding instead of (int) cast which truncates. In mixed expressions, Java promotes to the widest type."
+    },
+    {
+      "level": "Advanced",
+      "title": "Object Upcasting, Downcasting, and instanceof",
+      "code": "public class ObjectCasting {\n    // Class hierarchy\n    static class Animal {\n        String name;\n        Animal(String name) { this.name = name; }\n        void makeSound() { System.out.println(name + \" makes a sound\"); }\n    }\n    \n    static class Dog extends Animal {\n        Dog(String name) { super(name); }\n        void makeSound() { System.out.println(name + \" barks: Woof!\"); }\n        void fetch() { System.out.println(name + \" fetches the ball!\"); }\n    }\n    \n    static class Cat extends Animal {\n        Cat(String name) { super(name); }\n        void makeSound() { System.out.println(name + \" meows: Meow!\"); }\n        void purr() { System.out.println(name + \" purrs...\"); }\n    }\n    \n    public static void main(String[] args) {\n        // Upcasting: implicit (Dog -> Animal)\n        Animal a1 = new Dog(\"Rex\");  // upcast\n        Animal a2 = new Cat(\"Whiskers\"); // upcast\n        \n        // Polymorphism: overridden method called\n        a1.makeSound(); // Dog's makeSound runs!\n        a2.makeSound(); // Cat's makeSound runs!\n        \n        // Can't call Dog-specific methods via Animal reference\n        // a1.fetch(); // COMPILE ERROR\n        \n        // Downcasting with instanceof check\n        Animal[] animals = { new Dog(\"Buddy\"), new Cat(\"Luna\"), new Dog(\"Max\") };\n        \n        System.out.println();\n        for (Animal animal : animals) {\n            animal.makeSound();  // polymorphic call\n            \n            if (animal instanceof Dog) {\n                Dog dog = (Dog) animal;  // safe downcast\n                dog.fetch();\n            } else if (animal instanceof Cat) {\n                Cat cat = (Cat) animal;\n                cat.purr();\n            }\n        }\n        \n        // Dangerous: ClassCastException\n        System.out.println();\n        Animal a = new Dog(\"Cooper\");\n        try {\n            Cat c = (Cat) a; // ClassCastException: Dog cannot be cast to Cat\n        } catch (ClassCastException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n        \n        System.out.println(\"a instanceof Dog: \" + (a instanceof Dog));  // true\n        System.out.println(\"a instanceof Cat: \" + (a instanceof Cat));  // false\n    }\n}",
+      "output": "Rex barks: Woof!\nWhiskers meows: Meow!\n\nBuddy barks: Woof!\nBuddy fetches the ball!\nLuna meows: Meow!\nLuna purrs...\nMax barks: Woof!\nMax fetches the ball!\n\nError: class ObjectCasting$Dog cannot be cast to class ObjectCasting$Cat\na instanceof Dog: true\na instanceof Cat: false",
+      "explanation": "Upcasting is automatic and enables polymorphism — overridden methods run based on actual type. Downcasting requires explicit cast and instanceof check to prevent ClassCastException. Even though the variable is Animal type, the actual object determines behavior."
+    },
+    {
+      "level": "Real-world",
+      "title": "Type Casting in a Shape Drawing System",
+      "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class ShapeSystem {\n    abstract static class Shape {\n        String color;\n        Shape(String color) { this.color = color; }\n        abstract double area();\n        void display() {\n            System.out.printf(\"%-12s | Color: %-8s | Area: %.2f%n\",\n                    getClass().getSimpleName(), color, area());\n        }\n    }\n    \n    static class Circle extends Shape {\n        double radius;\n        Circle(String color, double radius) {\n            super(color);\n            this.radius = radius;\n        }\n        double area() { return Math.PI * radius * radius; }\n        void drawCircle() { System.out.println(\"Drawing circle with radius \" + radius); }\n    }\n    \n    static class Rectangle extends Shape {\n        double width, height;\n        Rectangle(String color, double width, double height) {\n            super(color);\n            this.width = width;\n            this.height = height;\n        }\n        double area() { return width * height; }\n        void drawRectangle() { System.out.printf(\"Drawing rectangle %s x %s%n\", width, height); }\n    }\n    \n    static class Triangle extends Shape {\n        double base, height;\n        Triangle(String color, double base, double height) {\n            super(color);\n            this.base = base;\n            this.height = height;\n        }\n        double area() { return 0.5 * base * height; }\n    }\n    \n    public static void main(String[] args) {\n        List<Shape> shapes = new ArrayList<>();\n        shapes.add(new Circle(\"Red\", 5.0));\n        shapes.add(new Rectangle(\"Blue\", 4.0, 6.0));\n        shapes.add(new Triangle(\"Green\", 3.0, 8.0));\n        shapes.add(new Circle(\"Yellow\", 2.5));\n        shapes.add(new Rectangle(\"Purple\", 10.0, 3.0));\n        \n        System.out.println(\"=== All Shapes ===\");\n        System.out.printf(\"%-12s | %-16s | %s%n\", \"Shape\", \"Color\", \"Area\");\n        System.out.println(\"-\".repeat(45));\n        for (Shape s : shapes) s.display();  // polymorphism via upcasting\n        \n        // Calculate total area - widening cast for sum\n        double totalArea = 0;\n        for (Shape s : shapes) totalArea += s.area();\n        System.out.printf(\"%nTotal Area: %.2f%n\", totalArea);\n        \n        // Downcast to access subclass-specific methods\n        System.out.println(\"\\n=== Shape-Specific Operations ===\");\n        for (Shape s : shapes) {\n            if (s instanceof Circle circle) {  // Pattern matching (Java 16+)\n                circle.drawCircle();\n                // Narrowing: double radius to int for display\n                int approxRadius = (int) circle.radius;\n                System.out.println(\"  Approx radius (int): \" + approxRadius);\n            } else if (s instanceof Rectangle rect) {\n                rect.drawRectangle();\n            }\n        }\n        \n        // Autoboxing and numeric casting\n        System.out.println(\"\\n=== Area Statistics ===\");\n        List<Double> areas = new ArrayList<>();\n        for (Shape s : shapes) areas.add(s.area()); // autoboxing double → Double\n        \n        double max = areas.get(0);\n        for (Double d : areas) if (d > max) max = d; // unboxing Double → double\n        System.out.printf(\"Largest Area: %.2f%n\", max);\n        System.out.printf(\"As integer: %d%n\", (int) max); // narrowing cast\n    }\n}",
+      "output": "=== All Shapes ===\nShape        | Color            | Area\n---------------------------------------------\nCircle       | Color: Red      | Area: 78.54\nRectangle    | Color: Blue     | Area: 24.00\nTriangle     | Color: Green    | Area: 12.00\nCircle       | Color: Yellow   | Area: 19.63\nRectangle    | Color: Purple   | Area: 30.00\n\nTotal Area: 164.17\n\n=== Shape-Specific Operations ===\nDrawing circle with radius 5.0\n  Approx radius (int): 5\nDrawing rectangle 4.0 x 6.0\nDrawing circle with radius 2.5\n  Approx radius (int): 2\nDrawing rectangle 10.0 x 3.0\n\n=== Area Statistics ===\nLargest Area: 78.54\nAs integer: 78",
+      "explanation": "Real-world shape system combining all casting types: upcasting for polymorphic storage in List<Shape>, downcasting with pattern matching instanceof (Java 16+) for type-specific operations, autoboxing/unboxing with Double collection, and narrowing cast for integer display."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Widening Conversion Chart",
+        "headers": ["From Type", "Can Widen To", "Data Loss?", "Cast Required?"],
+        "rows": [
+          ["byte", "short, int, long, float, double", "No", "No (automatic)"],
+          ["short", "int, long, float, double", "No", "No (automatic)"],
+          ["char", "int, long, float, double", "No", "No (automatic)"],
+          ["int", "long, float, double", "No (may lose precision for float)", "No (automatic)"],
+          ["long", "float, double", "May lose precision", "No (automatic)"],
+          ["float", "double", "No", "No (automatic)"]
+        ]
+      },
+      {
+        "title": "Narrowing Conversion Chart",
+        "headers": ["From Type", "To Type", "Risk", "Example"],
+        "rows": [
+          ["double", "int", "Decimal truncated", "(int)3.99 → 3"],
+          ["double", "float", "Precision lost", "(float)3.141592653 → 3.1415927"],
+          ["long", "int", "Overflow possible", "(int)10_000_000_000L → 1410065408"],
+          ["int", "short", "Overflow possible", "(short)40000 → -25536"],
+          ["int", "byte", "Overflow possible", "(byte)200 → -56"],
+          ["int", "char", "Possible data loss", "(char)65 → 'A'"]
+        ]
+      },
+      {
+        "title": "Primitive Data Type Sizes",
+        "headers": ["Type", "Size (bits)", "Min Value", "Max Value"],
+        "rows": [
+          ["byte", "8", "-128", "127"],
+          ["short", "16", "-32,768", "32,767"],
+          ["int", "32", "-2,147,483,648", "2,147,483,647"],
+          ["long", "64", "-9.2 × 10^18", "9.2 × 10^18"],
+          ["float", "32", "~1.4 × 10^-45", "~3.4 × 10^38"],
+          ["double", "64", "~5 × 10^-324", "~1.8 × 10^308"],
+          ["char", "16", "0 (\\u0000)", "65,535 (\\uFFFF)"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Widening (Implicit) Casting",
+        "concept_b": "Narrowing (Explicit) Casting",
+        "explanation": "Widening goes from smaller to larger type (int→double), is automatic, and never loses data. Narrowing goes from larger to smaller type (double→int), requires explicit (cast) operator, and can lose data through truncation or overflow. Always check if narrowing is safe before applying."
+      },
+      {
+        "concept_a": "Upcasting",
+        "concept_b": "Downcasting",
+        "explanation": "Upcasting (subclass→superclass) is automatic and always safe. It enables polymorphism but limits access to subclass-only methods. Downcasting (superclass→subclass) requires explicit cast and can throw ClassCastException if the actual object isn't of the target type. Always use instanceof before downcasting."
+      },
+      {
+        "concept_a": "Truncation with (int) cast",
+        "concept_b": "Rounding with Math.round()",
+        "explanation": "(int) cast simply drops the decimal part: (int)9.9 gives 9, (int)2.1 gives 2. Math.round() rounds to nearest integer: Math.round(9.9) gives 10, Math.round(2.1) gives 2. Use Math.round() when you need proper rounding; use cast only when you intentionally want truncation."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "Integer.parseInt()",
+      "description": "Converts a String to an int primitive. Throws NumberFormatException if the string is not a valid integer.",
+      "parameters": "String s",
+      "return_value": "int",
+      "example_usage": "int n = Integer.parseInt(\"42\"); // n = 42"
+    },
+    {
+      "name": "Double.parseDouble()",
+      "description": "Converts a String to a double primitive. Throws NumberFormatException if not a valid double.",
+      "parameters": "String s",
+      "return_value": "double",
+      "example_usage": "double d = Double.parseDouble(\"3.14\"); // d = 3.14"
+    },
+    {
+      "name": "String.valueOf()",
+      "description": "Converts various primitive types and objects to their String representation.",
+      "parameters": "any primitive or Object",
+      "return_value": "String",
+      "example_usage": "String s = String.valueOf(42); // \"42\"\nString s2 = String.valueOf(3.14); // \"3.14\""
+    },
+    {
+      "name": "Math.round()",
+      "description": "Rounds a double to the nearest long, or float to the nearest int. Use instead of (int) cast when you want rounding not truncation.",
+      "parameters": "double or float",
+      "return_value": "long (for double), int (for float)",
+      "example_usage": "long rounded = Math.round(9.7); // 10\nint r = Math.round(3.4f);       // 3"
+    },
+    {
+      "name": "Math.ceil()",
+      "description": "Returns the smallest double greater than or equal to the argument, i.e., rounds up. Cast result to int if needed.",
+      "parameters": "double a",
+      "return_value": "double",
+      "example_usage": "int up = (int) Math.ceil(9.1); // 10"
+    },
+    {
+      "name": "Math.floor()",
+      "description": "Returns the largest double less than or equal to the argument, i.e., rounds down. Equivalent to (int) cast for positive numbers.",
+      "parameters": "double a",
+      "return_value": "double",
+      "example_usage": "int down = (int) Math.floor(9.9); // 9"
+    },
+    {
+      "name": "Integer.intValue()",
+      "description": "Unboxes an Integer object to an int primitive. Typically done automatically via unboxing, but can be called explicitly.",
+      "parameters": "none (instance method)",
+      "return_value": "int",
+      "example_usage": "Integer boxed = 42; int primitive = boxed.intValue();"
+    },
+    {
+      "name": "Number.doubleValue() / intValue()",
+      "description": "Methods on Number subclasses (Integer, Long, Float, Double) to convert to any numeric primitive type. Useful when you have a Number reference.",
+      "parameters": "none",
+      "return_value": "double/int/long/float",
+      "example_usage": "Number n = Integer.valueOf(100); double d = n.doubleValue(); // 100.0"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Expecting Rounding Instead of Truncation",
+      "description": "Many beginners assume (int) cast rounds a decimal number to the nearest integer. It actually truncates (removes the decimal part entirely), which can lead to off-by-one errors in calculations.",
+      "wrong_example": "double score = 9.9;\nint finalScore = (int) score;\n// Developer expects 10, but gets 9!\nSystem.out.println(finalScore); // 9 — WRONG assumption",
+      "correct_example": "double score = 9.9;\n// For rounding: use Math.round()\nlong rounded = Math.round(score);  // 10\n// For ceiling: use Math.ceil()\nint ceiling = (int) Math.ceil(score); // 10\n// For truncation (floor): (int) is correct\nint truncated = (int) score; // 9\nSystem.out.println(\"Rounded: \" + rounded + \", Ceiling: \" + ceiling + \", Truncated: \" + truncated);",
+      "debugging_tip": "Remember: (int) cast always truncates toward zero. Use Math.round() for nearest-integer rounding, Math.ceil() for always rounding up, Math.floor() for always rounding down."
+    },
+    {
+      "title": "Integer Division Producing Wrong Results",
+      "description": "When both operands of division are integers, Java performs integer division (truncates result to integer). Assigning to a double variable does NOT help — the integer division happens first.",
+      "wrong_example": "int a = 7, b = 2;\ndouble result = a / b;  // 3.0, NOT 3.5!\n// The division 7/2 = 3 (integer), then 3 is widened to 3.0\nSystem.out.println(result); // 3.0 — WRONG",
+      "correct_example": "int a = 7, b = 2;\n// Cast at least one operand to double BEFORE dividing\ndouble result1 = (double) a / b;   // 3.5 — CORRECT\ndouble result2 = a / (double) b;   // 3.5 — CORRECT\ndouble result3 = a / 2.0;          // 3.5 — CORRECT\nSystem.out.println(result1); // 3.5",
+      "debugging_tip": "If you get an unexpectedly integer-like result from division, check if both operands are integer types. Cast one operand to double before the division operator."
+    },
+    {
+      "title": "ClassCastException from Unsafe Downcasting",
+      "description": "Downcasting a superclass reference to a subclass type without checking with instanceof will throw ClassCastException if the actual object is a different subclass.",
+      "wrong_example": "Animal animal = new Cat(\"Whiskers\");\nDog dog = (Dog) animal; // ClassCastException at runtime!\n// Even though it compiles, Cat object cannot be cast to Dog\ndog.fetch(); // Never reached",
+      "correct_example": "Animal animal = new Cat(\"Whiskers\");\n// Always check with instanceof before downcasting\nif (animal instanceof Dog) {\n    Dog dog = (Dog) animal; // safe\n    dog.fetch();\n} else if (animal instanceof Cat) {\n    Cat cat = (Cat) animal; // safe\n    cat.purr();\n}\n// Java 16+ pattern matching:\nif (animal instanceof Dog dog) { dog.fetch(); }\nelse if (animal instanceof Cat cat) { cat.purr(); }",
+      "debugging_tip": "ClassCastException tells you the actual type and target type in the message (e.g., 'Cat cannot be cast to Dog'). Always use instanceof before downcasting. Pattern matching instanceof (Java 16+) eliminates the separate cast."
+    },
+    {
+      "title": "Overflow in Narrowing Conversion",
+      "description": "When narrowing a large value that exceeds the target type's range, the result wraps around (overflows) silently without any error or warning, producing an incorrect value.",
+      "wrong_example": "int value = 200;\nbyte b = (byte) value; // byte range is -128 to 127\n// 200 doesn't fit in byte — silently wraps!\nSystem.out.println(b); // -56 — WRONG",
+      "correct_example": "int value = 200;\n// Check if value fits in target range before casting\nif (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {\n    byte b = (byte) value;\n    System.out.println(b);\n} else {\n    System.out.println(\"Value \" + value + \" overflows byte range (\"\n        + Byte.MIN_VALUE + \" to \" + Byte.MAX_VALUE + \")\");\n}",
+      "debugging_tip": "Use TYPE.MIN_VALUE and TYPE.MAX_VALUE constants to validate before narrowing. For byte: -128 to 127. For short: -32768 to 32767. For int: -2147483648 to 2147483647."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is type casting in Java?",
+        "answer": "Type casting is the process of converting a value from one data type to another. Java supports widening (implicit) casting where a smaller type is automatically converted to a larger type, and narrowing (explicit) casting where a larger type is manually converted to a smaller type using the cast operator (targetType)."
+      },
+      {
+        "question": "What is the difference between widening and narrowing casting?",
+        "answer": "Widening (implicit) casting converts a smaller type to a larger type (e.g., int to double). It is automatic and no data is lost. Narrowing (explicit) casting converts a larger type to a smaller type (e.g., double to int). It requires an explicit cast operator and may lose data through truncation or overflow."
+      },
+      {
+        "question": "What does (int) 9.8 evaluate to in Java?",
+        "answer": "It evaluates to 9. Java casting truncates the decimal part — it does NOT round. So (int)9.8 drops .8 and returns 9. To get proper rounding (10), use Math.round(9.8) which returns 10L."
+      },
+      {
+        "question": "What is the widening order for Java primitive types?",
+        "answer": "The widening hierarchy is: byte → short → int → long → float → double, and char → int → long → float → double. A type on the left can be automatically widened to any type on the right without explicit casting."
+      },
+      {
+        "question": "What is autoboxing in Java?",
+        "answer": "Autoboxing is the automatic conversion of a primitive type to its corresponding wrapper class object. For example, int is automatically boxed to Integer, double to Double, etc. It happens when a primitive is used where an Object is expected, like adding to an ArrayList: list.add(42) automatically boxes 42 to Integer."
+      },
+      {
+        "question": "What is unboxing in Java?",
+        "answer": "Unboxing is the automatic conversion of a wrapper class object to its corresponding primitive type. For example, Integer to int, Double to double. It happens when a wrapper object is used in arithmetic or where a primitive is expected: Integer n = 42; int result = n + 1; (n is unboxed to int)."
+      },
+      {
+        "question": "What is the result of 7 / 2 in Java?",
+        "answer": "7 / 2 = 3 in Java because both operands are integers, so integer division is performed (result truncated to integer). To get 3.5, you must cast: (double)7 / 2 or 7 / 2.0 or 7.0 / 2."
+      },
+      {
+        "question": "What does char to int conversion give?",
+        "answer": "Converting a char to int gives its Unicode (ASCII) value. For example, (int)'A' gives 65, (int)'B' gives 66, (int)'0' gives 48. This is widening and automatic. Conversely, (char)65 gives 'A' (narrowing, explicit cast required)."
+      },
+      {
+        "question": "What is the cast operator syntax in Java?",
+        "answer": "The cast operator is written as (targetType) before the value or variable. For example: (int) doubleValue, (double) intValue, (Dog) animalReference. It is used for narrowing primitive casts and explicit object downcasting."
+      },
+      {
+        "question": "What exception is thrown when you try to cast an object to an incompatible type?",
+        "answer": "ClassCastException is thrown at runtime when you try to cast an object to a type it is not actually an instance of. For example, casting a Cat object to Dog type throws ClassCastException. Use instanceof to check before casting to prevent this exception."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain the difference between upcasting and downcasting in Java.",
+        "answer": "Upcasting converts a subclass reference to a superclass type (e.g., Animal a = new Dog()). It is implicit, always safe, and enables polymorphism, but limits method access to the superclass interface. Downcasting converts a superclass reference to a subclass type (e.g., Dog d = (Dog) animal). It is explicit, can throw ClassCastException if the actual object isn't of the target type, and provides access to subclass-specific methods."
+      },
+      {
+        "question": "Why might int to float widening cause precision loss?",
+        "answer": "float has only 23 bits for the mantissa (significant digits), allowing about 7 decimal digits of precision. int has 32 bits. Large int values like 1,234,567,890 cannot be exactly represented in float. For example, (float)1234567890 gives 1.23456794E9 (rounded). Use double (53 mantissa bits) for better precision."
+      },
+      {
+        "question": "What is the instanceof operator and when should you use it?",
+        "answer": "instanceof is a binary operator that checks whether an object is an instance of a specific class or interface. It returns true if the object is of that type or a subtype, false otherwise, and also false for null. It should be used before every explicit downcast to prevent ClassCastException: if (obj instanceof Dog) { Dog dog = (Dog) obj; dog.fetch(); }"
+      },
+      {
+        "question": "What is pattern matching for instanceof introduced in Java 16?",
+        "answer": "Pattern matching for instanceof combines the type check and cast into one expression. Instead of: if (obj instanceof Dog) { Dog dog = (Dog) obj; dog.fetch(); }, you write: if (obj instanceof Dog dog) { dog.fetch(); }. The variable 'dog' is bound as type Dog within the if block, eliminating the explicit cast and making code cleaner and safer."
+      },
+      {
+        "question": "What is the difference between (int) cast and Math.round()?",
+        "answer": "(int) cast truncates the decimal part toward zero: (int)9.9 = 9, (int)2.1 = 2, (int)-2.9 = -2. Math.round() rounds to the nearest integer: Math.round(9.9) = 10, Math.round(2.1) = 2, Math.round(-2.9) = -3. Use Math.round() for proper rounding; use (int) when you intentionally want truncation."
+      },
+      {
+        "question": "How does Java handle arithmetic with mixed types (e.g., int + double)?",
+        "answer": "Java promotes operands to the widest type in the expression before performing the operation. If any operand is double, the result is double. If any is float, the result is float. If any is long, the result is long. Otherwise int (including when both are byte or short). The promotion is implicit: int + double = double."
+      },
+      {
+        "question": "Can you cast between unrelated classes in Java? What happens?",
+        "answer": "If two classes are completely unrelated (not in the same inheritance hierarchy), attempting to cast between them causes a compile error — the compiler detects the incompatibility. If they share a superclass or interface but the actual object isn't of the target type, the compiler won't catch it, but a ClassCastException is thrown at runtime."
+      },
+      {
+        "question": "What is the risk of unboxing a null wrapper object?",
+        "answer": "Unboxing a null Integer (or any wrapper) to a primitive throws NullPointerException. For example: Integer n = null; int x = n; // NullPointerException. This is a subtle bug especially with collections: List<Integer> list = new ArrayList(); list.add(null); int v = list.get(0); // NullPointerException. Always check for null before unboxing."
+      },
+      {
+        "question": "How do you convert a String to int in Java?",
+        "answer": "Use Integer.parseInt(String): int n = Integer.parseInt(\"42\"). It throws NumberFormatException if the string is not a valid integer. Alternative: Integer.valueOf(\"42\") returns an Integer object (autoboxed to int). For safe parsing, wrap in try-catch: try { int n = Integer.parseInt(str); } catch (NumberFormatException e) { /* handle */ }"
+      },
+      {
+        "question": "What is the result of (byte) 200 in Java and why?",
+        "answer": "The result is -56. Byte has range -128 to 127. When 200 overflows byte range, Java wraps around: 200 - 256 = -56. This is because Java narrows by taking only the lower 8 bits of the integer representation of 200 (11001000 in binary) and interpreting it as a signed byte (which is -56). This silent overflow is why narrowing requires careful validation."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain the difference between ClassCastException and compile-time cast errors.",
+        "answer": "Compile-time cast errors occur when you try to cast between obviously incompatible types (e.g., String to Integer with no relationship) — the compiler rejects it. ClassCastException is a runtime error that occurs when an explicit cast is syntactically valid (the types have a relationship) but the actual object at runtime is not of the target type. The compiler cannot always detect invalid casts involving polymorphism — it trusts the programmer's instanceof check."
+      },
+      {
+        "question": "How does type erasure in Java generics relate to casting?",
+        "answer": "Java generics use type erasure — generic type parameters are replaced with Object (or the upper bound) at runtime. List<String> becomes List at runtime. The compiler inserts automatic casts when you retrieve elements. If you use raw types or unsafe casts to bypass generics, you get unchecked cast warnings and potential ClassCastException at the insertion point of the compiler-generated cast, not where you wrote it."
+      },
+      {
+        "question": "What is co-variant return type and how does it relate to casting?",
+        "answer": "Java 5+ allows covariant return types: an overriding method can return a subtype of the parent method's return type. For example, if Animal has a method Animal create(), Dog can override it as Dog create(). Callers using Dog reference get Dog directly without casting. This reduces the need for explicit downcasting and improves type safety."
+      },
+      {
+        "question": "How does Java handle overflow differently from C/C++ in type casting?",
+        "answer": "In Java, integer overflow (including narrowing casts) is defined behavior: it wraps around modulo 2^n. Java does not throw exceptions for integer overflow (unlike some other operations). This is unlike C/C++ where signed integer overflow is undefined behavior. Java's behavior is predictable but can lead to silent bugs if not validated. For overflow detection in Java, use Math.addExact(), Math.multiplyExact() etc. which throw ArithmeticException."
+      },
+      {
+        "question": "What is the SOLID principle violation associated with excessive downcasting?",
+        "answer": "Excessive downcasting violates the Liskov Substitution Principle (LSP) — if you need to downcast to use an object, it means the base type interface is insufficient and substitutability breaks down. It also violates the Open/Closed Principle (OCP). Better design uses polymorphism, abstract methods, or the Visitor pattern instead of type checks and downcasts. Downcasting is a code smell indicating possible design issues."
+      },
+      {
+        "question": "How does Java's sealed classes (Java 17+) feature complement type casting and instanceof?",
+        "answer": "Sealed classes restrict which classes can extend them (using 'permits'). Combined with pattern matching switch (Java 21), they enable exhaustive pattern matching: switch (animal) { case Dog d -> d.fetch(); case Cat c -> c.purr(); }. The compiler verifies all subclasses are covered, eliminating the need for instanceof chains and enabling safe, exhaustive downcasting without default cases."
+      },
+      {
+        "question": "Explain the performance implications of autoboxing/unboxing in performance-critical code.",
+        "answer": "Autoboxing creates new wrapper objects on the heap (heap allocation). Unboxing requires dereferencing the object. In tight loops processing millions of values, this causes: (1) excessive garbage collection pressure, (2) cache misses due to non-contiguous memory, (3) null check overhead. Solution: use primitive arrays or primitive collections (Eclipse Collections, Trove, FastUtil) that store primitives directly, avoiding boxing entirely."
+      },
+      {
+        "question": "What happens during numeric promotion in Java method overloading?",
+        "answer": "When you call an overloaded method, Java performs widening to find a match before boxing/unboxing. For example, with overloads print(long) and print(Integer): print(5) — Java widens int 5 to long (widening preferred over boxing), calling print(long). print(Integer.valueOf(5)) — calls print(Integer). This can surprise developers expecting autoboxing to be applied before widening."
+      },
+      {
+        "question": "How do casts work with interfaces in Java?",
+        "answer": "You can cast any object to any interface type (the compiler won't prevent it) because you could have a class implementing that interface somewhere in the hierarchy. The ClassCastException is thrown at runtime if the actual object doesn't implement the interface. Unlike casting between concrete classes (where the compiler can detect incompatibility), interface casts are often only caught at runtime. Exception: final classes not implementing the interface are caught at compile time."
+      },
+      {
+        "question": "What is a narrowing reference conversion in the context of generics and raw types?",
+        "answer": "A narrowing reference conversion converts a more general type to a more specific type in the reference hierarchy. With generics and raw types, casts like (List<String>) rawList generate unchecked cast warnings because the type parameter isn't checked at runtime (due to erasure). The JVM only checks the raw type (List), not the generic parameter (String). If the List actually contains non-String elements, ClassCastException occurs later when you retrieve elements, not at the cast point."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a Java program that demonstrates widening conversion from int to double and prints both values.",
+      "Write a program that reads a double from the user and explicitly casts it to an int, showing the truncation.",
+      "Write a program that converts the character 'Z' to its integer (ASCII/Unicode) value and prints it.",
+      "Write a program that adds an int and a double and prints the result, showing the widening that occurs.",
+      "Write a program that demonstrates narrowing cast from double 9.9 and shows it does NOT round to 10.",
+      "Write a program that demonstrates autoboxing: assign an int to an Integer variable and print both.",
+      "Write a program that prints the integer division of 10/3 and the floating-point division using casting.",
+      "Write a program that converts integer 72 to a char using explicit casting and prints the character.",
+      "Write a program that reads two integers and computes their quotient as a double using type casting.",
+      "Write a program that demonstrates widening through the full chain: byte → short → int → long → float → double."
+    ],
+    "medium": [
+      "Write a program that reads a list of doubles from the user and converts each to int using casting, showing truncation vs rounding (with Math.round).",
+      "Write a program with Animal, Dog, Cat classes that stores multiple objects in an Animal array, iterates with instanceof, and calls type-specific methods after safe downcasting.",
+      "Write a program that demonstrates overflow in narrowing: try casting values 100, 200, 300 to byte and show the results.",
+      "Write a program that reads a String representing a number, converts it to int using Integer.parseInt(), performs calculations, and converts the result back to String.",
+      "Write a program that computes the average of an int array as a double using proper type casting for accurate division.",
+      "Write a program that demonstrates the difference between (int)9.9, Math.round(9.9), Math.ceil(9.9), and Math.floor(9.9).",
+      "Write a program using an ArrayList<Double> that demonstrates autoboxing when adding elements and unboxing when summing them.",
+      "Write a program that handles NumberFormatException when parsing invalid strings to int using try-catch.",
+      "Write a program that uses String.valueOf() to convert various primitive types (int, double, boolean, char) to String and concatenates them.",
+      "Write a program simulating a bank account that stores balance as long (cents) but displays as double (dollars) using type casting."
+    ],
+    "hard": [
+      "Implement a generic type-safe downcaster method: <T> T safeCast(Object obj, Class<T> type) that returns the cast object or null if incompatible, without throwing exceptions.",
+      "Write a program with a Vehicle hierarchy (Car, Truck, Motorcycle) that uses pattern matching instanceof (Java 16+) to process a mixed list and compute statistics per type.",
+      "Implement a simple expression evaluator that reads arithmetic expressions and handles mixed int/double operands, applying appropriate casting to maintain precision.",
+      "Write a program that demonstrates the JVM behavior of (float)(long) conversion for very large numbers and explains why precision is lost.",
+      "Implement a BigDecimal-based calculator that accepts user input as strings, performs precise decimal arithmetic (no floating-point errors), and compares results with regular double arithmetic.",
+      "Write a program that reads a file of mixed data (ints, doubles, strings on separate lines) using hasNextInt(), hasNextDouble(), parses each appropriately, and generates a typed summary.",
+      "Implement a type-safe heterogeneous container that stores objects with their Class<T> keys and retrieves them with automatic safe casting, similar to Effective Java's TypeSafeHeterogeneousContainer pattern.",
+      "Write a program demonstrating how generics type erasure interacts with casting: show an unchecked cast warning scenario and demonstrate when ClassCastException is thrown vs when it's silent.",
+      "Implement a matrix multiplication program that uses int arrays for input but switches to long intermediate calculations to prevent overflow, then casts back appropriately.",
+      "Write a program that benchmarks autoboxing overhead vs primitive operations: compare summing 10 million values using int[] vs Integer[] and measure time difference."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Grade to GPA Converter: Read N student names and their percentage scores (double). Convert each percentage to a 4.0 GPA scale using casting: [90-100] → 4.0, [80-89] → 3.0+, [70-79] → 2.0+, [60-69] → 1.0+, below 60 → 0.0. Print student name, percentage (2 decimal places), and GPA (1 decimal place). Also print class average GPA.",
+      "input": "4\nAlice 95.5\nBob 83.2\nCarol 71.8\nDave 58.0",
+      "output": "Alice  : 95.50% -> GPA: 4.0\nBob    : 83.20% -> GPA: 3.0\nCarol  : 71.80% -> GPA: 2.0\nDave   : 58.00% -> GPA: 0.0\nClass Average GPA: 2.3",
+      "constraints": "0 <= score <= 100; 1 <= N <= 100; Use type casting for GPA calculation",
+      "solution": "import java.util.Scanner;\n\npublic class GpaConverter {\n    public static double toGpa(double percent) {\n        // Narrowing cast to int for range check\n        int p = (int) percent;\n        if (p >= 90) return 4.0;\n        if (p >= 80) return 3.0 + (p - 80) * 0.1;\n        if (p >= 70) return 2.0 + (p - 70) * 0.1;\n        if (p >= 60) return 1.0 + (p - 60) * 0.1;\n        return 0.0;\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt(); sc.nextLine();\n        double totalGpa = 0;\n        for (int i = 0; i < n; i++) {\n            String name = sc.next();\n            double score = sc.nextDouble();\n            sc.nextLine();\n            double gpa = toGpa(score);\n            totalGpa += gpa;\n            System.out.printf(\"%-7s: %.2f%% -> GPA: %.1f%n\", name, score, gpa);\n        }\n        System.out.printf(\"Class Average GPA: %.1f%n\", totalGpa / n);\n        sc.close();\n    }\n}"
+    },
+    {
+      "statement": "Type-Safe Animal Processor: Create an Animal hierarchy with Dog (has barkCount field), Cat (has livesRemaining field), Bird (has canFly field). Read a list of animal descriptions and populate an Animal array. Then process the array: use downcasting to call type-specific methods and print a summary showing counts and specific attributes of each type.",
+      "input": "5\nDog Rex 3\nCat Luna 9\nBird Tweety true\nDog Max 5\nCat Shadow 7",
+      "output": "=== Animal Processing ===\nDog Rex - Bark count: 3\nCat Luna - Lives remaining: 9\nBird Tweety - Can fly: true\nDog Max - Bark count: 5\nCat Shadow - Lives remaining: 7\n=== Summary ===\nDogs: 2  Cats: 2  Birds: 1",
+      "constraints": "Use instanceof for type checking; no direct type-specific methods without downcasting; up to 50 animals",
+      "solution": "import java.util.Scanner;\n\npublic class AnimalProcessor {\n    static class Animal { String name; Animal(String n) { name = n; } }\n    static class Dog extends Animal {\n        int barkCount;\n        Dog(String n, int b) { super(n); barkCount = b; }\n    }\n    static class Cat extends Animal {\n        int livesRemaining;\n        Cat(String n, int l) { super(n); livesRemaining = l; }\n    }\n    static class Bird extends Animal {\n        boolean canFly;\n        Bird(String n, boolean f) { super(n); canFly = f; }\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt(); sc.nextLine();\n        Animal[] animals = new Animal[n];\n        for (int i = 0; i < n; i++) {\n            String type = sc.next(), name = sc.next();\n            if (type.equals(\"Dog\")) animals[i] = new Dog(name, sc.nextInt());\n            else if (type.equals(\"Cat\")) animals[i] = new Cat(name, sc.nextInt());\n            else animals[i] = new Bird(name, sc.nextBoolean());\n            sc.nextLine();\n        }\n        System.out.println(\"=== Animal Processing ===\");\n        int dogs = 0, cats = 0, birds = 0;\n        for (Animal a : animals) {\n            if (a instanceof Dog dog) { System.out.println(\"Dog \" + dog.name + \" - Bark count: \" + dog.barkCount); dogs++; }\n            else if (a instanceof Cat cat) { System.out.println(\"Cat \" + cat.name + \" - Lives remaining: \" + cat.livesRemaining); cats++; }\n            else if (a instanceof Bird bird) { System.out.println(\"Bird \" + bird.name + \" - Can fly: \" + bird.canFly); birds++; }\n        }\n        System.out.println(\"=== Summary ===\");\n        System.out.printf(\"Dogs: %d  Cats: %d  Birds: %d%n\", dogs, cats, birds);\n        sc.close();\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Applications",
+      "explanation": "Enterprise Java uses type casting extensively when working with legacy APIs that return Object types, when using JDBC (casting ResultSet values to specific types), and when deserializing data from older systems. Frameworks like Hibernate use casting internally to map database rows to Java objects."
+    },
+    {
+      "field": "Banking Systems",
+      "explanation": "Banking applications use widening casts when aggregating transaction amounts (int → long → BigDecimal) to prevent overflow. Currency calculations use careful casting between monetary integer (cents as long) and display values (double). Type-safe downcasting is used in transaction hierarchy processing (PaymentTransaction → CardPayment, WireTransfer)."
+    },
+    {
+      "field": "Android Development",
+      "explanation": "Android development frequently uses type casting for View inflation (View v = inflater.inflate(); TextView tv = (TextView) v.findViewById(R.id.textView)), adapter callbacks, and intent extras parsing. Android's View hierarchy relies heavily on upcasting and downcasting for UI component management."
+    },
+    {
+      "field": "Web Applications",
+      "explanation": "Java web frameworks use type casting when handling request parameters (converting String to int/double), processing JSON deserialization (Object to specific domain types), and working with HttpSession attributes (Object → User). Spring MVC uses type conversion under the hood when binding request parameters to method arguments."
+    },
+    {
+      "field": "Microservices",
+      "explanation": "Microservices use type casting when deserializing message payloads from queues (JSON Object → specific DTO), handling polymorphic event types in event-driven architectures (downcasting Event to OrderCreatedEvent, PaymentProcessedEvent), and converting between internal domain types and external API types."
+    },
+    {
+      "field": "Cloud Applications",
+      "explanation": "Cloud Java SDK calls often return generic types that require casting to specific service responses. AWS SDK, Google Cloud SDK, and Azure SDK use type hierarchies where response objects need downcasting. Data processing pipelines use widening numeric casts to handle large volumes without overflow."
+    }
+  ],
+  "best_practices": [
+    "Always use instanceof before downcasting to prevent ClassCastException; prefer Java 16+ pattern matching instanceof for cleaner code",
+    "Use Math.round(), Math.ceil(), or Math.floor() when rounding is needed; avoid relying on (int) cast which only truncates",
+    "Cast at least one operand to double before integer division to get accurate floating-point results: (double)a / b",
+    "Validate value ranges before narrowing casts to prevent silent overflow: check TYPE.MIN_VALUE and TYPE.MAX_VALUE",
+    "Prefer generics over casting with Object — generics provide compile-time type safety and eliminate runtime ClassCastException",
+    "Avoid deep inheritance hierarchies that require frequent downcasting — use polymorphism and abstract methods instead",
+    "Check for null before unboxing wrapper types to prevent NullPointerException: Integer n = null; if (n != null) int x = n;",
+    "Use explicit casting comments or assertions when casting is intentional to improve code readability"
+  ],
+  "summary": [
+    "Java type casting converts values between types: widening (smaller→larger, automatic, safe) and narrowing (larger→smaller, explicit (type) operator, may lose data)",
+    "Narrowing truncates decimals — (int)9.9 = 9, not 10. Use Math.round() for rounding. Integer division 7/2 = 3; cast to double first: (double)7/2 = 3.5",
+    "Object casting uses upcasting (subclass→superclass, automatic, enables polymorphism) and downcasting (superclass→subclass, explicit, needs instanceof check to avoid ClassCastException)",
+    "Autoboxing (int→Integer) and unboxing (Integer→int) happen automatically; never unbox null — it throws NullPointerException",
+    "Best practice: use instanceof before downcasting, generics instead of Object casting, and validate ranges before narrowing to write safe, bug-free code"
+  ],
+  "quiz": [
+    {
+      "question": "What is the result of (int) 9.9 in Java?",
+      "options": ["A. 10", "B. 9", "C. 9.9", "D. Compile error"],
+      "answer": "B. 9",
+      "explanation": "(int) cast truncates the decimal part, it does NOT round. So (int)9.9 removes .9 and returns 9. To get 10 (rounded), use Math.round(9.9) which returns 10L."
+    },
+    {
+      "question": "Which of the following is an example of widening conversion?",
+      "options": ["A. (int) 3.14", "B. (byte) 200", "C. double d = 42;", "D. (char) 65"],
+      "answer": "C. double d = 42;",
+      "explanation": "Widening goes from smaller to larger type automatically. Assigning int 42 to double d is widening — it's automatic and no cast is needed. Options A, B, D all use explicit (narrowing) casts."
+    },
+    {
+      "question": "What is the result of 7 / 2 in Java?",
+      "options": ["A. 3.5", "B. 3.0", "C. 3", "D. 4"],
+      "answer": "C. 3",
+      "explanation": "Both 7 and 2 are int, so Java performs integer division, resulting in int 3 (truncated). Assigning to double gives 3.0. To get 3.5, cast: (double)7/2 or 7/2.0."
+    },
+    {
+      "question": "What exception is thrown when downcasting an object to an incompatible type?",
+      "options": ["A. TypeMismatchException", "B. IllegalArgumentException", "C. ClassCastException", "D. NumberFormatException"],
+      "answer": "C. ClassCastException",
+      "explanation": "ClassCastException is thrown at runtime when you try to cast an object to a type it is not an instance of (e.g., casting a Cat to Dog). Use instanceof before downcasting to prevent this."
+    },
+    {
+      "question": "What is autoboxing?",
+      "options": ["A. Converting double to int automatically", "B. Converting a primitive to its wrapper class automatically", "C. Converting a String to a number", "D. Casting a subclass to superclass"],
+      "answer": "B. Converting a primitive to its wrapper class automatically",
+      "explanation": "Autoboxing is the automatic conversion of a primitive type (int, double, etc.) to its corresponding wrapper class (Integer, Double, etc.). For example: Integer n = 42; automatically boxes int 42 to Integer."
+    },
+    {
+      "question": "What is the result of (byte) 200 in Java? (byte range: -128 to 127)",
+      "options": ["A. 200", "B. 127", "C. -56", "D. Compile error"],
+      "answer": "C. -56",
+      "explanation": "200 exceeds byte's max (127), so it overflows. Java narrows by taking the lower 8 bits: 200 in binary is 11001000. Interpreted as signed byte, this is -56 (200 - 256 = -56). Narrowing overflow is silent — no exception."
+    },
+    {
+      "question": "Which keyword is used to check an object's type before casting?",
+      "options": ["A. typeof", "B. checktype", "C. instanceof", "D. isInstanceOf"],
+      "answer": "C. instanceof",
+      "explanation": "instanceof is the Java operator used to check if an object is of a specific type: if (animal instanceof Dog) { Dog d = (Dog) animal; }. It prevents ClassCastException by verifying the type before casting."
+    },
+    {
+      "question": "When is upcasting performed in Java?",
+      "options": ["A. Only with explicit cast operator", "B. Automatically when assigning subclass to superclass reference", "C. Only inside try-catch blocks", "D. Only with instanceof check"],
+      "answer": "B. Automatically when assigning subclass to superclass reference",
+      "explanation": "Upcasting is implicit (automatic). When you assign a subclass object to a superclass reference — Animal a = new Dog() — Java automatically upcasts without needing an explicit cast operator. It's always safe because a Dog IS-A Animal."
+    },
+    {
+      "question": "What does Integer.parseInt(\"42abc\") do?",
+      "options": ["A. Returns 42", "B. Returns 0", "C. Throws NumberFormatException", "D. Throws ClassCastException"],
+      "answer": "C. Throws NumberFormatException",
+      "explanation": "Integer.parseInt() throws NumberFormatException if the string contains non-numeric characters. \"42abc\" is not a valid integer string. Always wrap parseInt() in try-catch when parsing user input to handle invalid formats gracefully."
+    },
+    {
+      "question": "Which of these correctly performs floating-point division from two int variables a and b?",
+      "options": ["A. double r = a / b;", "B. double r = (double)(a / b);", "C. double r = (double) a / b;", "D. double r = double(a) / b;"],
+      "answer": "C. double r = (double) a / b;",
+      "explanation": "Only C casts 'a' to double BEFORE the division, making it double/int = double. Option A and B both perform integer division first (giving 3 for 7/2) and then widen to double (3.0). Option D is not valid Java syntax."
+    }
+  ]
+}

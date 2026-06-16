@@ -1,0 +1,263 @@
+{
+  "title": "Matplotlib",
+  "introduction": {
+    "what_it_is": "Matplotlib is a comprehensive library for creating static, animated, and interactive visualizations in Python. It is the most widely used 2D plotting library in the Python ecosystem.",
+    "why_important": "Data is meaningless if it cannot be understood. Matplotlib allows developers and data scientists to translate complex datasets into intuitive graphs, charts, and figures, making it easier to identify trends, patterns, and outliers.",
+    "real_world": [
+      "Plotting stock market price movements over time via line charts.",
+      "Visualizing the distribution of customer ages using histograms.",
+      "Comparing sales performance across different regions using bar charts."
+    ]
+  },
+  "detailed_theory": "Matplotlib's architecture is composed of three main layers: the Backend layer, the Artist layer, and the Scripting layer. \n\n1. **Backend Layer**: Handles the heavy lifting of rendering graphs to a screen or saving them to a file. It manages the interaction with your operating system's UI toolkit.\n2. **Artist Layer**: Contains all the elements that make up a figure. The `Figure` object is the overall canvas. Inside the Figure are `Axes` (the actual plots). Everything you see on an Axes (lines, text, ticks, labels) is an Artist.\n3. **Scripting Layer (pyplot)**: This is what most users interact with. `matplotlib.pyplot` is a collection of command style functions that make Matplotlib work like MATLAB. It automatically manages Figures and Axes, allowing you to create plots with very little code.\n\nThere are two primary approaches to plotting in Matplotlib:\n- **The Pyplot API (State-based approach)**: You call `plt.plot()`, and Matplotlib automatically applies it to the current active figure and axes. It is fast and easy for simple plots.\n- **The Object-Oriented API**: You explicitly create Figure and Axes objects (`fig, ax = plt.subplots()`), and then call methods on the Axes object (`ax.plot()`). This approach provides far greater control and is highly recommended for complex, multi-plot figures.\n\nCustomization is a massive part of Matplotlib. Every visual aspect can be tweaked: colors, line styles, markers, titles, x/y labels, legends, grids, and annotations. \n\nIt integrates perfectly with NumPy arrays and Pandas DataFrames, making it the standard end-point of a data analysis pipeline.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Extensive Plot Types",
+        "description": "Supports line plots, scatter plots, bar charts, histograms, pie charts, 3D plots, and more."
+      },
+      {
+        "name": "High Customizability",
+        "description": "Almost every element of a plot can be fine-tuned to create publication-quality graphics."
+      }
+    ],
+    "advantages": [
+      "Highly mature and widely adopted with immense community support and examples.",
+      "Integrates seamlessly with Pandas and NumPy.",
+      "Can export figures to various high-quality formats (PNG, PDF, SVG)."
+    ],
+    "limitations": [
+      "The API can be verbose and complex for highly customized plots.",
+      "Default styles are somewhat outdated compared to newer libraries like Seaborn or Plotly.",
+      "Not inherently designed for highly interactive web-based dashboards (though wrappers exist)."
+    ]
+  },
+  "syntax": {
+    "explanation": "Matplotlib is installed via `pip install matplotlib` and the pyplot module is conventionally imported as `plt`.",
+    "breakdown": [
+      "import matplotlib.pyplot as plt",
+      "plt.plot(x_data, y_data)",
+      "plt.show()"
+    ],
+    "rules": [
+      "Always use `plt.show()` at the end of your script to display the window.",
+      "Prefer the Object-Oriented approach (`fig, ax = plt.subplots()`) for anything beyond a simple single plot."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple Line Plot",
+      "code": "import matplotlib.pyplot as plt\n\nx = [1, 2, 3, 4]\ny = [10, 20, 25, 30]\n\nplt.plot(x, y)\nplt.title('Basic Line Plot')\nplt.xlabel('X Axis')\nplt.ylabel('Y Axis')\nplt.show()",
+      "output": "[Displays a window with a line connecting the points]",
+      "explanation": "The pyplot API quickly creates a line plot, adds titles and labels, and renders the result."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Scatter Plot with Customization",
+      "code": "import matplotlib.pyplot as plt\nimport numpy as np\n\nx = np.random.rand(50)\ny = np.random.rand(50)\ncolors = np.random.rand(50)\nsizes = 1000 * np.random.rand(50)\n\nplt.scatter(x, y, c=colors, s=sizes, alpha=0.5, cmap='viridis')\nplt.colorbar() # Show color scale\nplt.show()",
+      "output": "[Displays a scatter plot with varying bubble sizes and colors]",
+      "explanation": "Creates a bubble chart where size ('s') and color ('c') map to data values. 'alpha' adds transparency."
+    },
+    {
+      "level": "Advanced",
+      "title": "Object-Oriented Subplots",
+      "code": "import matplotlib.pyplot as plt\nimport numpy as np\n\nx = np.linspace(0, 5, 10)\ny1 = x ** 2\ny2 = np.sqrt(x)\n\n# Create a figure with 1 row and 2 columns\nfig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))\n\n# Plot on first axes\naxes[0].plot(x, y1, 'r--')\naxes[0].set_title('Square')\n\n# Plot on second axes\naxes[1].plot(x, y2, 'g*-')\naxes[1].set_title('Square Root')\n\nplt.tight_layout()\nplt.show()",
+      "output": "[Displays two distinct plots side-by-side in one figure]",
+      "explanation": "The OO approach creates an array of Axes objects, allowing precise targeting of specific subplots."
+    },
+    {
+      "level": "Real-world",
+      "title": "Plotting from a Pandas DataFrame",
+      "code": "import matplotlib.pyplot as plt\nimport pandas as pd\n\ndata = {'Year': [2018, 2019, 2020, 2021], 'Revenue': [100, 150, 130, 200]}\ndf = pd.DataFrame(data)\n\n# Pandas integrates with Matplotlib\ndf.plot(x='Year', y='Revenue', kind='bar', color='skyblue')\nplt.title('Annual Revenue')\nplt.ylabel('Millions USD')\nplt.show()",
+      "output": "[Displays a bar chart directly generated from the DataFrame]",
+      "explanation": "Pandas DataFrames have built-in plotting methods that wrap Matplotlib, making it extremely fast to visualize data."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Plot Types",
+        "headers": ["Function", "Plot Type", "Use Case"],
+        "rows": [
+          ["plt.plot()", "Line Plot", "Tracking changes over time."],
+          ["plt.scatter()", "Scatter Plot", "Showing relationships between two variables."],
+          ["plt.bar()", "Bar Chart", "Comparing quantities across categories."],
+          ["plt.hist()", "Histogram", "Showing the frequency distribution of continuous data."],
+          ["plt.pie()", "Pie Chart", "Showing parts of a whole (proportions)."]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Pyplot API (plt.plot)",
+        "concept_b": "Object-Oriented API (ax.plot)",
+        "explanation": "Pyplot implicitly tracks the 'current' figure and axes. It's easy but limiting. The OO API explicitly creates Figure and Axes objects, requiring you to call methods on specific objects. It is robust, clear, and essential for multi-plot layouts."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "plt.subplots()",
+      "description": "Create a figure and a set of subplots.",
+      "parameters": "nrows, ncols, figsize",
+      "return_value": "Figure object, Axes object (or array of Axes)",
+      "example_usage": "fig, ax = plt.subplots()"
+    },
+    {
+      "name": "plt.savefig()",
+      "description": "Save the current figure to a file.",
+      "parameters": "filename, dpi",
+      "return_value": "None",
+      "example_usage": "plt.savefig('my_plot.png', dpi=300)"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting plt.show()",
+      "description": "In standalone scripts (outside of Jupyter Notebooks), a plot will not render on the screen until plt.show() is called.",
+      "wrong_example": "plt.plot([1, 2], [3, 4])\n# Script ends, nothing appears",
+      "correct_example": "plt.plot([1, 2], [3, 4])\nplt.show()",
+      "debugging_tip": "If your script finishes running but no image pops up, ensure plt.show() is at the very bottom."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between a Figure and an Axes in Matplotlib?",
+        "answer": "The Figure is the overall window or page that everything is drawn on. An Axes is an individual plot (with x and y axis) inside that Figure. A Figure can contain multiple Axes."
+      },
+      {
+        "question": "How do you add a title and labels to a plot?",
+        "answer": "Using plt.title('Title'), plt.xlabel('X-axis'), and plt.ylabel('Y-axis'). In OO API, it's ax.set_title(), ax.set_xlabel(), etc."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How do you plot multiple lines on the same graph?",
+        "answer": "Simply call plt.plot() multiple times before calling plt.show(). Matplotlib will automatically overlay them and cycle through default colors."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Why might you use plt.tight_layout()?",
+        "answer": "When creating multiple subplots, axes labels and titles can overlap. plt.tight_layout() automatically adjusts subplot parameters so that the subplots fit nicely within the figure without overlapping."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Plot a simple line graph passing just one list of numbers: `[1, 4, 9, 16]`.",
+      "Add a legend to a plot.",
+      "Change the color of a line to red and make it dashed.",
+      "Save a plot to your computer as a PDF file.",
+      "Create a bar chart for categorical data: 'Apples', 'Oranges', 'Bananas'."
+    ],
+    "medium": [
+      "Create a scatter plot of 100 random points and color them based on their y-value.",
+      "Plot two functions (sine and cosine) on the same axes with different colors and a legend.",
+      "Create a figure with 2 subplots stacked vertically.",
+      "Plot a histogram of a normal distribution array generated by NumPy.",
+      "Limit the x-axis view to range between 0 and 10 using `xlim()`."
+    ],
+    "hard": [
+      "Create a complex layout using `GridSpec` where one plot spans two columns.",
+      "Annotate a specific data point on a line plot with text and an arrow pointing to it.",
+      "Create a dual-axis chart (twinx) where two lines are plotted but use different Y-axes on the left and right.",
+      "Plot a 3D surface plot using `mpl_toolkits.mplot3d`.",
+      "Customize the global Matplotlib settings using `plt.rcParams` to change the default font size and figure size."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a script to generate a Figure with two side-by-side subplots. The left subplot should be a red line plot of $y = x^2$. The right subplot should be a blue scatter plot of random data. Ensure they have titles.",
+      "input": "x = range(5)",
+      "output": "[Displays Figure with 2 subplots]",
+      "constraints": "Must use the Object-Oriented API (plt.subplots).",
+      "solution": "import matplotlib.pyplot as plt\nimport numpy as np\n\nfig, (ax1, ax2) = plt.subplots(1, 2)\n\nx = np.arange(5)\nax1.plot(x, x**2, color='red')\nax1.set_title('Line Plot')\n\nax2.scatter(np.random.rand(10), np.random.rand(10), color='blue')\nax2.set_title('Scatter Plot')\n\nplt.show()"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Machine Learning",
+      "explanation": "Plotting the loss function curve over training epochs to diagnose if a neural network is overfitting or underfitting."
+    },
+    {
+      "field": "Scientific Reporting",
+      "explanation": "Generating high DPI publication-ready figures for academic papers, utilizing LaTeX for mathematical notations in labels."
+    }
+  ],
+  "best_practices": [
+    "Always use the Object-Oriented API (`fig, ax = plt.subplots()`) for production code as it is less error-prone in complex scripts.",
+    "Always include labels, titles, and legends. A plot without context is useless.",
+    "Consider using Seaborn (built on top of Matplotlib) if you want statistical graphics that look beautiful by default with less code."
+  ],
+  "summary": [
+    "Matplotlib is Python's foundational plotting library.",
+    "It offers two APIs: the implicit pyplot (state-based) and the explicit Object-Oriented API.",
+    "It can create almost any 2D chart type (line, scatter, bar, hist).",
+    "It integrates tightly with data analysis libraries like Pandas and NumPy."
+  ],
+  "quiz": [
+    {
+      "question": "What is the standard convention for importing the pyplot module?",
+      "options": ["import matplotlib as plot", "import pyplot as plt", "import matplotlib.pyplot as plt", "import matplotlib.pyplot as mpl"],
+      "answer": "import matplotlib.pyplot as plt",
+      "explanation": "This is the universally accepted alias in the Python data science community."
+    },
+    {
+      "question": "Which function is necessary to actually display a plot on screen in a standard script?",
+      "options": ["plt.render()", "plt.display()", "plt.draw()", "plt.show()"],
+      "answer": "plt.show()",
+      "explanation": "plt.show() starts an event loop, looks for all currently active figure objects, and opens interactive windows."
+    },
+    {
+      "question": "In the Object-Oriented API, what object represents an individual plot with an x/y axis?",
+      "options": ["Figure", "Axes", "Plot", "Canvas"],
+      "answer": "Axes",
+      "explanation": "The Figure is the overall window, while the Axes is the individual plot area containing data and labels."
+    },
+    {
+      "question": "How do you plot a scatter graph?",
+      "options": ["plt.scatter()", "plt.points()", "plt.plot_scatter()", "plt.dots()"],
+      "answer": "plt.scatter()",
+      "explanation": "plt.scatter() creates a scatter plot with varying marker size and/or color."
+    },
+    {
+      "question": "What does plt.hist() do?",
+      "options": ["Plots historical data", "Plots a heatmap", "Plots a histogram showing distribution", "Saves plot history"],
+      "answer": "Plots a histogram showing distribution",
+      "explanation": "A histogram groups continuous data into bins to show its frequency distribution."
+    },
+    {
+      "question": "How can you save a plot to an image file?",
+      "options": ["plt.export()", "plt.save()", "plt.savefig()", "plt.write()"],
+      "answer": "plt.savefig()",
+      "explanation": "plt.savefig('filename.png') saves the current figure to disk."
+    },
+    {
+      "question": "What does plt.tight_layout() prevent?",
+      "options": ["Data loss", "Overlapping labels and titles in subplots", "Color clashing", "Memory leaks"],
+      "answer": "Overlapping labels and titles in subplots",
+      "explanation": "It automatically adjusts subplot parameters to give specified padding so elements don't overlap."
+    },
+    {
+      "question": "If you plot multiple lines on the same axes, how do you differentiate them for the viewer?",
+      "options": ["Use plt.legend()", "It's impossible", "Use plt.differentiate()", "Matplotlib adds a legend automatically"],
+      "answer": "Use plt.legend()",
+      "explanation": "You must explicitly call plt.legend() (after providing 'label' arguments in your plot calls) to display a legend."
+    },
+    {
+      "question": "Which format string 'r--' represents?",
+      "options": ["Right-aligned dashed line", "Red dashed line", "Round dashed points", "Random dashed line"],
+      "answer": "Red dashed line",
+      "explanation": "'r' stands for red color, and '--' stands for dashed line style."
+    },
+    {
+      "question": "What is the primary library that Matplotlib is designed to work well with?",
+      "options": ["TensorFlow", "Django", "NumPy", "Flask"],
+      "answer": "NumPy",
+      "explanation": "Matplotlib's plotting functions expect and utilize NumPy arrays for fast, numerical computation."
+    }
+  ]
+}

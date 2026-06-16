@@ -1,0 +1,504 @@
+{
+  "title": "Methods in Java",
+  "introduction": {
+    "what_it_is": "A method in Java is a block of code that performs a specific task, is defined once, and can be called (invoked) multiple times throughout a program. Methods are the fundamental building blocks of Java programs and are always defined inside a class. They encapsulate logic, accept inputs (parameters), perform operations, and optionally return a result.",
+    "why_important": "Methods are essential for code reusability, readability, and maintainability. Instead of writing the same logic repeatedly, you define it once in a method and call it whenever needed. Methods also help break down complex problems into smaller, manageable units — a principle known as decomposition. They are the primary mechanism for implementing behavior in Java classes.",
+    "real_world": [
+      "A banking app uses a calculateInterest() method to compute interest for any account without duplicating code.",
+      "A login system uses an authenticateUser() method to verify credentials every time a user logs in.",
+      "An e-commerce platform uses a calculateDiscount() method to apply promotions consistently across all product categories."
+    ]
+  },
+  "detailed_theory": "## Methods in Java — Complete Theory\n\nA **method** is a named block of statements grouped together to perform a specific operation. In Java, every method must belong to a class. Methods are one of the most critical concepts in Java because they enable code reuse, modularity, and abstraction.\n\n### Method Declaration Syntax\nA method declaration consists of: access modifier, return type, method name, parameter list (in parentheses), and the method body (in curly braces).\n\n```\naccessModifier returnType methodName(parameterList) {\n    // method body\n    return value; // if returnType is not void\n}\n```\n\n### Parts of a Method\n\n**1. Access Modifier**: Controls visibility of the method. Options are `public`, `private`, `protected`, or package-private (no modifier). `public` means accessible from anywhere; `private` means only within the same class.\n\n**2. Return Type**: Specifies what type of value the method returns. If a method does not return anything, the return type is `void`. Otherwise, it must match a Java data type (int, String, double, boolean, etc.) or object type.\n\n**3. Method Name**: Should be a meaningful verb following camelCase convention (e.g., `calculateTotal`, `printReport`, `getUserName`). Names must start with a letter, underscore, or dollar sign.\n\n**4. Parameters (Formal Parameters)**: Variables listed in the method signature that receive values when the method is called. Parameters are optional — a method can have zero or more.\n\n**5. Method Body**: The block of code between `{` and `}` that contains the logic the method performs.\n\n**6. Return Statement**: For non-void methods, `return` is used to send a value back to the caller. The return statement also exits the method immediately.\n\n### Types of Methods in Java\n\n**1. Instance Methods**: Belong to an object of a class. They require an object to be called and can access instance variables directly.\n\n**2. Static Methods**: Belong to the class itself, not any specific object. Declared with the `static` keyword, they are called using the class name (e.g., `Math.sqrt()`). Static methods cannot access instance variables directly.\n\n**3. void Methods**: Do not return any value. They perform an action (like printing) but give nothing back to the caller.\n\n**4. Non-void Methods**: Return a value of a specific type. The caller can use this returned value.\n\n**5. Parameterized Methods**: Accept one or more parameters/arguments. These parameters allow data to be passed into the method.\n\n**6. No-argument Methods**: Accept no parameters. They operate on class-level or instance-level data that is already accessible.\n\n**7. Predefined Methods**: Methods already defined in the Java library, such as `System.out.println()`, `Math.max()`, `String.length()`, etc.\n\n**8. User-defined Methods**: Methods written by the programmer to meet specific requirements of an application.\n\n### Method Overloading\nJava allows multiple methods in the same class to have the **same name** but different parameter lists (different number, type, or order of parameters). This is called **method overloading**. It allows a single method name to handle different types or numbers of inputs, providing flexibility and readability.\n\n```java\nint add(int a, int b) { return a + b; }\ndouble add(double a, double b) { return a + b; }\nint add(int a, int b, int c) { return a + b + c; }\n```\n\nJava uses the method signature (name + parameter types) to determine which overloaded version to call. Return type alone does NOT distinguish overloaded methods.\n\n### Passing Arguments\n\n**Pass by Value**: Java always passes arguments by value. For primitive types (int, double, etc.), a copy of the value is passed; changes inside the method do not affect the original variable.\n\n**Pass by Reference (Object References)**: When an object is passed, a copy of the reference (memory address) is passed. The method can modify the object's state through this reference, but reassigning the reference inside the method doesn't affect the caller.\n\n### Recursion\nA method can call itself — this is called **recursion**. Recursive methods must have a **base case** to stop the recursion, or they'll cause a `StackOverflowError`. Recursion is used for problems that can be broken down into smaller, identical sub-problems (like calculating factorial, Fibonacci series, binary search, tree traversal).\n\n### Variable Arguments (Varargs)\nJava supports variable-length arguments using the `...` syntax. A varargs parameter allows a method to accept zero or more arguments of a specified type. Internally, varargs are treated as an array.\n\n```java\npublic int sum(int... numbers) {\n    int total = 0;\n    for (int n : numbers) total += n;\n    return total;\n}\n```\n\n### Method Scope and Local Variables\nVariables declared inside a method are called **local variables**. They exist only within the method's execution and are destroyed when the method returns. Local variables must be initialized before use, unlike instance variables which get default values.\n\n### The `this` Keyword in Methods\nWithin an instance method, `this` refers to the current object. It's used to distinguish between instance variables and local variables when they share the same name, and to call other constructors or methods of the same class.\n\n### Key Best Practices for Methods\n- A method should do **one thing** and do it well (Single Responsibility Principle).\n- Method names should clearly describe what the method does.\n- Keep methods short — ideally under 20 lines.\n- Use parameters instead of relying heavily on global/instance state.\n- Always validate input parameters when needed.\n- Prefer returning values over modifying global state.\n\nMethods are the backbone of Java programming. Mastering how to define, call, overload, and design methods is fundamental to writing clean, professional Java code. Every advanced concept in Java — from OOP to streams to concurrency — relies on methods.",
+  "key_features": {
+    "features": [
+      {"name": "Code Reusability", "description": "Define logic once and call it multiple times, eliminating code duplication."},
+      {"name": "Modularity", "description": "Break complex programs into smaller, manageable, single-purpose units."},
+      {"name": "Method Overloading", "description": "Multiple methods with the same name but different parameters, enabling flexible APIs."},
+      {"name": "Return Values", "description": "Methods can return results to the calling code, enabling computation and data retrieval."},
+      {"name": "Parameter Passing", "description": "Methods accept input through parameters, making them flexible and reusable."},
+      {"name": "Recursion Support", "description": "Methods can call themselves to solve problems that can be decomposed into identical sub-problems."},
+      {"name": "Access Control", "description": "Access modifiers (public, private, protected) control method visibility and encapsulation."},
+      {"name": "Static vs Instance", "description": "Static methods belong to the class; instance methods belong to objects, providing two modes of operation."}
+    ],
+    "advantages": [
+      "Promotes DRY (Don't Repeat Yourself) principle — write once, use many times",
+      "Improves readability by giving meaningful names to code blocks",
+      "Easier to test, debug, and maintain individual methods than monolithic code",
+      "Enables abstraction — callers don't need to know the internal implementation",
+      "Supports team development — different developers can work on different methods"
+    ],
+    "limitations": [
+      "Method calls add overhead (though minimal) due to stack frame creation",
+      "Deep recursion can cause StackOverflowError if no proper base case",
+      "Overloading with similar parameter types can cause ambiguity and bugs",
+      "Private methods cannot be tested directly through unit tests without reflection"
+    ]
+  },
+  "syntax": {
+    "explanation": "The method declaration in Java consists of an optional access modifier, a return type (or void), the method name in camelCase, a parenthesized parameter list, and a method body enclosed in curly braces. The return statement is mandatory for non-void methods.",
+    "breakdown": [
+      "accessModifier: public | private | protected | (default/package-private)",
+      "returnType: void | int | double | String | boolean | any class/interface type",
+      "methodName: camelCase identifier (e.g., calculateTotal, getUserName)",
+      "parameters: comma-separated list of 'type name' pairs, or empty ()",
+      "method body: statements enclosed in { } including optional return statement",
+      "return statement: 'return value;' required for all non-void methods"
+    ],
+    "rules": [
+      "Methods must be defined inside a class — Java has no standalone functions",
+      "Method name must start with a lowercase letter and follow camelCase convention",
+      "Non-void methods MUST have a return statement that returns the declared type",
+      "void methods must NOT return a value (but can use 'return;' to exit early)",
+      "Parameter names within a method must be unique",
+      "Overloaded methods must differ in parameter count, type, or order — not just return type",
+      "Static methods cannot access instance (non-static) variables or call instance methods directly",
+      "Varargs parameter (type... name) must be the LAST parameter in the method signature"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple void and return-type Methods",
+      "code": "public class BasicMethods {\n\n    // void method - performs action, returns nothing\n    public static void greet(String name) {\n        System.out.println(\"Hello, \" + name + \"!\");\n    }\n\n    // method that returns an int\n    public static int add(int a, int b) {\n        return a + b;\n    }\n\n    // method with no parameters\n    public static void printLine() {\n        System.out.println(\"--------------------\");\n    }\n\n    public static void main(String[] args) {\n        greet(\"Alice\");\n        printLine();\n        int result = add(10, 25);\n        System.out.println(\"Sum: \" + result);\n        printLine();\n        greet(\"Bob\");\n    }\n}",
+      "output": "Hello, Alice!\n--------------------\nSum: 35\n--------------------\nHello, Bob!",
+      "explanation": "This example shows three types of basic methods: a void method with a parameter, a method that returns an int value, and a no-argument void method. All are static so they can be called directly from main() without creating an object."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Method Overloading and Instance Methods",
+      "code": "public class Calculator {\n    private String brand;\n\n    public Calculator(String brand) {\n        this.brand = brand;\n    }\n\n    // Overloaded add methods\n    public int add(int a, int b) {\n        return a + b;\n    }\n\n    public double add(double a, double b) {\n        return a + b;\n    }\n\n    public int add(int a, int b, int c) {\n        return a + b + c;\n    }\n\n    // Instance method accessing instance variable\n    public String getBrand() {\n        return this.brand;\n    }\n\n    // Static utility method\n    public static int multiply(int a, int b) {\n        return a * b;\n    }\n\n    public static void main(String[] args) {\n        Calculator calc = new Calculator(\"ScientificPro\");\n        System.out.println(\"Brand: \" + calc.getBrand());\n        System.out.println(\"add(int, int): \" + calc.add(5, 3));\n        System.out.println(\"add(double, double): \" + calc.add(5.5, 3.2));\n        System.out.println(\"add(int, int, int): \" + calc.add(5, 3, 2));\n        System.out.println(\"multiply (static): \" + Calculator.multiply(4, 7));\n    }\n}",
+      "output": "Brand: ScientificPro\nadd(int, int): 8\nadd(double, double): 8.7\nadd(int, int, int): 10\nmultiply (static): 28",
+      "explanation": "Demonstrates method overloading — three add() methods with the same name but different parameters. Java resolves the correct version at compile time based on argument types/count. Also shows the difference between instance methods (needing an object) and static methods (called on the class)."
+    },
+    {
+      "level": "Advanced",
+      "title": "Recursion and Varargs",
+      "code": "public class AdvancedMethods {\n\n    // Recursive method to calculate factorial\n    public static long factorial(int n) {\n        if (n < 0) throw new IllegalArgumentException(\"n must be non-negative\");\n        if (n == 0 || n == 1) return 1; // base case\n        return n * factorial(n - 1);   // recursive call\n    }\n\n    // Recursive Fibonacci\n    public static int fibonacci(int n) {\n        if (n <= 1) return n;\n        return fibonacci(n - 1) + fibonacci(n - 2);\n    }\n\n    // Varargs method\n    public static double average(double... numbers) {\n        if (numbers.length == 0) return 0;\n        double sum = 0;\n        for (double num : numbers) sum += num;\n        return sum / numbers.length;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"5! = \" + factorial(5));\n        System.out.println(\"10! = \" + factorial(10));\n        System.out.println();\n        System.out.print(\"Fibonacci sequence: \");\n        for (int i = 0; i < 8; i++) {\n            System.out.print(fibonacci(i) + \" \");\n        }\n        System.out.println();\n        System.out.println();\n        System.out.println(\"avg(10, 20): \" + average(10, 20));\n        System.out.println(\"avg(1,2,3,4,5): \" + average(1, 2, 3, 4, 5));\n        System.out.println(\"avg(no args): \" + average());\n    }\n}",
+      "output": "5! = 120\n10! = 3628800\n\nFibonacci sequence: 0 1 1 2 3 5 8 13 \n\navg(10, 20): 15.0\navg(1,2,3,4,5): 3.0\navg(no args): 0.0",
+      "explanation": "Shows two recursive methods (factorial and Fibonacci) demonstrating base case and recursive call patterns. The varargs method average() can accept any number of double arguments, internally treating them as an array. The Fibonacci calls show how recursion branches to solve sub-problems."
+    },
+    {
+      "level": "Real-world",
+      "title": "Employee Payroll System Methods",
+      "code": "public class Employee {\n    private String name;\n    private String department;\n    private double baseSalary;\n    private int yearsOfService;\n\n    public Employee(String name, String department, double baseSalary, int yearsOfService) {\n        this.name = name;\n        this.department = department;\n        this.baseSalary = baseSalary;\n        this.yearsOfService = yearsOfService;\n    }\n\n    // Calculate annual bonus based on years of service\n    public double calculateBonus() {\n        if (yearsOfService >= 10) return baseSalary * 0.20;\n        else if (yearsOfService >= 5) return baseSalary * 0.10;\n        else return baseSalary * 0.05;\n    }\n\n    // Calculate tax deduction (simplified)\n    public double calculateTax() {\n        double grossSalary = baseSalary + calculateBonus();\n        if (grossSalary > 100000) return grossSalary * 0.30;\n        else if (grossSalary > 50000) return grossSalary * 0.20;\n        else return grossSalary * 0.10;\n    }\n\n    // Net salary after tax and bonus\n    public double calculateNetSalary() {\n        return (baseSalary + calculateBonus()) - calculateTax();\n    }\n\n    // Generate payslip as formatted string\n    public String generatePayslip() {\n        return String.format(\n            \"=== PAYSLIP ===\\nEmployee: %s\\nDepartment: %s\\nBase Salary: $%.2f\\nBonus: $%.2f\\nTax: $%.2f\\nNET SALARY: $%.2f\\n==============\",\n            name, department, baseSalary, calculateBonus(), calculateTax(), calculateNetSalary()\n        );\n    }\n\n    // Static method for department-level summary\n    public static void printSummary(Employee[] employees) {\n        System.out.println(\"--- Department Summary ---\");\n        double total = 0;\n        for (Employee e : employees) {\n            total += e.calculateNetSalary();\n        }\n        System.out.printf(\"Total Net Payroll: $%.2f%n\", total);\n    }\n\n    public static void main(String[] args) {\n        Employee emp1 = new Employee(\"Alice Johnson\", \"Engineering\", 80000, 8);\n        Employee emp2 = new Employee(\"Bob Smith\", \"Marketing\", 45000, 2);\n\n        System.out.println(emp1.generatePayslip());\n        System.out.println();\n        System.out.println(emp2.generatePayslip());\n        System.out.println();\n        printSummary(new Employee[]{emp1, emp2});\n    }\n}",
+      "output": "=== PAYSLIP ===\nEmployee: Alice Johnson\nDepartment: Engineering\nBase Salary: $80000.00\nBonus: $8000.00\nTax: $17600.00\nNET SALARY: $70400.00\n==============\n\n=== PAYSLIP ===\nEmployee: Bob Smith\nDepartment: Marketing\nBase Salary: $45000.00\nBonus: $2250.00\nTax: $4725.00\nNET SALARY: $42525.00\n==============\n\n--- Department Summary ---\nTotal Net Payroll: $112925.00",
+      "explanation": "A real-world payroll system where each method has a single, clear responsibility: calculateBonus() determines the bonus, calculateTax() computes tax, calculateNetSalary() combines them, and generatePayslip() formats the output. The static printSummary() operates at the class level. This demonstrates the Single Responsibility Principle and how methods collaborate."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Method Types Comparison",
+        "headers": ["Type", "Keyword", "Access Via", "Can Access Instance Vars?", "Example"],
+        "rows": [
+          ["Instance Method", "(none)", "Object reference", "Yes", "obj.calculateTotal()"],
+          ["Static Method", "static", "Class name", "No (only static)", "Math.sqrt(16)"],
+          ["Abstract Method", "abstract", "Subclass override", "N/A", "abstract void draw()"],
+          ["Final Method", "final", "Object reference", "Yes", "final void lock()"],
+          ["Synchronized Method", "synchronized", "Object reference", "Yes", "synchronized void update()"]
+        ]
+      },
+      {
+        "title": "Access Modifiers for Methods",
+        "headers": ["Modifier", "Same Class", "Same Package", "Subclass", "Other Classes"],
+        "rows": [
+          ["public", "Yes", "Yes", "Yes", "Yes"],
+          ["protected", "Yes", "Yes", "Yes", "No"],
+          ["(default)", "Yes", "Yes", "No", "No"],
+          ["private", "Yes", "No", "No", "No"]
+        ]
+      },
+      {
+        "title": "Return Types Overview",
+        "headers": ["Return Type", "Description", "Example"],
+        "rows": [
+          ["void", "Returns nothing", "void printName()"],
+          ["int", "Returns integer", "int getAge()"],
+          ["double", "Returns decimal", "double getPrice()"],
+          ["boolean", "Returns true/false", "boolean isValid()"],
+          ["String", "Returns text", "String getName()"],
+          ["Object/Class", "Returns an object", "Employee getEmployee()"],
+          ["Array", "Returns array", "int[] getScores()"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Static Method",
+        "concept_b": "Instance Method",
+        "explanation": "Static methods are called on the class (ClassName.method()) and cannot access instance variables. Instance methods are called on an object (object.method()) and can access both instance and static variables."
+      },
+      {
+        "concept_a": "Method Overloading",
+        "concept_b": "Method Overriding",
+        "explanation": "Overloading is compile-time polymorphism — same method name, different parameters, in the same class. Overriding is runtime polymorphism — subclass redefines a method from the parent class with the same signature."
+      },
+      {
+        "concept_a": "Parameters",
+        "concept_b": "Arguments",
+        "explanation": "Parameters are the variables listed in the method declaration (formal parameters). Arguments are the actual values passed when calling the method. Parameters define what a method needs; arguments supply those values."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "System.out.println()",
+      "description": "Prints a value to standard output followed by a newline. Heavily overloaded to accept any type.",
+      "parameters": "Object/String/int/double/boolean/char/long/float x",
+      "return_value": "void",
+      "example_usage": "System.out.println(\"Hello\"); System.out.println(42);"
+    },
+    {
+      "name": "String.format()",
+      "description": "Returns a formatted string using format specifiers, similar to printf.",
+      "parameters": "String format, Object... args",
+      "return_value": "String",
+      "example_usage": "String s = String.format(\"Name: %s, Age: %d\", name, age);"
+    },
+    {
+      "name": "Math.max()",
+      "description": "Returns the greater of two values. Overloaded for int, long, float, double.",
+      "parameters": "int/long/float/double a, int/long/float/double b",
+      "return_value": "Same type as arguments",
+      "example_usage": "int biggest = Math.max(10, 25); // returns 25"
+    },
+    {
+      "name": "Math.abs()",
+      "description": "Returns the absolute value of a number (removes negative sign).",
+      "parameters": "int/long/float/double a",
+      "return_value": "Same type as argument",
+      "example_usage": "int pos = Math.abs(-42); // returns 42"
+    },
+    {
+      "name": "Arrays.sort()",
+      "description": "Sorts the specified array in ascending order using a dual-pivot quicksort.",
+      "parameters": "int[]/Object[] a (with optional fromIndex, toIndex range)",
+      "return_value": "void",
+      "example_usage": "int[] arr = {3,1,4}; Arrays.sort(arr); // arr is now {1,3,4}"
+    },
+    {
+      "name": "String.valueOf()",
+      "description": "Converts various types (int, double, boolean, char, Object) to their String representation.",
+      "parameters": "int/double/boolean/char/Object value",
+      "return_value": "String",
+      "example_usage": "String s = String.valueOf(42); // returns \"42\""
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Missing Return Statement in Non-void Method",
+      "description": "If a method declares a non-void return type, every possible code path must have a return statement. Forgetting a return in an if-else block causes a compilation error.",
+      "wrong_example": "public static int absolute(int n) {\n    if (n >= 0) {\n        return n;\n    }\n    // ERROR: missing return for negative case\n}",
+      "correct_example": "public static int absolute(int n) {\n    if (n >= 0) {\n        return n;\n    }\n    return -n; // covers negative case\n}",
+      "debugging_tip": "The compiler will report 'missing return statement'. Check that all if/else branches and try/catch blocks return a value."
+    },
+    {
+      "title": "Calling Instance Method from Static Context",
+      "description": "Static methods cannot directly call instance methods or access instance variables. This is a very common beginner mistake.",
+      "wrong_example": "public class MyClass {\n    private int value = 10;\n    \n    public void display() {\n        System.out.println(value);\n    }\n    \n    public static void main(String[] args) {\n        display(); // ERROR: non-static method cannot be referenced from static context\n    }\n}",
+      "correct_example": "public class MyClass {\n    private int value = 10;\n    \n    public void display() {\n        System.out.println(value);\n    }\n    \n    public static void main(String[] args) {\n        MyClass obj = new MyClass(); // create an object first\n        obj.display(); // now call instance method on object\n    }\n}",
+      "debugging_tip": "Error message: 'non-static method X cannot be referenced from a static context'. Always create an object of the class before calling instance methods."
+    },
+    {
+      "title": "Overloading Confusion with Autoboxing",
+      "description": "When overloaded methods exist for both primitive and wrapper types, Java's autoboxing can cause unexpected method resolution.",
+      "wrong_example": "public class Test {\n    static void print(int x) { System.out.println(\"int: \" + x); }\n    static void print(Integer x) { System.out.println(\"Integer: \" + x); }\n    \n    public static void main(String[] args) {\n        print(5);        // Calls int version\n        print(null);     // Ambiguity! ERROR or unexpected behavior\n    }\n}",
+      "correct_example": "public class Test {\n    static void print(int x) { System.out.println(\"int: \" + x); }\n    static void print(Integer x) {\n        if (x == null) {\n            System.out.println(\"Integer: null\");\n            return;\n        }\n        System.out.println(\"Integer: \" + x);\n    }\n    \n    public static void main(String[] args) {\n        print(5);           // Calls int version\n        print((Integer) null); // Explicitly calls Integer version\n    }\n}",
+      "debugging_tip": "Be explicit about types when calling overloaded methods that have both primitive and wrapper type variants. Use explicit casting when necessary."
+    },
+    {
+      "title": "Infinite Recursion (Missing Base Case)",
+      "description": "A recursive method without a proper base case will call itself indefinitely, causing a StackOverflowError at runtime.",
+      "wrong_example": "public static int factorial(int n) {\n    return n * factorial(n - 1); // ERROR: no base case! Runs forever\n}",
+      "correct_example": "public static int factorial(int n) {\n    if (n == 0 || n == 1) return 1; // base case stops recursion\n    return n * factorial(n - 1);\n}",
+      "debugging_tip": "Always define the base case FIRST in a recursive method. Test with small inputs (0, 1) to verify the base case works before testing larger values."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is a method in Java?",
+        "answer": "A method is a named block of code inside a class that performs a specific task. It can accept parameters, execute statements, and optionally return a value. Methods promote code reusability by allowing the same logic to be called multiple times."
+      },
+      {
+        "question": "What is the difference between a void method and a non-void method?",
+        "answer": "A void method does not return any value after execution (declared with 'void' keyword). A non-void method returns a value of the declared return type (int, String, double, etc.) using the 'return' statement."
+      },
+      {
+        "question": "What is method overloading?",
+        "answer": "Method overloading allows multiple methods in the same class to have the same name but different parameter lists (different number, type, or order of parameters). Java resolves the correct method at compile time based on the arguments passed."
+      },
+      {
+        "question": "What is the difference between a parameter and an argument?",
+        "answer": "A parameter is the variable defined in the method declaration (formal parameter). An argument is the actual value passed to the method when it is called. Parameters receive the argument values."
+      },
+      {
+        "question": "Can a Java method return multiple values?",
+        "answer": "Not directly. A Java method can only return one value. To return multiple values, you can return an array, a collection, or wrap the values in an object/class."
+      },
+      {
+        "question": "What is a static method?",
+        "answer": "A static method belongs to the class rather than any object instance. It is declared with the 'static' keyword, called using the class name, and cannot directly access instance variables or instance methods."
+      },
+      {
+        "question": "What does the 'return' statement do?",
+        "answer": "The return statement exits the current method. In non-void methods, it also sends a value back to the caller. In void methods, 'return;' can be used to exit early without returning a value."
+      },
+      {
+        "question": "What is recursion in Java?",
+        "answer": "Recursion is a technique where a method calls itself to solve a problem. Every recursive method must have a base case (stopping condition) to prevent infinite recursion and a StackOverflowError."
+      },
+      {
+        "question": "What is the main() method in Java?",
+        "answer": "The main() method is the entry point of every Java application. Its signature is: public static void main(String[] args). It is public (accessible), static (called without object), void (returns nothing), and accepts a String array of command-line arguments."
+      },
+      {
+        "question": "What are access modifiers for methods?",
+        "answer": "Access modifiers control the visibility of methods: 'public' — accessible from anywhere; 'private' — only within the same class; 'protected' — within the package and subclasses; default (no modifier) — within the same package only."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How does Java pass arguments to methods — by value or by reference?",
+        "answer": "Java always passes arguments BY VALUE. For primitives, a copy of the value is passed. For objects, a copy of the reference (memory address) is passed. The method can modify the object's fields through this reference, but cannot reassign the original reference variable in the caller."
+      },
+      {
+        "question": "Can overloaded methods differ only by return type?",
+        "answer": "No. Method overloading is determined by the method signature (name + parameter types). Return type is NOT part of the signature. Having two methods with the same name and parameters but different return types causes a compilation error."
+      },
+      {
+        "question": "What is the difference between method overloading and method overriding?",
+        "answer": "Overloading is compile-time polymorphism in the same class — same name, different parameters. Overriding is runtime polymorphism — a subclass provides its own implementation of a method declared in the parent class, with the same signature. Overriding requires inheritance; overloading does not."
+      },
+      {
+        "question": "What are varargs in Java and when would you use them?",
+        "answer": "Varargs (variable arguments) allow a method to accept any number of arguments of a specified type using the '...' syntax: void method(int... nums). Internally treated as an array. Useful when the number of arguments is not known at compile time. The varargs parameter must be the last parameter."
+      },
+      {
+        "question": "Can a static method be overloaded? Can it be overridden?",
+        "answer": "Yes, static methods can be overloaded (same class, different parameters). No, static methods cannot be overridden — if a subclass defines a static method with the same signature, it is called method hiding, not overriding. Static methods are resolved by the compiler based on the reference type."
+      },
+      {
+        "question": "What is method chaining and how is it implemented in Java?",
+        "answer": "Method chaining allows multiple method calls on the same object in a single statement. It is implemented by having each method return 'this' (the current object). Example: StringBuilder sb = new StringBuilder().append(\"Hello\").append(\" \").append(\"World\");"
+      },
+      {
+        "question": "What is the significance of the 'final' keyword on a method?",
+        "answer": "A method declared as 'final' cannot be overridden by subclasses. This is used to prevent modification of critical behavior (e.g., security checks, core algorithms). The method can still be called normally; it just cannot be redefined in a subclass."
+      },
+      {
+        "question": "What is the difference between actual parameters and formal parameters?",
+        "answer": "Formal parameters are the variable names declared in the method definition (e.g., int x in void add(int x)). Actual parameters (arguments) are the concrete values passed when calling the method (e.g., add(5)). Formal parameters act as local variables within the method."
+      },
+      {
+        "question": "What happens when a void method executes a 'return' statement?",
+        "answer": "The method exits immediately. A void method can use 'return;' (without a value) to terminate early — useful inside conditionals to skip the remaining code. Returning a value from a void method is a compilation error."
+      },
+      {
+        "question": "What is tail recursion and does Java optimize it?",
+        "answer": "Tail recursion is a form of recursion where the recursive call is the very last operation in the method. Many languages optimize this to avoid stack overflow. Java does NOT perform tail call optimization — every recursive call creates a new stack frame, so deep recursion can still cause StackOverflowError."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain how the JVM handles method calls internally using the call stack.",
+        "answer": "Each method call creates a stack frame pushed onto the call stack. The frame contains local variables, the operand stack, and the return address. When the method returns, its frame is popped. Static methods have frames without 'this'. Deep recursion can exhaust the stack (default ~500-1000 frames) causing StackOverflowError."
+      },
+      {
+        "question": "What is method dispatch and how does Java resolve instance method calls at runtime?",
+        "answer": "Java uses virtual method dispatch (dynamic dispatch) for instance methods. At runtime, the JVM looks up the actual object's class (not the reference type) to find the correct method implementation. This enables polymorphism. The JVM uses the vtable (virtual method table) for this dispatch."
+      },
+      {
+        "question": "What are default and static methods in interfaces (Java 8+)?",
+        "answer": "Java 8 introduced default methods in interfaces — methods with a body declared with the 'default' keyword. They provide a default implementation that implementing classes can optionally override, allowing interface evolution without breaking existing code. Static methods in interfaces are utility methods associated with the interface and called as Interface.method()."
+      },
+      {
+        "question": "What is the impact of method inlining in JIT compilation?",
+        "answer": "The JIT (Just-In-Time) compiler may replace a method call with the method body (inlining) for small, frequently-called methods. This eliminates the overhead of stack frame creation/destruction. The JVM uses heuristics (method size, call frequency) to decide when to inline. Final and private methods are better candidates for inlining."
+      },
+      {
+        "question": "How does autoboxing interact with method overloading? What are the resolution rules?",
+        "answer": "Java resolves overloaded methods in three phases: (1) exact match without boxing/unboxing, (2) with boxing/unboxing, (3) with varargs. This means int prefers the int version over Integer. Passing null can cause ambiguity between reference type overloads. Being explicit about types avoids unexpected resolution."
+      },
+      {
+        "question": "What are bridge methods and why does Java generate them?",
+        "answer": "Bridge methods are synthetic methods generated by the Java compiler to handle type erasure with generics. When a generic class/interface is subclassed with a concrete type and overrides a method, the compiler creates a bridge method that casts and delegates to the actual implementation. They ensure binary compatibility with older bytecode."
+      },
+      {
+        "question": "Explain the difference between invokeVirtual, invokeStatic, invokeSpecial, and invokeInterface bytecode instructions.",
+        "answer": "These JVM bytecode instructions determine how method calls are dispatched: invokeVirtual — instance method call with dynamic dispatch (polymorphism); invokeStatic — static method call (no dispatch); invokeSpecial — private methods, constructors, super calls (no virtual dispatch); invokeInterface — call through an interface reference (requires interface method table lookup)."
+      },
+      {
+        "question": "What is the difference between a synchronized method and a synchronized block? When would you use each?",
+        "answer": "A synchronized method locks on 'this' (instance methods) or the class object (static methods) for the entire method duration. A synchronized block can specify any object as the lock and synchronize only part of the code. Synchronized blocks are preferred for performance (finer granularity) and to use custom lock objects. Both ensure only one thread executes the locked code at a time."
+      },
+      {
+        "question": "How does the 'strictfp' keyword affect floating-point methods?",
+        "answer": "The 'strictfp' keyword applied to a method or class ensures that all floating-point operations within it follow the IEEE 754 standard strictly, producing consistent results across all platforms. Without strictfp, the JVM may use extended precision on some hardware (like x87 FPU), giving platform-specific results. Note: in Java 17+, strict FP became the default."
+      },
+      {
+        "question": "What are the implications of method visibility on inheritance and design?",
+        "answer": "Private methods are not visible to subclasses and cannot be overridden (they can be re-declared but it's not overriding). Protected and public methods are part of a class's API contract. Widening visibility in overriding is allowed (private → protected → public) but narrowing is not. Package-private methods are only visible within the same package, which can create subtle bugs when classes are moved across packages."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a method that takes two integers and returns their sum.",
+      "Write a method that accepts a name (String) and prints 'Hello, [name]!'",
+      "Write a method that returns the larger of two numbers.",
+      "Create a method that calculates and returns the area of a rectangle given width and height.",
+      "Write a static method that checks if a number is even and returns a boolean.",
+      "Write a method that converts Celsius to Fahrenheit and returns the result.",
+      "Create a void method that prints the multiplication table of a given number (1 to 10).",
+      "Write a method that accepts an int array and returns its length.",
+      "Create a method that takes a String and returns it in uppercase.",
+      "Write a method that computes and returns the square of a number."
+    ],
+    "medium": [
+      "Write an overloaded method 'findMax' that finds the maximum of two ints, two doubles, and three ints.",
+      "Create a recursive method to compute the sum of digits of an integer (e.g., 123 → 6).",
+      "Write a method that accepts a String and returns the count of vowels in it.",
+      "Create a method that reverses an integer array in-place and returns the reversed array.",
+      "Write a method isPrime(int n) that returns true if n is a prime number.",
+      "Implement a method using varargs that computes the sum of any number of integers passed.",
+      "Write a method that takes a sentence and returns the number of words in it.",
+      "Create a method that checks if a given string is a palindrome (case-insensitive).",
+      "Write a method that finds and returns the second largest element in an int array.",
+      "Implement a method that converts a decimal number to binary and returns the binary as a String."
+    ],
+    "hard": [
+      "Write a recursive method to solve the Tower of Hanoi for n disks, printing each move.",
+      "Implement a method that performs binary search on a sorted array and returns the index, or -1 if not found.",
+      "Create a method that takes a 2D int matrix and returns its transpose.",
+      "Write a method that computes GCD of two numbers using the Euclidean algorithm (recursive).",
+      "Implement a method that flattens a nested ArrayList<Object> (which may contain integers or other lists) into a flat list.",
+      "Write a method that accepts a String expression (only digits and +/-) and evaluates it without using eval.",
+      "Create a method that generates all permutations of a given String using recursion.",
+      "Write a method that performs merge sort on an int array and returns the sorted array.",
+      "Implement a method that finds all pairs in an int array that sum to a given target value.",
+      "Write a method that uses memoization to compute Fibonacci numbers efficiently for large n."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a Java program with a method 'isPerfect(int n)' that returns true if n is a perfect number (a number equal to the sum of its proper divisors, e.g., 6 = 1+2+3). Then print all perfect numbers between 1 and 10000.",
+      "input": "No user input — finds all perfect numbers from 1 to 10000",
+      "output": "Perfect numbers between 1 and 10000:\n6\n28\n496\n8128",
+      "constraints": "1 <= n <= 10000",
+      "solution": "public class PerfectNumbers {\n    public static boolean isPerfect(int n) {\n        if (n <= 1) return false;\n        int sum = 1;\n        for (int i = 2; i <= Math.sqrt(n); i++) {\n            if (n % i == 0) {\n                sum += i;\n                if (i != n / i) sum += n / i;\n            }\n        }\n        return sum == n;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"Perfect numbers between 1 and 10000:\");\n        for (int i = 1; i <= 10000; i++) {\n            if (isPerfect(i)) System.out.println(i);\n        }\n    }\n}"
+    },
+    {
+      "statement": "Implement a class 'StringUtils' with overloaded static methods 'count': (1) counts occurrences of a char in a String, (2) counts occurrences of a substring in a String, (3) counts words in a String. Demonstrate all three.",
+      "input": "String: 'hello world, hello java world'\nChar to count: 'l'\nSubstring to count: 'hello'\nWord count of the same string",
+      "output": "Char 'l' count: 6\nSubstring 'hello' count: 2\nWord count: 5",
+      "constraints": "Input strings are non-null. Substring search is case-sensitive.",
+      "solution": "public class StringUtils {\n    // Count occurrences of a char\n    public static int count(String str, char ch) {\n        int cnt = 0;\n        for (char c : str.toCharArray()) {\n            if (c == ch) cnt++;\n        }\n        return cnt;\n    }\n\n    // Count occurrences of a substring\n    public static int count(String str, String sub) {\n        if (sub.isEmpty()) return 0;\n        int cnt = 0;\n        int idx = 0;\n        while ((idx = str.indexOf(sub, idx)) != -1) {\n            cnt++;\n            idx += sub.length();\n        }\n        return cnt;\n    }\n\n    // Count words in a string\n    public static int count(String str) {\n        if (str == null || str.trim().isEmpty()) return 0;\n        return str.trim().split(\"\\\\s+\").length;\n    }\n\n    public static void main(String[] args) {\n        String text = \"hello world, hello java world\";\n        System.out.println(\"Char 'l' count: \" + count(text, 'l'));\n        System.out.println(\"Substring 'hello' count: \" + count(text, \"hello\"));\n        System.out.println(\"Word count: \" + count(text));\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Enterprise Applications",
+      "explanation": "Enterprise systems define hundreds of business logic methods. An ERP system might have methods like processOrder(), validateInventory(), generateInvoice() — each method handling a distinct business operation. Method organization mirrors the business domain."
+    },
+    {
+      "field": "Banking Systems",
+      "explanation": "Banking software uses methods extensively: deposit(), withdraw(), transfer(), calculateInterest(), checkBalance(). These methods enforce business rules (e.g., balance cannot go negative) and transaction integrity. Static methods are used for rate calculations shared across accounts."
+    },
+    {
+      "field": "Android Development",
+      "explanation": "Android apps override Activity lifecycle methods (onCreate(), onResume(), onPause()) defined by the framework. Developers implement these callback methods to respond to system events. Utility methods are used for formatting, validation, and API communication."
+    },
+    {
+      "field": "Web Applications",
+      "explanation": "Spring MVC controller methods annotated with @GetMapping or @PostMapping handle HTTP requests. Each endpoint is a method that validates input, calls service methods, and returns a response. Service layer methods encapsulate business logic."
+    },
+    {
+      "field": "Microservices",
+      "explanation": "Microservices expose their functionality through REST APIs backed by methods. A payment microservice has methods like processPayment(), refundPayment(), validateCard(). Each service method can be independently tested, deployed, and scaled."
+    },
+    {
+      "field": "Cloud Applications",
+      "explanation": "Cloud-native Java applications use methods for fault tolerance (retry logic in methods with exponential backoff), caching (methods that check cache before calling APIs), and circuit breaking. Methods like getDataWithFallback() implement resilience patterns."
+    }
+  ],
+  "best_practices": [
+    "Follow the Single Responsibility Principle — each method should perform exactly one well-defined task.",
+    "Use meaningful, action-verb-based method names that clearly describe what the method does (e.g., calculateTax(), getUserById()).",
+    "Keep methods short (ideally under 20 lines); if a method is getting long, extract sub-logic into separate private helper methods.",
+    "Validate input parameters at the beginning of methods, throwing IllegalArgumentException for invalid inputs.",
+    "Prefer returning values rather than modifying external state; pure functions (same input always gives same output, no side effects) are easier to test and reason about.",
+    "Document public methods with Javadoc comments (@param, @return, @throws) so callers understand the contract without reading the implementation.",
+    "Avoid deep recursion for large inputs — prefer iterative solutions or use memoization/dynamic programming to prevent StackOverflowError."
+  ],
+  "summary": [
+    "A method is a named block of code inside a class that performs a specific task, promotes reusability, and can accept parameters and return values.",
+    "Java supports instance methods (called on objects), static methods (called on the class), void methods (no return), and non-void methods (returns a value).",
+    "Method overloading allows multiple methods with the same name but different parameter types/counts in the same class — resolved at compile time.",
+    "Java passes all arguments by value — primitives get a copy, objects get a copy of the reference (the object's state can be modified but the reference cannot be reassigned).",
+    "Best practices include single responsibility, meaningful naming, short method bodies, parameter validation, and proper Javadoc documentation."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is NOT a valid way to overload a method in Java?",
+      "options": ["A. Different number of parameters", "B. Different parameter types", "C. Different return type only", "D. Different order of parameter types"],
+      "answer": "C. Different return type only",
+      "explanation": "Method overloading is determined by the method signature (name + parameter list). Return type alone does not distinguish overloaded methods — the compiler cannot resolve the ambiguity based on return type, causing a compilation error."
+    },
+    {
+      "question": "What will happen if a recursive method has no base case?",
+      "options": ["A. The method returns null", "B. Compilation error", "C. StackOverflowError at runtime", "D. The method runs once and stops"],
+      "answer": "C. StackOverflowError at runtime",
+      "explanation": "Without a base case, a recursive method calls itself infinitely. Each call adds a frame to the call stack until memory is exhausted, causing a StackOverflowError at runtime (not a compile error)."
+    },
+    {
+      "question": "Which keyword is used to call an instance method on the current object from within the same class?",
+      "options": ["A. super", "B. self", "C. this", "D. current"],
+      "answer": "C. this",
+      "explanation": "'this' refers to the current object instance. It can be used to call instance methods and access instance variables from within the class. Java has no 'self' keyword."
+    },
+    {
+      "question": "What is the output of this code?\npublic class Test {\n    static int x = 5;\n    static void modify(int x) { x = 100; }\n    public static void main(String[] args) {\n        modify(x);\n        System.out.println(x);\n    }\n}",
+      "options": ["A. 100", "B. 5", "C. 0", "D. Compilation error"],
+      "answer": "B. 5",
+      "explanation": "Java passes primitives by value. Inside modify(), 'x' is a local copy — changing it has no effect on the static field 'x'. So the static field remains 5."
+    },
+    {
+      "question": "A method declared as 'private static void helper()' can be:",
+      "options": ["A. Called from any class in the package", "B. Called from subclasses only", "C. Called only from within the same class", "D. Overridden by subclasses"],
+      "answer": "C. Called only from within the same class",
+      "explanation": "'private' restricts access to the same class only. Being static means it belongs to the class but is still private. It cannot be called from outside the class and cannot be overridden."
+    },
+    {
+      "question": "Which method signature correctly demonstrates a varargs method?",
+      "options": ["A. void method(int[] ...nums)", "B. void method(int... nums)", "C. void method(...int nums)", "D. void method(int nums...)"],
+      "answer": "B. void method(int... nums)",
+      "explanation": "Varargs syntax uses 'type... name' where the three dots come after the type. The varargs parameter is treated as an array inside the method. Only one varargs parameter is allowed and it must be last."
+    },
+    {
+      "question": "Which of the following is true about static methods?",
+      "options": ["A. They can be overridden by subclasses", "B. They cannot be overloaded", "C. They can access instance variables directly", "D. They belong to the class, not any instance"],
+      "answer": "D. They belong to the class, not any instance",
+      "explanation": "Static methods belong to the class. They cannot access instance variables directly (only static ones). They can be overloaded but not truly overridden (subclass hiding ≠ overriding). They are called using the class name."
+    },
+    {
+      "question": "What is the return type of the main() method in Java?",
+      "options": ["A. int", "B. String", "C. void", "D. boolean"],
+      "answer": "C. void",
+      "explanation": "The main() method is declared as 'public static void main(String[] args)'. It returns nothing (void). Unlike C/C++, Java's main method does not return an int exit code."
+    },
+    {
+      "question": "How many values can a Java method return directly?",
+      "options": ["A. As many as needed using varargs", "B. Two values at most", "C. Exactly one value (or none for void)", "D. No limit"],
+      "answer": "C. Exactly one value (or none for void)",
+      "explanation": "A Java method can return exactly one value using the 'return' statement, or nothing at all if declared void. To return multiple values, wrap them in an array, collection, or object."
+    },
+    {
+      "question": "Which of the following is a predefined Java method?",
+      "options": ["A. calculateSalary()", "B. Math.sqrt()", "C. processOrder()", "D. printPayslip()"],
+      "answer": "B. Math.sqrt()",
+      "explanation": "Math.sqrt() is a predefined static method in the java.lang.Math class. The other options are user-defined method names that would need to be written by the programmer."
+    }
+  ]
+}

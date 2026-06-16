@@ -1,0 +1,35 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" />
+        </marker>
+      </defs>
+      <rect width="100%" height="100%" fill="#f4f4f4" />
+      <text x="400" y="40" font-family="monospace" font-size="24" font-weight="bold" text-anchor="middle">32-bit ALU Architecture</text>
+      <rect x="300" y="80" width="200" height="200" fill="#e2e8f0" stroke="#475569" stroke-width="2" />
+      <text x="400" y="120" font-family="monospace" font-size="16" text-anchor="middle">ALU Core</text>
+      
+      <rect x="320" y="140" width="160" height="40" fill="#cbd5e1" stroke="#334155" />
+      <text x="400" y="165" font-family="monospace" font-size="14" text-anchor="middle">Arithmetic Unit</text>
+
+      <rect x="320" y="190" width="160" height="40" fill="#cbd5e1" stroke="#334155" />
+      <text x="400" y="215" font-family="monospace" font-size="14" text-anchor="middle">Logic Unit</text>
+
+      <rect x="320" y="240" width="160" height="30" fill="#94a3b8" stroke="#334155" />
+      <text x="400" y="260" font-family="monospace" font-size="12" text-anchor="middle">Multiplexer</text>
+
+      <!-- Inputs -->
+      <path d="M 200 120 L 290 120" stroke="#1e293b" stroke-width="2" marker-end="url(#arrow)" />
+      <text x="250" y="110" font-family="monospace" font-size="14" text-anchor="middle">Operand A</text>
+
+      <path d="M 200 180 L 290 180" stroke="#1e293b" stroke-width="2" marker-end="url(#arrow)" />
+      <text x="250" y="170" font-family="monospace" font-size="14" text-anchor="middle">Operand B</text>
+
+      <!-- Control -->
+      <path d="M 400 350 L 400 290" stroke="#dc2626" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)" />
+      <text x="400" y="370" font-family="monospace" font-size="14" text-anchor="middle" fill="#dc2626">Control Signals</text>
+
+      <!-- Output -->
+      <path d="M 500 180 L 590 180" stroke="#1e293b" stroke-width="4" marker-end="url(#arrow)" />
+      <text x="550" y="170" font-family="monospace" font-size="14" text-anchor="middle">Result Bus</text>
+    </svg>

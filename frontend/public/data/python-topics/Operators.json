@@ -1,0 +1,260 @@
+{
+  "title": "Operators",
+  "introduction": {
+    "what_it_is": "Operators are special symbols or keywords in Python that carry out arithmetic or logical computation. The value that the operator operates on is called the operand.",
+    "why_important": "Operators form the core foundation of programming logic. They are essential for manipulating data, performing calculations, making comparisons, and building the decision-making capabilities of a program.",
+    "real_world": [
+      "Calculating the total cost of items in an online shopping cart.",
+      "Checking if a user's password matches the stored password.",
+      "Determining if an age is strictly greater than 18 to grant access."
+    ]
+  },
+  "detailed_theory": "In Python, operators are used to perform operations on variables and values. Python divides operators into several groups. \n\n1. **Arithmetic Operators:** Used to perform common mathematical operations. This includes addition (+), subtraction (-), multiplication (*), division (/), modulus (%), exponentiation (**), and floor division (//). Notice that normal division (/) always returns a float, whereas floor division (//) rounds down to the nearest whole number.\n\n2. **Assignment Operators:** Used to assign values to variables. The most basic is =, but Python also offers compound assignment operators like +=, -=, *=, and /=, which perform an operation and then assign the result back to the variable.\n\n3. **Comparison Operators:** Used to compare two values. They always evaluate to a Boolean (True or False). These include equal (==), not equal (!=), greater than (>), less than (<), greater than or equal to (>=), and less than or equal to (<=).\n\n4. **Logical Operators:** Used to combine conditional statements. These are 'and' (returns True if both statements are true), 'or' (returns True if one of the statements is true), and 'not' (reverses the result, returns False if the result is true).\n\n5. **Identity Operators:** Used to compare the objects, not if they are equal, but if they are actually the same object, with the same memory location. These are 'is' and 'is not'.\n\n6. **Membership Operators:** Used to test if a sequence is presented in an object. These are 'in' and 'not in'.\n\n7. **Bitwise Operators:** Used to compare (binary) numbers. They operate bit by bit, like AND (&), OR (|), XOR (^), NOT (~), Left Shift (<<), and Right Shift (>>).\n\nUnderstanding operator precedence is also critical. Similar to PEMDAS in mathematics, operators in Python follow an order of evaluation (e.g., multiplication is evaluated before addition). Parentheses `()` can be used to override this precedence and enforce a specific evaluation order.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Extensive Operator Set",
+        "description": "Provides operators for arithmetic, logic, identity, membership, and bitwise operations."
+      },
+      {
+        "name": "Operator Precedence",
+        "description": "Follows well-defined mathematical rules for evaluation order."
+      },
+      {
+        "name": "Overloading Capability",
+        "description": "Many built-in operators can be overloaded to work with custom class objects using special magic methods."
+      }
+    ],
+    "advantages": [
+      "Rich operator syntax makes mathematical and logical expressions highly readable.",
+      "Membership and identity operators offer extremely Pythonic ways to check conditions.",
+      "Compound assignment operators save keystrokes and reduce potential typos."
+    ],
+    "limitations": [
+      "Overusing bitwise operations or complex logical chains can make code hard to read.",
+      "Implicit type conversion during operations (like int + float) can sometimes cause unexpected precision issues."
+    ]
+  },
+  "syntax": {
+    "explanation": "Operators are placed between operands (values or variables) to form expressions.",
+    "breakdown": [
+      "`operand1 operator operand2`",
+      "Example: `5 + 3` (5 and 3 are operands, + is the operator)"
+    ],
+    "rules": [
+      "Operands must be of compatible types for the specific operator.",
+      "Parentheses can group expressions to change precedence.",
+      "Indentation does not affect operators directly, but expressions must align logically."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Arithmetic Operators",
+      "code": "a = 10\nb = 3\nprint('Addition:', a + b)\nprint('Division:', a / b)\nprint('Floor Division:', a // b)\nprint('Modulus:', a % b)",
+      "output": "Addition: 13\nDivision: 3.3333333333333335\nFloor Division: 3\nModulus: 1",
+      "explanation": "Demonstrates basic math operations, highlighting the difference between standard and floor division."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Logical and Comparison Operators",
+      "code": "age = 20\nhas_license = True\nif age >= 18 and has_license:\n    print('Can drive')\nelse:\n    print('Cannot drive')",
+      "output": "Can drive",
+      "explanation": "Combines a comparison operator (>=) with a logical operator (and) to form a complex condition."
+    },
+    {
+      "level": "Advanced",
+      "title": "Identity vs Equality",
+      "code": "list1 = [1, 2, 3]\nlist2 = [1, 2, 3]\nlist3 = list1\n\nprint(list1 == list2)  # True, they have the same values\nprint(list1 is list2)  # False, they are different objects in memory\nprint(list1 is list3)  # True, they are the same object",
+      "output": "True\nFalse\nTrue",
+      "explanation": "Crucial distinction: `==` checks value equality, whereas `is` checks memory identity."
+    },
+    {
+      "level": "Real-world",
+      "title": "Membership in Data Validation",
+      "code": "allowed_roles = ['admin', 'editor', 'viewer']\nuser_role = 'guest'\n\nif user_role not in allowed_roles:\n    print('Access Denied')",
+      "output": "Access Denied",
+      "explanation": "Using the `not in` membership operator to quickly validate user permissions."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Operator Categories",
+        "headers": ["Category", "Operators", "Example"],
+        "rows": [
+          ["Arithmetic", "+, -, *, /, //, %, **", "10 % 3"],
+          ["Assignment", "=, +=, -=, *=", "x += 5"],
+          ["Comparison", "==, !=, >, <, >=, <=", "x == y"],
+          ["Logical", "and, or, not", "x < 5 and x < 10"],
+          ["Identity", "is, is not", "x is y"],
+          ["Membership", "in, not in", "x in y"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "/ (Division)",
+        "concept_b": "// (Floor Division)",
+        "explanation": "Standard division `/` yields a float (e.g., 5/2 = 2.5). Floor division `//` yields an int rounded down (e.g., 5//2 = 2)."
+      }
+    ]
+  },
+  "methods": [],
+  "mistakes": [
+    {
+      "title": "Confusing Assignment (=) with Equality (==)",
+      "description": "Using a single equals sign when you intend to compare two values in an if-statement.",
+      "wrong_example": "if x = 5:\n    print('Five')",
+      "correct_example": "if x == 5:\n    print('Five')",
+      "debugging_tip": "A single equals sign causes a SyntaxError inside conditional evaluations."
+    },
+    {
+      "title": "Using `is` instead of `==` for Values",
+      "description": "Using the identity operator to compare integers or strings, which can lead to unpredictable results due to caching.",
+      "wrong_example": "if number is 1000:",
+      "correct_example": "if number == 1000:",
+      "debugging_tip": "Always use `==` for value comparison. Only use `is` when you explicitly want to check if variables point to the exact same memory object (like `x is None`)."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between `/` and `//` in Python?",
+        "answer": "The `/` operator performs standard division and always returns a float. The `//` operator performs floor division, rounding the result down to the nearest whole number."
+      },
+      {
+        "question": "What do the logical operators 'and' and 'or' do?",
+        "answer": "'and' evaluates to True if both operands are true. 'or' evaluates to True if at least one operand is true."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Explain the difference between `==` and `is`.",
+        "answer": "`==` checks for equality of value (do they contain the same data?). `is` checks for object identity (do they point to the exact same object in memory?)."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How does operator overloading work in Python?",
+        "answer": "Operator overloading allows operators to have different meanings according to the context. It is achieved by implementing dunder (double underscore) methods like `__add__` for `+` or `__eq__` for `==` in custom classes."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "1. Multiply 10 by 5 and print the result.",
+      "2. Divide 10 by 2 using standard division.",
+      "3. Use the correct membership operator to check if 'apple' is present in the list ['apple', 'banana', 'cherry'].",
+      "4. Compare 5 and 9 to print True if 5 is not equal to 9.",
+      "5. Use the modulus operator to find the remainder of 10 divided by 3."
+    ],
+    "medium": [
+      "1. Calculate 2 to the power of 8.",
+      "2. Write an expression that uses `and`, `or`, and `not` operators simultaneously.",
+      "3. Demonstrate the difference between `is` and `==` using two separate lists with identical elements.",
+      "4. Use a compound assignment operator to multiply a variable `x` by 3.",
+      "5. Determine if an integer is even or odd using the modulus operator."
+    ],
+    "hard": [
+      "1. Write a script that uses bitwise AND, OR, and XOR on two integers.",
+      "2. Explain operator precedence by writing an expression where adding parentheses changes the result.",
+      "3. Implement a custom class and overload the `__add__` method to add two objects together.",
+      "4. Show how chained comparisons work in Python (e.g., `1 < x < 10`).",
+      "5. Evaluate a complex boolean expression using truth tables to verify your script."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a program that takes a number of seconds and converts it into hours, minutes, and remaining seconds.",
+      "input": "seconds = 3665",
+      "output": "1 hour(s), 1 minute(s), 5 second(s)",
+      "constraints": "Use floor division and modulus operators.",
+      "solution": "total_seconds = 3665\nhours = total_seconds // 3600\nremaining_after_hours = total_seconds % 3600\nminutes = remaining_after_hours // 60\nseconds = remaining_after_hours % 60\nprint(f'{hours} hour(s), {minutes} minute(s), {seconds} second(s)')"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Game Development",
+      "explanation": "Calculating distances between objects (exponentiation and addition) and determining collisions (comparison operators)."
+    },
+    {
+      "field": "Financial Systems",
+      "explanation": "Computing interest rates and compounding values using arithmetic operators, or validating transaction limits via comparison operators."
+    }
+  ],
+  "best_practices": [
+    "Use parentheses to make complex logical or arithmetic expressions clear, even if not strictly necessary for precedence.",
+    "Use chained comparisons (e.g., `0 <= age <= 120`) instead of combining with `and` for better readability.",
+    "Always prefer `is` and `is not` when comparing against singletons like `None` (e.g., `if x is None:`).",
+    "Avoid confusing bitwise operators (`&`, `|`) with logical operators (`and`, `or`); they act very differently on booleans vs integers."
+  ],
+  "summary": [
+    "Operators are the symbols that direct the compiler to perform mathematical or logical operations.",
+    "Python features arithmetic, assignment, comparison, logical, identity, membership, and bitwise operators.",
+    "Precedence rules dictate the order of evaluation; parentheses can override these rules.",
+    "Understanding the difference between value equality (==) and identity (is) prevents common bugs."
+  ],
+  "quiz": [
+    {
+      "question": "Which operator is used for exponentiation (power)?",
+      "options": ["^", "**", "pow", "//"],
+      "answer": "**",
+      "explanation": "In Python, the double asterisk ** is the exponentiation operator."
+    },
+    {
+      "question": "What does the modulus operator % do?",
+      "options": ["Calculates percentages", "Returns the quotient of division", "Returns the remainder of division", "Performs floor division"],
+      "answer": "Returns the remainder of division",
+      "explanation": "The modulus operator % divides one number by another and returns the remainder."
+    },
+    {
+      "question": "What is the output of 9 // 2?",
+      "options": ["4.5", "4", "5", "1"],
+      "answer": "4",
+      "explanation": "Floor division // divides the numbers and rounds the result down to the nearest integer."
+    },
+    {
+      "question": "Which operator checks if two variables are the exact same object in memory?",
+      "options": ["==", "===", "is", "equals"],
+      "answer": "is",
+      "explanation": "The 'is' identity operator checks if two references point to the same memory location."
+    },
+    {
+      "question": "How do you check if the value 'apple' is present in the list `fruits`?",
+      "options": ["if 'apple' in fruits:", "if 'apple' exists fruits:", "if fruits has 'apple':", "if fruits.contains('apple'):"],
+      "answer": "if 'apple' in fruits:",
+      "explanation": "The 'in' membership operator checks for the presence of a value in a sequence."
+    },
+    {
+      "question": "What is the result of `True and False`?",
+      "options": ["True", "False", "None", "Error"],
+      "answer": "False",
+      "explanation": "The 'and' operator returns True only if both operands are True."
+    },
+    {
+      "question": "What does the `!=` operator signify?",
+      "options": ["Not equal", "Equal", "Greater than", "Less than"],
+      "answer": "Not equal",
+      "explanation": "The exclamation mark followed by equals (!=) means 'not equal to'."
+    },
+    {
+      "question": "Can Python evaluate chained comparisons like `5 < x < 10`?",
+      "options": ["Yes, it's valid syntax", "No, you must use 'and'", "Only in Python 2", "It throws a SyntaxError"],
+      "answer": "Yes, it's valid syntax",
+      "explanation": "Python allows chaining comparisons for cleaner and more readable code."
+    },
+    {
+      "question": "Which of these is a valid compound assignment operator?",
+      "options": ["x =+ 1", "x ++", "x += 1", "x = x + 1"],
+      "answer": "x += 1",
+      "explanation": "+= is the correct compound addition assignment operator."
+    },
+    {
+      "question": "According to operator precedence, which operation is performed first in `3 + 4 * 2`?",
+      "options": ["Addition", "Multiplication", "Evaluated left to right", "Randomly"],
+      "answer": "Multiplication",
+      "explanation": "Multiplication (*) has higher precedence than addition (+)."
+    }
+  ]
+}

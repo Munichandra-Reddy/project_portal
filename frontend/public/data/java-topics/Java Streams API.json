@@ -1,0 +1,203 @@
+{
+  "title": "Java Streams API",
+  "introduction": {
+    "what_it_is": "The Java Streams API, introduced in Java 8, provides a functional and declarative approach to processing sequences of elements. A stream represents a pipeline of operations that can be evaluated to perform complex data processing queries, such as filtering, mapping, and reducing, on collections or other data sources.",
+    "why_important": "It greatly simplifies bulk operations on collections, allowing developers to write cleaner, more readable, and less error-prone code. Furthermore, it easily enables parallel execution to leverage multi-core architectures without writing complex multi-threading code.",
+    "real_world": [
+      "Processing large datasets from a database to filter active users and extract their email addresses.",
+      "Aggregating e-commerce transaction data to calculate the total sales for a specific region.",
+      "Parsing and analyzing log files line by line to find specific error patterns."
+    ]
+  },
+  "detailed_theory": "A Stream in Java does not store data. Instead, it is an abstraction that takes input from a data source (like Collections, Arrays, or I/O channels) and processes it through a pipeline of computational operations. Stream operations are divided into two categories: intermediate and terminal operations. Intermediate operations (like `filter`, `map`, `sorted`) return a new stream and are always lazy; they do not execute until a terminal operation is invoked. Terminal operations (like `collect`, `forEach`, `reduce`) trigger the execution of the pipeline, consume the stream, and produce a result or a side-effect. Once a terminal operation is performed, the stream is considered consumed and cannot be reused. The Streams API is tightly integrated with lambda expressions, making it highly expressive.",
+  "key_features": {
+    "features": [
+      {"name": "Declarative Programming", "description": "Allows developers to specify 'what' to achieve rather than 'how' to achieve it."},
+      {"name": "Pipelining", "description": "Operations can be chained together. Intermediate operations return a stream to allow chaining, while a terminal operation completes the pipeline."},
+      {"name": "Internal Iteration", "description": "Unlike collections that require external iteration (e.g., using a `for` loop), streams manage iteration internally behind the scenes."},
+      {"name": "Lazy Evaluation", "description": "Intermediate operations are not evaluated until a terminal operation is invoked, optimizing performance by avoiding unnecessary computations."},
+      {"name": "Parallelism", "description": "Streams can easily be processed in parallel using the `parallelStream()` method to improve performance on large datasets."}
+    ],
+    "advantages": [
+      "Significantly reduces boilerplate code compared to traditional loops and conditional statements.",
+      "Enhances code readability and maintainability.",
+      "Facilitates easy parallel processing without explicit lock handling or thread management.",
+      "Encourages functional programming practices in Java."
+    ],
+    "limitations": [
+      "Streams are single-use; once consumed, they cannot be reused and will throw an `IllegalStateException` if reused.",
+      "Can be harder to debug because the execution is delayed and stack traces can be complex.",
+      "Performance overhead on small datasets due to the cost of setting up the stream pipeline."
+    ]
+  },
+  "syntax": {
+    "explanation": "A typical stream pipeline consists of a source, zero or more intermediate operations, and exactly one terminal operation.",
+    "breakdown": [
+      "Source: Collection, Array, or I/O channel (e.g., `list.stream()`).",
+      "Intermediate Operations: Methods that transform the stream (e.g., `.filter(e -> e > 10)`, `.map(e -> e.toUpperCase())`).",
+      "Terminal Operation: The final method that produces a result or side-effect (e.g., `.collect(Collectors.toList())`, `.count()`)."
+    ],
+    "rules": [
+      "A stream pipeline must have a terminal operation to execute.",
+      "Intermediate operations are always lazy.",
+      "Streams cannot be reused after a terminal operation."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Filtering and Collecting",
+      "code": "import java.util.Arrays;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\npublic class BasicStream {\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eve\");\n        \n        List<String> filteredNames = names.stream()\n            .filter(name -> name.startsWith(\"C\") || name.startsWith(\"D\"))\n            .collect(Collectors.toList());\n            \n        System.out.println(filteredNames);\n    }\n}",
+      "output": "[Charlie, David]",
+      "explanation": "This example creates a stream from a List of strings, uses `filter` to keep only the names starting with 'C' or 'D', and then uses `collect` to gather the results into a new List."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Mapping and Sorting",
+      "code": "import java.util.Arrays;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\npublic class IntermediateStream {\n    public static void main(String[] args) {\n        List<Integer> numbers = Arrays.asList(5, 2, 8, 1, 9, 3);\n        \n        List<Integer> squaredAndSorted = numbers.stream()\n            .map(n -> n * n)\n            .sorted()\n            .collect(Collectors.toList());\n            \n        System.out.println(squaredAndSorted);\n    }\n}",
+      "output": "[1, 4, 9, 25, 64, 81]",
+      "explanation": "Here, `map` is used to transform each element by squaring it. `sorted` orders the resulting squares in ascending order, and `collect` bundles them into a List."
+    },
+    {
+      "level": "Advanced",
+      "title": "Reducing and Grouping",
+      "code": "import java.util.Arrays;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.stream.Collectors;\n\nclass Employee {\n    String name;\n    String department;\n    double salary;\n    // constructor, getters omitted for brevity\n    public Employee(String n, String d, double s) { name = n; department = d; salary = s; }\n    public String getDepartment() { return department; }\n    public double getSalary() { return salary; }\n}\n\npublic class AdvancedStream {\n    public static void main(String[] args) {\n        List<Employee> employees = Arrays.asList(\n            new Employee(\"John\", \"IT\", 5000),\n            new Employee(\"Jane\", \"HR\", 4000),\n            new Employee(\"Jack\", \"IT\", 6000)\n        );\n        \n        // Group by department and sum salaries\n        Map<String, Double> totalSalaryByDept = employees.stream()\n            .collect(Collectors.groupingBy(\n                Employee::getDepartment,\n                Collectors.summingDouble(Employee::getSalary)\n            ));\n            \n        System.out.println(totalSalaryByDept);\n    }\n}",
+      "output": "{HR=4000.0, IT=11000.0}",
+      "explanation": "This advanced snippet uses `Collectors.groupingBy` to group employees by their department and applies a downstream collector `Collectors.summingDouble` to calculate the total salary for each department."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Intermediate vs Terminal Operations",
+        "headers": ["Operation", "Type", "Description"],
+        "rows": [
+          ["filter", "Intermediate", "Returns a stream consisting of elements matching a predicate."],
+          ["map", "Intermediate", "Returns a stream consisting of the results of applying the given function."],
+          ["sorted", "Intermediate", "Returns a stream sorted according to natural order or a comparator."],
+          ["forEach", "Terminal", "Performs an action for each element of the stream."],
+          ["collect", "Terminal", "Performs a mutable reduction operation to accumulate elements into a collection."],
+          ["reduce", "Terminal", "Performs a reduction on the elements of the stream using an associative accumulation function."]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Collections",
+        "concept_b": "Streams",
+        "explanation": "Collections are in-memory data structures that hold all their values; they focus on storing and accessing data. Streams do not store data; they are computational pipelines that process data sequentially or in parallel from a source."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "filter(Predicate<? super T> predicate)",
+      "description": "Returns a stream consisting of the elements of this stream that match the given predicate.",
+      "parameters": "predicate - a non-interfering, stateless predicate to apply to each element to determine if it should be included",
+      "return_value": "the new stream",
+      "example_usage": "stream.filter(s -> s.length() > 5)"
+    },
+    {
+      "name": "map(Function<? super T, ? extends R> mapper)",
+      "description": "Returns a stream consisting of the results of applying the given function to the elements of this stream.",
+      "parameters": "mapper - a non-interfering, stateless function to apply to each element",
+      "return_value": "the new stream",
+      "example_usage": "stream.map(String::toUpperCase)"
+    },
+    {
+      "name": "collect(Collector<? super T, A, R> collector)",
+      "description": "Performs a mutable reduction operation on the elements of this stream using a Collector.",
+      "parameters": "collector - the Collector describing the reduction",
+      "return_value": "the result of the reduction",
+      "example_usage": "stream.collect(Collectors.toList())"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Reusing a Stream",
+      "description": "Attempting to perform operations on a stream that has already had a terminal operation executed on it.",
+      "wrong_example": "Stream<String> s = list.stream(); s.count(); s.forEach(System.out::println); // Throws IllegalStateException",
+      "correct_example": "list.stream().count(); list.stream().forEach(System.out::println);",
+      "debugging_tip": "If you see 'java.lang.IllegalStateException: stream has already been operated upon or closed', you are trying to reuse a stream. Always create a new stream from the source if you need to perform multiple terminal operations."
+    },
+    {
+      "title": "Modifying Source During Stream Execution",
+      "description": "Adding or removing elements from the underlying collection while the stream is being processed.",
+      "wrong_example": "list.stream().forEach(e -> { if (e.equals(\"A\")) list.remove(e); }); // May throw ConcurrentModificationException",
+      "correct_example": "list.removeIf(e -> e.equals(\"A\"));",
+      "debugging_tip": "Stream operations must be non-interfering. Do not modify the data source while a stream pipeline is executing."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {"question": "What is the Java Streams API?", "answer": "The Streams API is a feature introduced in Java 8 to process collections of objects in a functional and declarative manner."},
+      {"question": "What is the difference between an intermediate and a terminal operation?", "answer": "Intermediate operations return a new stream and are lazily evaluated, while terminal operations produce a result or side-effect and trigger the execution of the stream pipeline."}
+    ],
+    "intermediate": [
+      {"question": "Can a stream be reused?", "answer": "No, a stream cannot be reused once a terminal operation has been invoked. Attempting to do so will result in an IllegalStateException."},
+      {"question": "What is lazy evaluation in Streams?", "answer": "Lazy evaluation means that intermediate operations are not executed until a terminal operation is called. This allows the API to optimize the processing pipeline."}
+    ],
+    "advanced": [
+      {"question": "How does `parallelStream()` work and when should you use it?", "answer": "`parallelStream()` splits the data into multiple chunks and processes them simultaneously using the ForkJoin pool. It should be used for large datasets and computationally intensive tasks where the overhead of managing multiple threads is less than the performance gain. It is not suitable for stateful operations or I/O bound tasks."},
+      {"question": "Explain the difference between `map` and `flatMap`.", "answer": "`map` transforms each element of a stream into another object, producing a Stream of objects. `flatMap` transforms each element into a stream of objects and then flattens these streams into a single stream, merging all the elements together."}
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Given a list of strings, write a stream pipeline to count how many strings have a length greater than 3.",
+      "Convert a list of strings to uppercase using the Streams API."
+    ],
+    "medium": [
+      "Given a list of integers, filter out the odd numbers, double the remaining even numbers, and return them as a list.",
+      "Find the maximum value in a list of integers using the `reduce` method."
+    ],
+    "hard": [
+      "Given a list of Employee objects, partition them into two groups: those earning more than $50,000 and those earning less, using `Collectors.partitioningBy`.",
+      "Implement a stream operation that groups words from a list by their length and counts the number of words of each length."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Find the Second Highest Number",
+      "input": "List of Integers: [10, 20, 15, 30, 25]",
+      "output": "25",
+      "constraints": "List contains at least two distinct integers.",
+      "solution": "int secondHighest = list.stream().sorted(Comparator.reverseOrder()).skip(1).findFirst().get();"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Data Processing & ETL",
+      "explanation": "Streams are widely used to extract data from a source, transform it (filtering, mapping, formatting), and load it into another system or database, significantly reducing boilerplate code."
+    },
+    {
+      "field": "Log Analysis",
+      "explanation": "Reading large log files line-by-line as a Stream allows developers to filter specific error codes, extract relevant details, and summarize occurrences efficiently without loading the entire file into memory."
+    }
+  ],
+  "best_practices": [
+    "Prefer method references (e.g., `String::toUpperCase`) over lambda expressions where possible for better readability.",
+    "Do not use Streams for simple iteration if a classic `for-each` loop is clearer and more performant.",
+    "Be cautious with `parallelStream()`: only use it when the dataset is sufficiently large and the operations are independent and stateless.",
+    "Avoid modifying shared state (side-effects) inside stream operations like `forEach` or `map`."
+  ],
+  "summary": [
+    "The Java Streams API brings functional-style programming to Java, enabling declarative data processing.",
+    "Stream pipelines consist of a source, intermediate operations (lazy), and a terminal operation (eager execution).",
+    "Streams improve code readability, reduce boilerplate, and make parallel processing easier."
+  ],
+  "quiz": [
+    {
+      "question": "Which of the following is an intermediate operation?",
+      "options": ["forEach", "collect", "filter", "count"],
+      "answer": "filter",
+      "explanation": "`filter` returns a new stream and is lazily evaluated, making it an intermediate operation. The others are terminal operations."
+    },
+    {
+      "question": "What exception is thrown if you try to use a stream after calling a terminal operation on it?",
+      "options": ["NullPointerException", "IllegalStateException", "UnsupportedOperationException", "IllegalArgumentException"],
+      "answer": "IllegalStateException",
+      "explanation": "Streams can only be consumed once. Reusing a stream throws an `IllegalStateException`."
+    }
+  ]
+}

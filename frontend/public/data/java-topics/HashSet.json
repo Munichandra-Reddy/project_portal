@@ -1,0 +1,256 @@
+{
+  "title": "HashSet in Java",
+  "introduction": {
+    "what_it_is": "HashSet is a class in the Java Collections Framework that implements the Set interface, backed by a hash table (actually a HashMap instance). It is used to store a collection of unique elements where no duplicate values are allowed.",
+    "why_important": "HashSet provides constant-time performance (O(1)) for basic operations like add, remove, contains, and size, assuming the hash function disperses elements properly. It is the go-to collection when you need to maintain uniqueness and do not care about the order of elements.",
+    "real_world": [
+      "Storing a list of unique user IDs or email addresses in an application.",
+      "Keeping track of visited nodes or URLs in a web crawler or graph traversal algorithm to avoid infinite loops."
+    ]
+  },
+  "detailed_theory": "HashSet is part of `java.util` package and extends `AbstractSet` while implementing the `Set` interface. Under the hood, a HashSet is backed by a HashMap. When you insert an element into a HashSet, it actually inserts a key-value pair into the backing HashMap where the key is the element you provided, and the value is a constant dummy object (`PRESENT`). \n\nThe hash function determines the bucket where the element will be stored. When a collision occurs (two different elements having the same hash code), elements are stored in a linked list or balanced tree (from Java 8 onwards, when the bucket size exceeds a threshold) within the same bucket. HashSet does not guarantee the order of elements; the order may change over time as the set grows and gets rehashed.",
+  "key_features": {
+    "features": [
+      {"name": "No Duplicates", "description": "It inherently prevents duplicate elements. If you try to add an existing element, the add() method simply returns false."},
+      {"name": "Null Values Allowed", "description": "HashSet allows storing exactly one null element."},
+      {"name": "Unordered Collection", "description": "It does not maintain the insertion order of elements."},
+      {"name": "Non-Synchronized", "description": "HashSet is not thread-safe. Concurrent modifications by multiple threads without proper synchronization may lead to non-deterministic behavior or ConcurrentModificationException."}
+    ],
+    "advantages": [
+      "Extremely fast performance for search, insert, and delete operations (O(1) time complexity on average).",
+      "Simple and easy-to-use API for maintaining unique collections.",
+      "Excellent choice for checking membership (e.g., 'contains' operations)."
+    ],
+    "limitations": [
+      "Does not maintain the order of elements. If you need insertion order, use LinkedHashSet; if you need sorted order, use TreeSet.",
+      "Not thread-safe out of the box.",
+      "Memory overhead is slightly higher due to the backing HashMap structure compared to a simple array."
+    ]
+  },
+  "syntax": {
+    "explanation": "To use a HashSet, you must import `java.util.HashSet`. You typically declare it using the Set interface as the reference type for flexibility.",
+    "breakdown": [
+      "Set<E> set = new HashSet<>(); - Creates an empty HashSet of type E.",
+      "Set<E> set = new HashSet<>(int initialCapacity); - Creates an empty HashSet with a specific initial capacity.",
+      "Set<E> set = new HashSet<>(int initialCapacity, float loadFactor); - Creates a HashSet with specified capacity and load factor (default load factor is 0.75)."
+    ],
+    "rules": [
+      "Only objects can be stored; primitives must be wrapped in their corresponding wrapper classes (e.g., Integer instead of int).",
+      "Custom objects stored in a HashSet should properly override `equals()` and `hashCode()` methods to ensure correct behavior.",
+      "Type parameter `<E>` should be specified to ensure type safety."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating and Adding Elements to a HashSet",
+      "code": "import java.util.HashSet;\nimport java.util.Set;\n\npublic class BasicHashSetExample {\n    public static void main(String[] args) {\n        Set<String> fruits = new HashSet<>();\n        fruits.add(\"Apple\");\n        fruits.add(\"Banana\");\n        fruits.add(\"Orange\");\n        fruits.add(\"Apple\"); // Duplicate, will be ignored\n\n        System.out.println(\"Fruits Set: \" + fruits);\n    }\n}",
+      "output": "Fruits Set: [Apple, Orange, Banana] // Note: Order may vary",
+      "explanation": "In this basic example, we create a HashSet of Strings. We add three distinct fruits and then try to add 'Apple' again. The HashSet ignores the duplicate 'Apple'. When printed, the output shows the unique elements in no specific order."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Iterating over a HashSet",
+      "code": "import java.util.HashSet;\nimport java.util.Iterator;\nimport java.util.Set;\n\npublic class IterateHashSetExample {\n    public static void main(String[] args) {\n        Set<Integer> numbers = new HashSet<>();\n        numbers.add(10);\n        numbers.add(20);\n        numbers.add(30);\n\n        // Using Enhanced for-loop\n        System.out.print(\"Using for-each: \");\n        for (Integer num : numbers) {\n            System.out.print(num + \" \");\n        }\n        System.out.println();\n\n        // Using Iterator\n        System.out.print(\"Using Iterator: \");\n        Iterator<Integer> it = numbers.iterator();\n        while (it.hasNext()) {\n            System.out.print(it.next() + \" \");\n        }\n    }\n}",
+      "output": "Using for-each: 20 10 30 \nUsing Iterator: 20 10 30 ",
+      "explanation": "This example demonstrates two common ways to iterate over elements in a HashSet: the enhanced for-each loop and using an Iterator. Note that the traversal order does not necessarily match the insertion order."
+    },
+    {
+      "level": "Advanced",
+      "title": "HashSet with Custom Objects",
+      "code": "import java.util.HashSet;\nimport java.util.Objects;\nimport java.util.Set;\n\nclass Employee {\n    int id;\n    String name;\n\n    public Employee(int id, String name) {\n        this.id = id;\n        this.name = name;\n    }\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (o == null || getClass() != o.getClass()) return false;\n        Employee employee = (Employee) o;\n        return id == employee.id && Objects.equals(name, employee.name);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(id, name);\n    }\n\n    @Override\n    public String toString() {\n        return \"Employee{\" + \"id=\" + id + \", name='\" + name + '\\'' + '}';\n    }\n}\n\npublic class CustomObjectHashSet {\n    public static void main(String[] args) {\n        Set<Employee> employees = new HashSet<>();\n        employees.add(new Employee(1, \"Alice\"));\n        employees.add(new Employee(2, \"Bob\"));\n        // Attempting to add a duplicate based on id and name\n        employees.add(new Employee(1, \"Alice\"));\n\n        for (Employee emp : employees) {\n            System.out.println(emp);\n        }\n    }\n}",
+      "output": "Employee{id=1, name='Alice'}\nEmployee{id=2, name='Bob'}",
+      "explanation": "When storing custom objects in a HashSet, you must override both `equals()` and `hashCode()`. The HashSet uses `hashCode()` to find the correct bucket and `equals()` to check for duplicates within that bucket. By overriding them, the HashSet correctly identifies the second 'Alice' object as a duplicate and ignores it."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "HashSet vs ArrayList",
+        "headers": ["Feature", "HashSet", "ArrayList"],
+        "rows": [
+          ["Order", "Unordered", "Maintains insertion order"],
+          ["Duplicates", "Not allowed", "Allowed"],
+          ["Null elements", "Allows only one null", "Allows multiple nulls"],
+          ["Underlying Data Structure", "Hash Table (HashMap)", "Resizable Array"],
+          ["Search Time Complexity", "O(1) on average", "O(n) on average"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "HashSet",
+        "concept_b": "TreeSet",
+        "explanation": "HashSet is backed by a HashMap and does not maintain any order of elements, offering O(1) performance. TreeSet is backed by a TreeMap and maintains elements in a sorted (ascending) order, offering O(log n) performance for basic operations."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "add(E e)",
+      "description": "Adds the specified element to this set if it is not already present.",
+      "parameters": "e - element to be added to this set",
+      "return_value": "true if this set did not already contain the specified element",
+      "example_usage": "set.add(\"Java\");"
+    },
+    {
+      "name": "remove(Object o)",
+      "description": "Removes the specified element from this set if it is present.",
+      "parameters": "o - object to be removed from this set, if present",
+      "return_value": "true if the set contained the specified element",
+      "example_usage": "set.remove(\"Java\");"
+    },
+    {
+      "name": "contains(Object o)",
+      "description": "Returns true if this set contains the specified element.",
+      "parameters": "o - element whose presence in this set is to be tested",
+      "return_value": "true if this set contains the specified element",
+      "example_usage": "boolean hasJava = set.contains(\"Java\");"
+    },
+    {
+      "name": "isEmpty()",
+      "description": "Returns true if this set contains no elements.",
+      "parameters": "None",
+      "return_value": "true if this set contains no elements",
+      "example_usage": "boolean empty = set.isEmpty();"
+    },
+    {
+      "name": "clear()",
+      "description": "Removes all of the elements from this set.",
+      "parameters": "None",
+      "return_value": "void",
+      "example_usage": "set.clear();"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Forgetting to override equals() and hashCode()",
+      "description": "When using custom objects in a HashSet, failing to override `equals()` and `hashCode()` results in the default Object methods being used. This checks for reference equality rather than logical value equality, causing the HashSet to store logical duplicates.",
+      "wrong_example": "class Person { String name; Person(String name) { this.name = name; } }\nSet<Person> set = new HashSet<>();\nset.add(new Person(\"John\"));\nset.add(new Person(\"John\")); // Added twice!",
+      "correct_example": "class Person {\n  String name;\n  Person(String name) { this.name = name; }\n  @Override\n  public boolean equals(Object o) { ... }\n  @Override\n  public int hashCode() { ... }\n}",
+      "debugging_tip": "If your HashSet is allowing duplicates of custom objects, verify that your class properly overrides both `equals()` and `hashCode()` and that the fields used in `hashCode()` are consistent with those in `equals()`."
+    },
+    {
+      "title": "Modifying an object's state after adding it to the HashSet",
+      "description": "If you modify fields of an object that affect its `hashCode()` after it has been added to a HashSet, the object's hash code will change, but its bucket location in the HashSet will not. This makes the object 'lost' in the set.",
+      "wrong_example": "Person p = new Person(\"John\");\nset.add(p);\np.name = \"Doe\"; // Modifying the field used in hashCode()\nset.contains(p); // May return false!",
+      "correct_example": "Make fields used in `equals` and `hashCode` final, or ensure you remove the object from the set before updating it, and re-add it afterward.",
+      "debugging_tip": "Design objects used as keys or elements in hash-based collections to be immutable, or at least treat their hash-code contributing fields as immutable."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "Does HashSet allow duplicate values?",
+        "answer": "No, HashSet does not allow duplicate values. It uses the `equals()` and `hashCode()` methods to check for duplicates."
+      },
+      {
+        "question": "Can we store a null value in a HashSet?",
+        "answer": "Yes, HashSet allows storing exactly one null value."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How does HashSet work internally in Java?",
+        "answer": "Internally, a HashSet is backed by a HashMap. When you insert an element into a HashSet, it becomes the key in the underlying HashMap, and a constant dummy object called `PRESENT` is used as the value. The `add()` method returns true if the key did not exist, and false if it already did."
+      },
+      {
+        "question": "What is the difference between HashSet and LinkedHashSet?",
+        "answer": "HashSet does not maintain any order of its elements. LinkedHashSet maintains a doubly-linked list running through all its entries, which allows it to maintain the insertion order of elements."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What are load factor and initial capacity in a HashSet?",
+        "answer": "Initial capacity is the number of buckets in the underlying HashMap when the set is created (default 16). Load factor is a measure of how full the hash table is allowed to get before its capacity is automatically increased (default 0.75). When the number of elements exceeds (capacity * load factor), the HashSet is rehashed to approximately double the capacity."
+      },
+      {
+        "question": "How can you make a HashSet thread-safe?",
+        "answer": "HashSet is not synchronized. You can make it thread-safe by wrapping it using `Collections.synchronizedSet(new HashSet<>())` or by using `ConcurrentHashMap.newKeySet()` in highly concurrent environments."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a Java program to append the specified element to the end of a HashSet.",
+      "Write a Java program to iterate through all elements in a HashSet.",
+      "Write a Java program to get the number of elements in a hash set."
+    ],
+    "medium": [
+      "Write a Java program to convert a HashSet to an array.",
+      "Write a Java program to compare two hash sets and retain only the elements which are identical on both sets (Intersection).",
+      "Write a Java program to find the union of two HashSets."
+    ],
+    "hard": [
+      "Create a custom object with a mutable property. Add it to a HashSet, mutate the property, and attempt to remove it. Explain the behavior and fix the issue.",
+      "Implement your own simplistic version of a HashSet backed by a custom array of linked lists."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given an array of integers, write a function that returns true if any value appears at least twice in the array, and it returns false if every element is distinct.",
+      "input": "[1, 2, 3, 1]",
+      "output": "true",
+      "constraints": "1 <= nums.length <= 10^5, -10^9 <= nums[i] <= 10^9",
+      "solution": "class Solution {\n    public boolean containsDuplicate(int[] nums) {\n        Set<Integer> set = new HashSet<>();\n        for (int num : nums) {\n            if (!set.add(num)) {\n                return true;\n            }\n        }\n        return false;\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Data Deduplication",
+      "explanation": "When processing large files (like log files) or data streams, HashSet is used to keep track of unique entries and discard duplicate records efficiently."
+    },
+    {
+      "field": "Graph Algorithms",
+      "explanation": "In algorithms like Depth First Search (DFS) or Breadth First Search (BFS), a HashSet is typically used to store a 'visited' set of nodes to prevent revisiting the same node and falling into an infinite loop."
+    }
+  ],
+  "best_practices": [
+    "Always override `equals()` and `hashCode()` together when storing custom objects in a HashSet.",
+    "Choose appropriate initial capacity and load factor if you know the approximate number of elements in advance to avoid expensive rehashing operations.",
+    "Avoid modifying objects after they have been added to a HashSet, specifically the fields that are used in computing their hash code.",
+    "Use the interface `Set` as the reference type rather than the concrete class `HashSet` for greater flexibility (e.g., `Set<String> set = new HashSet<>();`)."
+  ],
+  "summary": [
+    "HashSet is a part of Java Collections Framework implementing the Set interface.",
+    "It stores distinct elements and is backed by a HashMap internally.",
+    "It allows a single null value.",
+    "Elements are unordered; iteration order is not guaranteed.",
+    "It provides constant time O(1) performance for basic operations like add, remove, and contains."
+  ],
+  "quiz": [
+    {
+      "question": "What happens if you try to add a duplicate element to a HashSet?",
+      "options": [
+        "A) It throws a DuplicateElementException",
+        "B) The existing element is overwritten",
+        "C) The add() method returns false and the set remains unchanged",
+        "D) It throws a RuntimeException"
+      ],
+      "answer": "C",
+      "explanation": "The add() method in HashSet checks if the element already exists. If it does, it simply returns false without modifying the collection."
+    },
+    {
+      "question": "Which of the following classes does HashSet extend?",
+      "options": [
+        "A) AbstractList",
+        "B) AbstractSet",
+        "C) AbstractCollection",
+        "D) AbstractMap"
+      ],
+      "answer": "B",
+      "explanation": "HashSet extends the AbstractSet class, which provides a skeletal implementation of the Set interface."
+    },
+    {
+      "question": "What is the default initial capacity of a HashSet in Java?",
+      "options": [
+        "A) 10",
+        "B) 16",
+        "C) 32",
+        "D) 0"
+      ],
+      "answer": "B",
+      "explanation": "The underlying HashMap is initialized with a default initial capacity of 16."
+    }
+  ]
+}

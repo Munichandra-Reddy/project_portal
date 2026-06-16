@@ -1,0 +1,263 @@
+{
+  "title": "NumPy",
+  "introduction": {
+    "what_it_is": "NumPy (Numerical Python) is an open-source Python library used for working with arrays. It provides a high-performance multidimensional array object and tools for working with these arrays.",
+    "why_important": "Standard Python lists are slow for mathematical operations. NumPy arrays are up to 50x faster than Python lists and use significantly less memory. NumPy is the foundational library for almost all numerical and scientific computing in Python, including machine learning and data science.",
+    "real_world": [
+      "Image processing (images are represented as multi-dimensional arrays of pixels).",
+      "Financial modeling and statistical analysis.",
+      "Providing the underlying data structures for Pandas and scikit-learn."
+    ]
+  },
+  "detailed_theory": "NumPy is written partially in Python, but most of the parts that require fast computation are written in C or C++. This is why NumPy operates much faster than standard Python lists.\n\nThe core object in NumPy is the `ndarray` (n-dimensional array). Unlike Python lists, which can contain mixed data types, a NumPy array contains elements of the same type. This uniformity allows NumPy to allocate a continuous block of memory, avoiding the overhead of type checking and memory pointer lookups required by Python lists.\n\nVectorization is a crucial concept in NumPy. It allows you to apply mathematical operations to entire arrays without writing explicit loops in Python. Because these operations are executed in optimized, pre-compiled C code, vectorization dramatically improves performance.\n\nBroadcasting is another powerful feature. It describes how NumPy treats arrays with different shapes during arithmetic operations. Subject to certain constraints, the smaller array is \"broadcast\" across the larger array so that they have compatible shapes. This avoids unnecessary data duplication.\n\nNumPy arrays have several important attributes:\n- `ndim`: The number of dimensions (axes) of the array.\n- `shape`: A tuple indicating the size of the array in each dimension.\n- `size`: The total number of elements in the array.\n- `dtype`: An object describing the type of elements in the array.\n\nCreating arrays can be done by converting Python lists using `np.array()`, or by using built-in functions like `np.zeros()`, `np.ones()`, `np.arange()`, and `np.linspace()` for generating sequences.",
+  "key_features": {
+    "features": [
+      {
+        "name": "N-dimensional Array (ndarray)",
+        "description": "A fast and space-efficient multidimensional array providing vectorized arithmetic operations."
+      },
+      {
+        "name": "Broadcasting",
+        "description": "A mechanism for performing mathematical operations on arrays of different shapes."
+      }
+    ],
+    "advantages": [
+      "Orders of magnitude faster than standard Python lists for numerical operations.",
+      "Consumes less memory due to contiguous memory allocation.",
+      "Provides an extensive set of mathematical functions (linear algebra, Fourier transforms)."
+    ],
+    "limitations": [
+      "Arrays must have a fixed size upon creation; appending elements requires creating a new array.",
+      "Elements must be of the same data type (homogenous).",
+      "Steeper learning curve for advanced broadcasting and indexing compared to basic Python lists."
+    ]
+  },
+  "syntax": {
+    "explanation": "NumPy must be installed (`pip install numpy`) and is conventionally imported under the alias `np`.",
+    "breakdown": [
+      "import numpy as np",
+      "arr = np.array([1, 2, 3])",
+      "result = arr * 2"
+    ],
+    "rules": [
+      "Always import numpy as np (community standard).",
+      "Avoid using Python loops for array operations; use NumPy's vectorized functions instead."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Array Creation and Attributes",
+      "code": "import numpy as np\n\narr = np.array([[1, 2, 3], [4, 5, 6]])\nprint(f'Array:\\n{arr}')\nprint(f'Shape: {arr.shape}')\nprint(f'Dimensions: {arr.ndim}')\nprint(f'Data Type: {arr.dtype}')",
+      "output": "Array:\n[[1 2 3]\n [4 5 6]]\nShape: (2, 3)\nDimensions: 2\nData Type: int32",
+      "explanation": "Creates a 2D array and inspects its metadata. The shape is 2 rows by 3 columns."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Vectorized Operations and Broadcasting",
+      "code": "import numpy as np\n\nbase_prices = np.array([10, 20, 30])\nmultiplier = 1.2 # representing a 20% increase\n\n# Vectorized multiplication (broadcasting scalar to array)\nnew_prices = base_prices * multiplier\nprint(new_prices)\n\n# Adding arrays\nfees = np.array([1, 2, 3])\ntotal = new_prices + fees\nprint(total)",
+      "output": "[12. 24. 36.]\n[13. 26. 39.]",
+      "explanation": "Operations are applied to all elements simultaneously without a for-loop. The scalar 1.2 is broadcasted to multiply with each array element."
+    },
+    {
+      "level": "Advanced",
+      "title": "Boolean Indexing (Masking)",
+      "code": "import numpy as np\n\nages = np.array([15, 22, 18, 35, 12, 40])\n\n# Create a boolean mask\nadult_mask = ages >= 18\nprint(f'Mask: {adult_mask}')\n\n# Apply the mask to filter the array\nadults = ages[adult_mask]\nprint(f'Filtered: {adults}')",
+      "output": "Mask: [False  True  True  True False  True]\nFiltered: [22 18 35 40]",
+      "explanation": "Advanced indexing allows filtering arrays using a boolean mask, which is incredibly useful for data cleaning and filtering."
+    },
+    {
+      "level": "Real-world",
+      "title": "Normalizing Data for Machine Learning",
+      "code": "import numpy as np\n\ndata = np.array([100, 200, 300, 400, 500])\n\n# Z-score normalization: (x - mean) / std_deviation\nnormalized_data = (data - np.mean(data)) / np.std(data)\n\nprint(f'Original: {data}')\nprint(f'Normalized: {normalized_data}')",
+      "output": "Original: [100 200 300 400 500]\nNormalized: [-1.41421356 -0.70710678  0.          0.70710678  1.41421356]",
+      "explanation": "Standardizes a dataset using vectorized mean and standard deviation functions. This is a standard preprocessing step in AI."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "NumPy Array Creation Methods",
+        "headers": ["Function", "Description"],
+        "rows": [
+          ["np.array()", "Creates an array from a Python list or tuple"],
+          ["np.zeros()", "Creates an array filled with zeros"],
+          ["np.ones()", "Creates an array filled with ones"],
+          ["np.arange()", "Creates an array with evenly spaced values within a given interval"],
+          ["np.linspace()", "Creates an array with a specified number of elements spaced equally"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "Python List",
+        "concept_b": "NumPy Array",
+        "explanation": "Python lists can hold multiple data types and are non-contiguous in memory, making iteration slow. NumPy arrays hold a single data type, are contiguous in memory, and support vectorized operations in C, making them vastly faster and memory-efficient."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "np.arange()",
+      "description": "Return evenly spaced values within a given interval.",
+      "parameters": "start, stop, step",
+      "return_value": "ndarray",
+      "example_usage": "np.arange(0, 10, 2)"
+    },
+    {
+      "name": "ndarray.reshape()",
+      "description": "Gives a new shape to an array without changing its data.",
+      "parameters": "shape (tuple or ints)",
+      "return_value": "ndarray",
+      "example_usage": "arr.reshape(2, 3)"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using Python Loops instead of Vectorization",
+      "description": "Iterating over a NumPy array using a Python for-loop defeats the purpose of NumPy and severely degrades performance.",
+      "wrong_example": "arr = np.array([1, 2, 3])\nfor i in range(len(arr)):\n    arr[i] = arr[i] * 2",
+      "correct_example": "arr = np.array([1, 2, 3])\narr = arr * 2",
+      "debugging_tip": "If you are writing a for-loop over a NumPy array, pause and check if there is a vectorized NumPy function or operator that can do the job."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is NumPy and why is it preferred over Python lists?",
+        "answer": "NumPy is a library for numerical computing. It is preferred because its ndarray objects are stored continuously in memory, making operations significantly faster and more memory-efficient than standard lists."
+      },
+      {
+        "question": "What does array broadcasting mean?",
+        "answer": "Broadcasting is how NumPy treats arrays of different shapes during arithmetic operations, virtually expanding the smaller array to match the shape of the larger one without actually copying data."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How do you handle missing values in NumPy?",
+        "answer": "Missing values are typically represented by np.nan (Not a Number). You can check for them using np.isnan(array) and filter them using boolean indexing or masked arrays."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain the difference between a copy and a view in NumPy.",
+        "answer": "A copy physically stores a new array and data. A view is just a new way of looking at the same data in memory. Modifying a view modifies the original array. Slicing an array creates a view, whereas using the .copy() method creates a copy."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Create a 1D NumPy array with numbers from 1 to 10.",
+      "Find the shape and dimension of the array: `np.array([[1, 2], [3, 4]])`.",
+      "Create an array of 5 zeros.",
+      "Multiply every element in an array `[2, 4, 6]` by 3 using vectorization.",
+      "Find the maximum value in an array using a NumPy function."
+    ],
+    "medium": [
+      "Create a 3x3 array with values ranging from 0 to 8 using `arange` and `reshape`.",
+      "Extract all odd numbers from an array using boolean indexing.",
+      "Replace all elements in an array greater than 5 with the value 5.",
+      "Compute the dot product of two 1D arrays.",
+      "Generate an array of 10 random numbers between 0 and 1."
+    ],
+    "hard": [
+      "Normalize a 5x5 random matrix (subtract mean and divide by standard deviation).",
+      "Find the indices of non-zero elements from `[1, 2, 0, 0, 4, 0]`.",
+      "Create a 2D array and subtract the mean of each row from each element in that row.",
+      "Implement a moving average function over an array using NumPy convolution.",
+      "Given two arrays, find the elements that are common to both."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Given a 1D array of integers, replace all odd numbers with -1 without modifying the original array.",
+      "input": "arr = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])",
+      "output": "[ 0 -1  2 -1  4 -1  6 -1  8 -1]",
+      "constraints": "Do not use Python loops. Do not alter the original array.",
+      "solution": "import numpy as np\narr = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])\nnew_arr = np.where(arr % 2 != 0, -1, arr)\nprint(new_arr)"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Image Processing",
+      "explanation": "Images are loaded as 3D NumPy arrays (height, width, RGB channels). Manipulating the array directly applies filters, changes contrast, or crops the image."
+    },
+    {
+      "field": "Scientific Simulations",
+      "explanation": "Solving differential equations for fluid dynamics heavily relies on high-speed matrix multiplications provided by NumPy."
+    }
+  ],
+  "best_practices": [
+    "Always pre-allocate arrays (e.g., using np.zeros) if you know the size beforehand, rather than appending in a loop.",
+    "Use np.where() for efficient conditional logic across arrays.",
+    "Be mindful of views vs. copies to prevent unexpected modifications to your original data."
+  ],
+  "summary": [
+    "NumPy is the core library for numerical computation in Python.",
+    "Its main object is the ndarray, which allows fast, vectorized operations.",
+    "Broadcasting enables math between arrays of different shapes.",
+    "Vectorization replaces slow Python loops with optimized C code."
+  ],
+  "quiz": [
+    {
+      "question": "What is the standard alias used when importing NumPy?",
+      "options": ["ny", "num", "np", "nmp"],
+      "answer": "np",
+      "explanation": "It is a universal convention in the Python community to 'import numpy as np'."
+    },
+    {
+      "question": "Which of the following creates an array of evenly spaced numbers over a specified interval?",
+      "options": ["np.arange()", "np.linspace()", "Both", "Neither"],
+      "answer": "Both",
+      "explanation": "arange() uses a step size, while linspace() uses a specified number of elements, but both create evenly spaced sequences."
+    },
+    {
+      "question": "What happens if you multiply a NumPy array by a scalar value?",
+      "options": ["Error", "Only the first element is multiplied", "Every element is multiplied (Broadcasting)", "The array is duplicated"],
+      "answer": "Every element is multiplied (Broadcasting)",
+      "explanation": "Broadcasting automatically applies the scalar operation to every element in the array."
+    },
+    {
+      "question": "How do you find the shape of a NumPy array 'arr'?",
+      "options": ["arr.size", "arr.shape", "np.shape(arr)", "Both arr.shape and np.shape(arr)"],
+      "answer": "Both arr.shape and np.shape(arr)",
+      "explanation": "You can access the .shape attribute or use the np.shape() function."
+    },
+    {
+      "question": "What is a key difference between NumPy arrays and Python lists?",
+      "options": ["Arrays are slower", "Lists hold only one data type", "Arrays hold only one data type", "Arrays have dynamic sizing"],
+      "answer": "Arrays hold only one data type",
+      "explanation": "NumPy arrays are homogenous, meaning all elements must be of the exact same data type, unlike Python lists."
+    },
+    {
+      "question": "Which attribute gives the number of dimensions of an array?",
+      "options": ["dim", "shape", "size", "ndim"],
+      "answer": "ndim",
+      "explanation": "The ndim attribute returns an integer representing the number of axes (dimensions)."
+    },
+    {
+      "question": "Does slicing a NumPy array create a copy or a view?",
+      "options": ["Copy", "View", "Depends on the size", "Neither"],
+      "answer": "View",
+      "explanation": "Slicing creates a view. Modifying the slice will modify the original array to save memory."
+    },
+    {
+      "question": "Which function converts a multi-dimensional array into a 1D array?",
+      "options": ["flatten()", "reduce()", "shrink()", "dim1()"],
+      "answer": "flatten()",
+      "explanation": "The flatten() method (or ravel()) collapses the array into a single dimension."
+    },
+    {
+      "question": "How do you filter an array based on a condition?",
+      "options": ["Using a for loop", "Using a filter() function", "Using Boolean indexing (e.g., arr[arr > 5])", "Using find()"],
+      "answer": "Using Boolean indexing (e.g., arr[arr > 5])",
+      "explanation": "Boolean indexing creates a mask that filters the array efficiently."
+    },
+    {
+      "question": "What is np.nan?",
+      "options": ["Not a Node", "Not a Number", "Null and Null", "None assigned"],
+      "answer": "Not a Number",
+      "explanation": "np.nan is a special floating-point value used to represent missing or undefined data."
+    }
+  ]
+}

@@ -1,0 +1,369 @@
+{
+  "title": "Exception Handling",
+  "introduction": {
+    "what_it_is": "Exception handling is a programming construct that allows developers to gracefully handle runtime errors and unexpected situations. In Python, it is managed using `try`, `except`, `else`, and `finally` blocks.",
+    "why_important": "It is critical for building robust applications. Without exception handling, a single error can crash the entire program. It ensures that the application can recover from errors, log them, or terminate gracefully without exposing messy stack traces to the end user.",
+    "real_world": [
+      "Preventing an app crash when a user inputs a string instead of a number for age.",
+      "Handling a lost internet connection gracefully during an API request.",
+      "Managing situations where an application tries to read a file that has been deleted."
+    ]
+  },
+  "detailed_theory": "In Python, errors are generally categorized into two types: syntax errors and exceptions. Syntax errors occur when the parser detects an incorrect statement (e.g., missing a colon). These must be fixed before the code runs. Exceptions, however, occur during the execution of the program. Even if a statement is syntactically correct, it may cause an error when an attempt is made to execute it (e.g., dividing by zero, accessing an out-of-bounds index). These runtime errors are called exceptions.\n\nPython provides a sophisticated mechanism to handle these exceptions using the `try-except` block. The code that might raise an exception is placed inside the `try` block. If an error occurs, the rest of the `try` block is skipped, and execution jumps to the corresponding `except` block. If no exception occurs, the `except` block is bypassed.\n\nYou can specify which exception to catch. Catching specific exceptions (like `ZeroDivisionError` or `ValueError`) is considered a best practice because it prevents you from masking unexpected bugs. A single `try` block can have multiple `except` blocks to handle different types of errors differently.\n\nPython also supports the `else` clause in exception handling. The code inside the `else` block executes only if the `try` block finishes without any exceptions. This is useful for code that should only run if the risky operation was successful, keeping the `try` block as small as possible.\n\nThe `finally` block is executed regardless of whether an exception occurred or not. It is typically used for clean-up actions, such as closing files or releasing network resources, ensuring that these resources are freed even if the program crashes.\n\nDevelopers can also generate their own exceptions using the `raise` keyword. This is useful for enforcing application logic (e.g., raising a `ValueError` if an age input is negative). Furthermore, Python allows the creation of Custom Exceptions by defining a new class that inherits from the built-in `Exception` class. This helps in building domain-specific errors that make debugging enterprise applications much easier.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Try-Except Blocks",
+        "description": "Mechanism to isolate risky code and define fallback behavior."
+      },
+      {
+        "name": "Else and Finally Clauses",
+        "description": "Provides control flow for successful execution (`else`) and guaranteed execution (`finally`)."
+      },
+      {
+        "name": "Custom Exceptions",
+        "description": "Ability to create user-defined exception classes for specific application domains."
+      }
+    ],
+    "advantages": [
+      "Prevents unexpected application crashes.",
+      "Improves user experience by providing meaningful error messages.",
+      "Separates error-handling code from regular business logic, making code cleaner.",
+      "Ensures necessary cleanup operations are always executed."
+    ],
+    "limitations": [
+      "Overusing broad exceptions (`except Exception:`) can hide actual bugs.",
+      "Exception handling incurs a slight performance overhead.",
+      "Can make control flow harder to follow if deeply nested."
+    ]
+  },
+  "syntax": {
+    "explanation": "The core syntax involves wrapping risky code in a `try` block and defining the error-handling logic in `except` blocks. Optional `else` and `finally` blocks handle success logic and cleanup.",
+    "breakdown": [
+      "try:",
+      "    # Code that might cause an exception",
+      "except SpecificException as e:",
+      "    # Code to execute if SpecificException occurs",
+      "else:",
+      "    # Code to execute if NO exception occurs",
+      "finally:",
+      "    # Code to execute REGARDLESS of exceptions"
+    ],
+    "rules": [
+      "A `try` block must be followed by at least one `except` or `finally` block.",
+      "Order matters: more specific exceptions should be caught before broader ones.",
+      "Use `as e` to access the exception instance and its message."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Handling Division by Zero",
+      "code": "try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print('Cannot divide by zero!')",
+      "output": "Cannot divide by zero!",
+      "explanation": "The division by zero raises a `ZeroDivisionError`. The `except` block catches this specific error and prints a friendly message."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Using Multiple Except Blocks",
+      "code": "try:\n    value = int(input('Enter a number: '))\n    result = 100 / value\nexcept ValueError:\n    print('Invalid input! Please enter a number.')\nexcept ZeroDivisionError:\n    print('Cannot divide by zero.')",
+      "output": "Depends on user input.",
+      "explanation": "This handles two distinct errors. If the user types a letter, `ValueError` is caught. If they type 0, `ZeroDivisionError` is caught."
+    },
+    {
+      "level": "Advanced",
+      "title": "Else and Finally",
+      "code": "def process_file(filename):\n    try:\n        f = open(filename, 'r')\n        data = f.read()\n    except FileNotFoundError:\n        print('File not found.')\n    else:\n        print('File read successfully.')\n    finally:\n        print('Execution finished.')\n        if 'f' in locals() and not f.closed:\n            f.close()",
+      "output": "Depends on file existence, 'Execution finished.' always prints.",
+      "explanation": "`else` runs only if the file was found and read. `finally` runs regardless, ensuring resources are evaluated for closure."
+    },
+    {
+      "level": "Real-world",
+      "title": "Custom Exceptions",
+      "code": "class NegativeAgeError(Exception):\n    pass\n\ndef register_user(age):\n    if age < 0:\n        raise NegativeAgeError('Age cannot be negative.')\n    print('Registered successfully.')\n\ntry:\n    register_user(-5)\nexcept NegativeAgeError as e:\n    print(f'Error: {e}')",
+      "output": "Error: Age cannot be negative.",
+      "explanation": "A custom exception is created by subclassing `Exception`. It is explicitly `raise`d when business logic fails and caught in the try-except block."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Common Built-in Exceptions",
+        "headers": [
+          "Exception Name",
+          "Cause"
+        ],
+        "rows": [
+          [
+            "TypeError",
+            "Operation applied to an object of inappropriate type."
+          ],
+          [
+            "ValueError",
+            "Function receives an argument of right type but inappropriate value."
+          ],
+          [
+            "IndexError",
+            "Sequence subscript is out of range."
+          ],
+          [
+            "KeyError",
+            "Dictionary key is not found."
+          ],
+          [
+            "FileNotFoundError",
+            "Trying to open a file that does not exist."
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "SyntaxError",
+        "concept_b": "Exception",
+        "explanation": "SyntaxError happens during parsing when the code violates language rules. Exceptions happen during execution when valid code encounters an illegal operation."
+      },
+      {
+        "concept_a": "else block",
+        "concept_b": "finally block",
+        "explanation": "`else` runs ONLY if no exception occurred. `finally` runs ALWAYS, whether an exception occurred or not."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "Exception.args",
+      "description": "A tuple of arguments passed to the exception constructor. Usually contains the error message.",
+      "parameters": "None",
+      "return_value": "tuple",
+      "example_usage": "e.args[0]"
+    },
+    {
+      "name": "raise",
+      "description": "Keyword used to forcefully trigger an exception.",
+      "parameters": "Exception instance or class",
+      "return_value": "None",
+      "example_usage": "raise ValueError('Invalid data')"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Bare Except Clause",
+      "description": "Using `except:` without specifying the exception type. It catches EVERYTHING, including SystemExit and KeyboardInterrupt, making it impossible to terminate the program via Ctrl+C.",
+      "wrong_example": "try:\n    x = 1 / 0\nexcept:\n    pass",
+      "correct_example": "try:\n    x = 1 / 0\nexcept ZeroDivisionError:\n    pass",
+      "debugging_tip": "Always specify the exception. At a minimum, use `except Exception:` to avoid catching system-exiting signals."
+    },
+    {
+      "title": "Wrong Order of Except Blocks",
+      "description": "Placing a generic exception (`Exception`) before a specific one (`ValueError`). The generic one will catch the error, and the specific block will never be reached.",
+      "wrong_example": "try:\n    int('a')\nexcept Exception:\n    print('General')\nexcept ValueError:\n    print('ValueError')",
+      "correct_example": "try:\n    int('a')\nexcept ValueError:\n    print('ValueError')\nexcept Exception:\n    print('General')",
+      "debugging_tip": "Order exceptions from most specific to least specific."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What are exceptions in Python?",
+        "answer": "Exceptions are runtime errors that occur during the execution of a program, disrupting the normal flow of instructions."
+      },
+      {
+        "question": "How do you handle multiple exceptions in Python?",
+        "answer": "You can handle multiple exceptions by providing multiple `except` blocks, or by passing a tuple of exceptions to a single `except` block (e.g., `except (TypeError, ValueError):`)."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What is the purpose of the `else` clause in a try-except block?",
+        "answer": "The `else` clause executes code only if the `try` block completes successfully without raising any exceptions."
+      },
+      {
+        "question": "How can you raise a custom exception?",
+        "answer": "You create a new class that inherits from the built-in `Exception` class and use the `raise` keyword to trigger it."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Why should you avoid catching `BaseException` or using bare `except:`?",
+        "answer": "`BaseException` and bare `except:` catch system-exiting exceptions like `KeyboardInterrupt` and `SystemExit`. This makes it difficult to stop a running script and hides critical system errors."
+      },
+      {
+        "question": "Explain exception chaining in Python 3.",
+        "answer": "Exception chaining is used when handling one exception causes another. Using `raise Exception from e` preserves the original traceback, making it clear that the new exception was a direct result of the previous one."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a try-except block to handle a `ZeroDivisionError`.",
+      "Write a program that asks for user input and handles a `ValueError` if the user enters a string instead of an integer.",
+      "Create a list of 3 items. Attempt to access the 5th item and catch the resulting `IndexError`.",
+      "Write a try-except block that tries to open a non-existent file and catches the `FileNotFoundError`.",
+      "Write a `try-except-finally` block where the `finally` block prints 'Operation complete'."
+    ],
+    "medium": [
+      "Write a function that divides two numbers and uses an `else` block to print the result if successful.",
+      "Create a single `try` block that can catch both `TypeError` and `ValueError` using a tuple in the `except` statement.",
+      "Write a function that accepts a dictionary and a key. Handle the `KeyError` if the key is not present.",
+      "Implement a custom exception `InsufficientFundsError` and raise it if a withdrawal amount exceeds the balance.",
+      "Write a program that repeatedly asks for an integer until the user enters a valid one."
+    ],
+    "hard": [
+      "Create a robust file processing function that catches file missing errors, decoding errors, and finally ensures the file is closed.",
+      "Write a script that attempts to download a URL, catching network-related exceptions (e.g., `requests.exceptions.RequestException`) and retries up to 3 times.",
+      "Implement exception chaining: catch a `ValueError` during database connection parsing and raise a custom `ConfigurationError` from it.",
+      "Write a context manager class that suppresses only `TypeError` exceptions within its `with` block.",
+      "Create an application structure where lower-level functions raise custom exceptions, and a top-level function catches them to log the errors to a file."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a function `safe_divide(a, b)` that returns the division of `a` by `b`. If `b` is 0, it should return 'Error: Division by zero'. If either `a` or `b` are not numbers, it should return 'Error: Invalid types'.",
+      "input": "safe_divide(10, 0)",
+      "output": "'Error: Division by zero'",
+      "constraints": "You must use exception handling, not `if` statements checking the types or values.",
+      "solution": "def safe_divide(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return 'Error: Division by zero'\n    except TypeError:\n        return 'Error: Invalid types'"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Web APIs",
+      "explanation": "Catching database connection timeouts and returning a 503 HTTP status code instead of crashing the server."
+    },
+    {
+      "field": "Data Processing",
+      "explanation": "Ignoring corrupted rows in a massive CSV file by catching `ValueError` during parsing and continuing to the next row."
+    },
+    {
+      "field": "User Interfaces",
+      "explanation": "Validating form inputs and displaying user-friendly error messages when validation fails."
+    }
+  ],
+  "best_practices": [
+    "Always catch the most specific exceptions possible.",
+    "Avoid bare `except:` blocks.",
+    "Use the `finally` block for resource cleanup (though `with` statements are preferred for files and locks).",
+    "Use meaningful error messages when raising custom exceptions.",
+    "Don't use exceptions for normal control flow; they should be for exceptional circumstances."
+  ],
+  "summary": [
+    "Exceptions are runtime errors that disrupt program execution.",
+    "The `try-except` structure allows developers to handle these gracefully.",
+    "The `else` block runs on success, while the `finally` block runs always.",
+    "Built-in exceptions cover common errors, but custom exceptions can be defined for app logic.",
+    "Proper exception handling leads to robust and user-friendly applications."
+  ],
+  "quiz": [
+    {
+      "question": "Which keyword is used to explicitly throw an exception?",
+      "options": [
+        "catch",
+        "throw",
+        "raise",
+        "except"
+      ],
+      "answer": "raise",
+      "explanation": "In Python, the `raise` keyword is used to trigger an exception manually."
+    },
+    {
+      "question": "When does the `finally` block execute?",
+      "options": [
+        "Only when an exception occurs.",
+        "Only when no exception occurs.",
+        "Always, regardless of exceptions.",
+        "Before the try block."
+      ],
+      "answer": "Always, regardless of exceptions.",
+      "explanation": "The `finally` block is guaranteed to execute, making it ideal for cleanup code."
+    },
+    {
+      "question": "What is the risk of using a bare `except:` clause?",
+      "options": [
+        "It causes a SyntaxError.",
+        "It catches system-exiting exceptions like KeyboardInterrupt.",
+        "It only catches standard errors.",
+        "It skips the finally block."
+      ],
+      "answer": "It catches system-exiting exceptions like KeyboardInterrupt.",
+      "explanation": "A bare `except:` catches `BaseException`, preventing users from stopping the program with Ctrl+C."
+    },
+    {
+      "question": "Which exception is raised when trying to access an invalid index in a list?",
+      "options": [
+        "KeyError",
+        "ValueError",
+        "TypeError",
+        "IndexError"
+      ],
+      "answer": "IndexError",
+      "explanation": "`IndexError` occurs when a sequence subscript is out of the valid range."
+    },
+    {
+      "question": "Which exception class should all custom exceptions inherit from?",
+      "options": [
+        "BaseException",
+        "Error",
+        "Exception",
+        "CustomError"
+      ],
+      "answer": "Exception",
+      "explanation": "Custom exceptions should inherit from the built-in `Exception` class, not `BaseException`."
+    },
+    {
+      "question": "In a `try-except-else` block, when is the `else` block executed?",
+      "options": [
+        "When an exception occurs.",
+        "When no exception occurs in the try block.",
+        "Always.",
+        "If the except block fails."
+      ],
+      "answer": "When no exception occurs in the try block.",
+      "explanation": "The `else` block is executed only if the `try` block finishes without raising any exceptions."
+    },
+    {
+      "question": "What will `int('Python')` raise?",
+      "options": [
+        "TypeError",
+        "SyntaxError",
+        "ValueError",
+        "NameError"
+      ],
+      "answer": "ValueError",
+      "explanation": "`int()` expects a valid number string. 'Python' is the right type (string) but an invalid value for conversion."
+    },
+    {
+      "question": "How do you catch multiple exceptions in a single `except` statement?",
+      "options": [
+        "except TypeError, ValueError:",
+        "except (TypeError, ValueError):",
+        "except TypeError or ValueError:",
+        "except TypeError & ValueError:"
+      ],
+      "answer": "except (TypeError, ValueError):",
+      "explanation": "Multiple exceptions must be passed as a tuple to a single `except` clause."
+    },
+    {
+      "question": "If you have `except ValueError:` followed by `except Exception:`, which catches a `ValueError`?",
+      "options": [
+        "Both",
+        "Exception",
+        "ValueError",
+        "Neither"
+      ],
+      "answer": "ValueError",
+      "explanation": "Python checks `except` blocks top-to-bottom. The first matching block (`ValueError`) handles it."
+    },
+    {
+      "question": "What is the purpose of exception chaining?",
+      "options": [
+        "To run multiple except blocks at once.",
+        "To preserve the original traceback when raising a new exception.",
+        "To catch syntax errors.",
+        "To link different try blocks together."
+      ],
+      "answer": "To preserve the original traceback when raising a new exception.",
+      "explanation": "Exception chaining (`raise ... from e`) keeps the context of the original error while throwing a new one."
+    }
+  ]
+}

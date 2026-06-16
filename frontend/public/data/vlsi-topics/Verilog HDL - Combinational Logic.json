@@ -1,0 +1,607 @@
+{
+  "title": "Verilog HDL - Combinational Logic",
+  "introduction": {
+    "definition": "Combinational logic in Verilog HDL refers to digital circuits whose outputs depend solely on the current values of their inputs, with no memory or feedback elements. Verilog provides multiple abstraction levels to describe such logic: structural (using gate primitives), dataflow (using continuous assign statements), and behavioral (using always @(*) procedural blocks). These circuits form the backbone of arithmetic units, data selectors, encoders, decoders, and barrel shifters in modern VLSI design.",
+    "purpose": "The purpose of combinational logic modeling in Verilog is to provide a hardware-accurate, synthesizable description of logic circuits that can be translated by EDA tools into real gate-level netlists for FPGA or ASIC implementation. It allows designers to abstractly describe complex logic functions—such as multiplexers, priority encoders, and barrel shifters—without manually drawing schematics, enabling rapid design iteration and verification.",
+    "importance": "Combinational logic is the fundamental building block of all digital systems. It performs arithmetic, data routing, encoding/decoding, and control signal generation. Mastering Verilog-based combinational design is essential for RTL engineers because: (1) it forms the critical path in most synchronous pipelines, directly impacting clock frequency; (2) synthesis quality heavily depends on how cleanly combinational intent is expressed; (3) functional correctness of sequential designs relies on properly modeled combinational logic; and (4) it is the primary skill tested in VLSI design interviews and academic courses."
+  },
+  "detailed_theory": "Combinational logic circuits are defined by the property that output = f(inputs), with no dependence on past states. In Verilog HDL, there are three primary modeling styles for combinational logic:\n\n1. GATE-LEVEL (STRUCTURAL) MODELING: Verilog provides built-in gate primitives: and, or, nand, nor, xor, xnor, not, buf, bufif0, bufif1, notif0, notif1. These are instantiated with the syntax: gate_type [instance_name] (output, input1, input2, ...); Gate primitives directly correspond to physical gates during synthesis, making timing analysis straightforward. Multi-input versions (and, or, etc.) accept any number of inputs.\n\n2. DATAFLOW MODELING (ASSIGN STATEMENTS): Continuous assignments use the 'assign' keyword to model combinational logic at the Boolean expression level. Syntax: assign [#delay] net_name = expression; The right-hand side can include: bitwise operators (&, |, ^, ~), reduction operators (&a, |a, ^a), logical operators (&&, ||, !), relational operators (<, >, ==, !=), conditional operator (?:), concatenation {}, replication {n{}}. Assign statements are re-evaluated whenever any RHS signal changes, modeling true combinational behavior.\n\n3. BEHAVIORAL MODELING (always @(*)): The always @(*) or always_comb block (SystemVerilog) creates a procedural block that executes whenever any input in its sensitivity list changes. Inside, Verilog procedural statements (if-else, case, casez, casex, for loops) model complex combinational functions. Critical rule: All outputs MUST be assigned in every branch; otherwise, Verilog infers latches (unintentional sequential elements).\n\nKEY COMBINATIONAL CIRCUITS:\n\nMULTIPLEXER (MUX): A data selector that routes one of N inputs to the output based on select lines. A 4:1 MUX has 4 data inputs, 2 select lines, and 1 output: Y = S[1]? (S[0]? D3:D2) : (S[0]? D1:D0). Implemented with assign (ternary), always/case, or gate primitives.\n\nDECODER: Converts a binary code to a one-hot output. An n-to-2^n decoder activates exactly one output for each input combination. Used in memory address decoding, instruction decoding, and demultiplexing.\n\nENCODER: The inverse of a decoder. Converts one-hot or sparse inputs to a binary code. Priority encoders resolve conflicts when multiple inputs are active simultaneously, outputting the code for the highest-priority active input.\n\nPRIORITY ENCODER: When multiple input lines are asserted, the priority encoder outputs the binary code of the highest-priority (usually highest index) active input, along with a 'valid' flag indicating at least one input is active. Essential in interrupt controllers, arbiters, and resource allocation circuits.\n\nBARREL SHIFTER: A combinational circuit that shifts or rotates a data word by any number of positions in a single clock cycle. Implemented as a cascade of multiplexer stages: stage k shifts by 2^k positions if enabled. An N-bit barrel shifter needs log2(N) MUX stages. Supports logical shift left (LSL), logical shift right (LSR), arithmetic shift right (ASR), and rotation. Used in ALUs, floating-point units, and DSP processors.\n\nSYNTHESIS CONSIDERATIONS: Synthesis tools translate RTL to gate-level netlists. For combinational logic: (1) All outputs must be driven in all conditions to avoid latch inference. (2) Use full_case and parallel_case pragmas carefully. (3) Minimize logic depth for timing closure. (4) Avoid combinational feedback loops which create oscillatory behavior. (5) X (unknown) and Z (high-impedance) states must be handled explicitly for robust design.",
+  "working_principle": {
+    "steps": [
+      "Step 1 - Input Stimulus: Primary inputs change value at any time, driving the combinational logic network.",
+      "Step 2 - Propagation: Each gate or assign expression evaluates immediately based on current input values, propagating through logic levels.",
+      "Step 3 - Gate Delay Accumulation: Each logic level introduces propagation delay (tpd). The critical path is the longest delay from any input to any output.",
+      "Step 4 - Output Stabilization: After all gate delays have elapsed, outputs stabilize to their correct values (valid output window).",
+      "Step 5 - Verilog always @(*) Triggering: In simulation, whenever any signal in the inferred sensitivity list changes, the always block re-executes from top to bottom.",
+      "Step 6 - Assign Statement Re-evaluation: Continuous assignments monitor all RHS signals; any change causes immediate re-evaluation and update of the LHS net.",
+      "Step 7 - Gate Primitive Evaluation: Structural gate instances evaluate output based on Boolean function of their inputs, optionally with specified rise/fall delays.",
+      "Step 8 - Synthesis Mapping: EDA synthesis tools read the RTL description and map it to technology-specific standard cells (AND2, OR3, MUX2, etc.) from a cell library.",
+      "Step 9 - Optimization: Synthesis tools apply Boolean optimization (two-level, multi-level), technology mapping, and timing-driven optimization to minimize area, power, and delay.",
+      "Step 10 - Verification: Functional simulation with testbenches validates that RTL behavior matches design intent before and after synthesis (equivalence checking)."
+    ],
+    "internal_operation": "At the transistor level, combinational logic is implemented with CMOS complementary pairs: a pull-up network (PMOS) and pull-down network (NMOS). For any input combination, exactly one network conducts, driving the output to VDD (logic 1) or GND (logic 0). A 2-input NAND gate uses 2 series NMOS and 2 parallel PMOS transistors. In Verilog simulation, gate primitives model this behavior with truth-table lookups including X and Z handling. For multi-bit buses, Verilog evaluates each bit independently using 4-state logic (0, 1, X, Z). Behavioral always blocks model register-transfer level operation: combinational always blocks infer no flip-flops if all outputs are assigned in every code path; otherwise, level-sensitive latches are inferred. Synthesis converts if-else chains into priority-encoded MUX trees, and case statements into binary or one-hot decision trees.",
+    "signal_flow": "Primary Inputs (PI) → [Continuous Assigns / Gate Primitives / Always Blocks] → Intermediate Nets → [More Logic Levels] → Primary Outputs (PO). In a MUX: Data Inputs {D0..Dn} + Select Lines {S} → MUX Logic (AND-OR or Tristate) → Output Y. In a Decoder: Binary Input A[n-1:0] → AND gates with complemented/uncomplemented input combinations → One-hot Output Y[2^n-1:0]. In a Priority Encoder: One-hot/sparse Input I[n-1:0] → Priority Resolution Logic (cascaded OR, conditional) → Binary Output Code[log2(n)-1:0] + Valid flag. In a Barrel Shifter: Data Input D[N-1:0] + Shift Amount shamt[log2(N)-1:0] → Stage 0 MUXes (shift by 1 if shamt[0]) → Stage 1 MUXes (shift by 2 if shamt[1]) → ... → Final Stage MUXes (shift by N/2 if shamt[last]) → Shifted Output."
+  },
+  "architecture": {
+    "description": "Verilog combinational logic architecture spans three abstraction levels: (1) Structural/Gate-level: explicit gate primitive instantiations forming a netlist; (2) Dataflow/RTL: continuous assign statements with expressions; (3) Behavioral: always @(*) procedural blocks. A typical combinational module has declared input/output ports, internal wire declarations, and one or more of these modeling styles. The Verilog module boundary acts as an abstraction unit, enabling hierarchical composition of complex combinational functions. Synthesis tools target a specific standard cell library, replacing RTL constructs with optimized gate networks that meet timing, area, and power constraints.",
+    "block_diagram_text": "┌─────────────────────────────────────────────────────────┐\n│              Verilog Combinational Module                │\n│                                                         │\n│  Inputs           Internal Logic         Outputs        │\n│  ───────         ───────────────        ────────        │\n│  in[N-1:0] ──►  [Assign Statements] ──► out[M-1:0]     │\n│  sel[k-1:0] ──► [Gate Primitives  ] ──► y               │\n│  enable ────►   [Always @(*) Block] ──► valid           │\n│                  ───────────────                        │\n│                  │  if/else      │                      │\n│                  │  case/casez   │                      │\n│                  │  for loops    │                      │\n│                  │  Operators    │                      │\n│                  └───────────────┘                      │\n└─────────────────────────────────────────────────────────┘\n\nMUX 4:1 Structure:\n D0 ──┐\n D1 ──┤ MUX ──► Y\n D2 ──┤  ▲\n D3 ──┘  │\n       S[1:0]\n\nDecoder 2:4 Structure:\n A[0] ─┬────► AND0 (A1'A0') ──► Y[0]\n       ├────► AND1 (A1'A0 ) ──► Y[1]\n A[1] ─┴────► AND2 (A1 A0') ──► Y[2]\n              AND3 (A1 A0 ) ──► Y[3]\n\nBarrel Shifter (4-bit, 2 stages):\n D[3:0] ─► [Stage0: shift by 1] ─► [Stage1: shift by 2] ─► Out[3:0]\n                  ▲                         ▲\n               shamt[0]                 shamt[1]",
+    "components": [
+      "Input Ports: Declared with 'input' keyword; may be single-bit or multi-bit (buses); drive all combinational logic inside the module",
+      "Output Ports: Declared with 'output' keyword; in behavioral blocks, driven by 'reg' type internally; in dataflow, driven by 'wire'",
+      "Wire Declarations: Internal nets connecting module components; driven by assign statements or module instance outputs",
+      "Reg Declarations (for always blocks): Variables that hold values across procedural statement execution within always blocks; synthesize to combinational logic if in always @(*) without latches",
+      "Gate Primitives: Built-in Verilog constructs (and, or, nand, nor, xor, xnor, not, buf) instantiated structurally to model gate-level netlists",
+      "Continuous Assign Statements: 'assign' keyword driving wires from combinational Boolean expressions; re-evaluated on any RHS change",
+      "Always @(*) Blocks: Behavioral procedural blocks with automatic sensitivity list; contain if-else, case, for-loop constructs for complex combinational functions",
+      "Multiplexer (MUX) Logic: Data selection circuit choosing one of N inputs based on select bits; fundamental to routing and conditional operations",
+      "Decoder Logic: Binary-to-one-hot conversion; activates one output line for each input combination; used in address decoding",
+      "Encoder Logic: One-hot to binary conversion; compresses sparse input representation to compact binary code",
+      "Priority Encoder Logic: Resolves multi-input conflicts by outputting code of highest-priority active input; includes 'valid' output",
+      "Barrel Shifter Logic: Multi-stage MUX cascade performing arbitrary-amount shift in one cycle; log2(N) stages for N-bit data"
+    ]
+  },
+  "hdl_code": {
+    "vhdl": "-- ============================================================\n-- VHDL: Combinational Logic - MUX, Decoder, Encoder,\n--       Priority Encoder, Barrel Shifter\n-- ============================================================\n\nlibrary IEEE;\nuse IEEE.STD_LOGIC_1164.ALL;\nuse IEEE.NUMERIC_STD.ALL;\n\n-- ============================================================\n-- 1. 4:1 Multiplexer\n-- ============================================================\nentity mux4to1 is\n    Port (\n        D   : in  STD_LOGIC_VECTOR(3 downto 0);\n        S   : in  STD_LOGIC_VECTOR(1 downto 0);\n        Y   : out STD_LOGIC\n    );\nend mux4to1;\n\narchitecture Behavioral of mux4to1 is\nbegin\n    with S select\n        Y <= D(0) when \"00\",\n             D(1) when \"01\",\n             D(2) when \"10\",\n             D(3) when \"11\",\n             '0'  when others;\nend Behavioral;\n\n-- ============================================================\n-- 2. 2-to-4 Decoder\n-- ============================================================\nentity decoder2to4 is\n    Port (\n        A   : in  STD_LOGIC_VECTOR(1 downto 0);\n        EN  : in  STD_LOGIC;\n        Y   : out STD_LOGIC_VECTOR(3 downto 0)\n    );\nend decoder2to4;\n\narchitecture Behavioral of decoder2to4 is\nbegin\n    process(A, EN)\n    begin\n        Y <= \"0000\";\n        if EN = '1' then\n            case A is\n                when \"00\" => Y <= \"0001\";\n                when \"01\" => Y <= \"0010\";\n                when \"10\" => Y <= \"0100\";\n                when \"11\" => Y <= \"1000\";\n                when others => Y <= \"0000\";\n            end case;\n        end if;\n    end process;\nend Behavioral;\n\n-- ============================================================\n-- 3. 4-to-2 Priority Encoder\n-- ============================================================\nentity priority_encoder4to2 is\n    Port (\n        I     : in  STD_LOGIC_VECTOR(3 downto 0);\n        Y     : out STD_LOGIC_VECTOR(1 downto 0);\n        VALID : out STD_LOGIC\n    );\nend priority_encoder4to2;\n\narchitecture Behavioral of priority_encoder4to2 is\nbegin\n    process(I)\n    begin\n        VALID <= '1';\n        if    I(3) = '1' then Y <= \"11\";\n        elsif I(2) = '1' then Y <= \"10\";\n        elsif I(1) = '1' then Y <= \"01\";\n        elsif I(0) = '1' then Y <= \"00\";\n        else  Y <= \"00\"; VALID <= '0';\n        end if;\n    end process;\nend Behavioral;\n\n-- ============================================================\n-- 4. 8-bit Barrel Shifter (Logical Left Shift)\n-- ============================================================\nentity barrel_shifter8 is\n    Port (\n        D     : in  STD_LOGIC_VECTOR(7 downto 0);\n        SHAMT : in  STD_LOGIC_VECTOR(2 downto 0);\n        Y     : out STD_LOGIC_VECTOR(7 downto 0)\n    );\nend barrel_shifter8;\n\narchitecture Behavioral of barrel_shifter8 is\n    signal stage0, stage1 : STD_LOGIC_VECTOR(7 downto 0);\nbegin\n    -- Stage 0: shift by 1 if shamt(0)=1\n    stage0 <= D(6 downto 0) & '0' when SHAMT(0) = '1' else D;\n    -- Stage 1: shift by 2 if shamt(1)=1\n    stage1 <= stage0(5 downto 0) & \"00\" when SHAMT(1) = '1' else stage0;\n    -- Stage 2: shift by 4 if shamt(2)=1\n    Y      <= stage1(3 downto 0) & \"0000\" when SHAMT(2) = '1' else stage1;\nend Behavioral;",
+    "verilog": "// ============================================================\n// Verilog HDL: Combinational Logic\n// Covers: assign, always @(*), gate primitives,\n//         MUX, Decoder, Encoder, Priority Encoder, Barrel Shifter\n// ============================================================\n\n// ============================================================\n// MODULE 1: Basic Gates using Verilog Primitives\n// ============================================================\nmodule basic_gates (\n    input  wire a, b,\n    output wire y_and, y_or, y_nand, y_nor, y_xor, y_xnor, y_not_a\n);\n    // Gate primitive instantiations\n    and  g1 (y_and,  a, b);      // AND gate\n    or   g2 (y_or,   a, b);      // OR gate\n    nand g3 (y_nand, a, b);      // NAND gate\n    nor  g4 (y_nor,  a, b);      // NOR gate\n    xor  g5 (y_xor,  a, b);      // XOR gate\n    xnor g6 (y_xnor, a, b);      // XNOR gate\n    not  g7 (y_not_a, a);        // NOT gate (single input)\nendmodule\n\n// ============================================================\n// MODULE 2: Half Adder using assign statements\n// ============================================================\nmodule half_adder (\n    input  wire a, b,\n    output wire sum, carry\n);\n    assign sum   = a ^ b;   // XOR for sum\n    assign carry = a & b;   // AND for carry\nendmodule\n\n// ============================================================\n// MODULE 3: Full Adder using assign\n// ============================================================\nmodule full_adder (\n    input  wire a, b, cin,\n    output wire sum, cout\n);\n    assign sum  = a ^ b ^ cin;\n    assign cout = (a & b) | (b & cin) | (a & cin);\nendmodule\n\n// ============================================================\n// MODULE 4: 2:1 MUX - Three styles\n// ============================================================\n\n// Style A: Continuous assign with ternary operator\nmodule mux2to1_assign (\n    input  wire d0, d1, sel,\n    output wire y\n);\n    assign y = sel ? d1 : d0;  // sel=1 -> d1, sel=0 -> d0\nendmodule\n\n// Style B: Using always @(*)\nmodule mux2to1_always (\n    input  wire d0, d1, sel,\n    output reg  y\n);\n    always @(*) begin\n        if (sel)\n            y = d1;\n        else\n            y = d0;\n    end\nendmodule\n\n// Style C: Gate-primitive structural\nmodule mux2to1_gates (\n    input  wire d0, d1, sel,\n    output wire y\n);\n    wire sel_n, t0, t1;\n    not  g1 (sel_n, sel);      // sel_n = ~sel\n    and  g2 (t0, d0, sel_n);   // t0 = d0 & ~sel\n    and  g3 (t1, d1, sel);     // t1 = d1 & sel\n    or   g4 (y, t0, t1);       // y = t0 | t1\nendmodule\n\n// ============================================================\n// MODULE 5: 4:1 MUX\n// ============================================================\nmodule mux4to1 (\n    input  wire [3:0] d,       // 4 data inputs\n    input  wire [1:0] sel,     // 2-bit select\n    output reg        y        // 1-bit output\n);\n    always @(*) begin\n        case (sel)\n            2'b00: y = d[0];\n            2'b01: y = d[1];\n            2'b10: y = d[2];\n            2'b11: y = d[3];\n            default: y = 1'bx; // Should never occur\n        endcase\n    end\nendmodule\n\n// ============================================================\n// MODULE 6: 8:1 MUX (bus-based)\n// ============================================================\nmodule mux8to1 (\n    input  wire [7:0] d,\n    input  wire [2:0] sel,\n    output reg        y\n);\n    always @(*) begin\n        y = d[sel]; // Compact vector-index mux\n    end\nendmodule\n\n// ============================================================\n// MODULE 7: 2-to-4 Decoder with Enable\n// ============================================================\nmodule decoder2to4 (\n    input  wire [1:0] a,      // 2-bit binary input\n    input  wire       en,     // Active-high enable\n    output reg  [3:0] y       // 4-bit one-hot output\n);\n    always @(*) begin\n        if (!en)\n            y = 4'b0000;      // Disabled: all outputs low\n        else begin\n            case (a)\n                2'b00: y = 4'b0001;  // Y[0] active\n                2'b01: y = 4'b0010;  // Y[1] active\n                2'b10: y = 4'b0100;  // Y[2] active\n                2'b11: y = 4'b1000;  // Y[3] active\n                default: y = 4'bxxxx;\n            endcase\n        end\n    end\nendmodule\n\n// ============================================================\n// MODULE 8: 3-to-8 Decoder using assign\n// ============================================================\nmodule decoder3to8 (\n    input  wire [2:0] a,\n    input  wire       en,\n    output wire [7:0] y\n);\n    // Each output is a minterm; active only when enabled\n    assign y[0] = en & ~a[2] & ~a[1] & ~a[0];\n    assign y[1] = en & ~a[2] & ~a[1] &  a[0];\n    assign y[2] = en & ~a[2] &  a[1] & ~a[0];\n    assign y[3] = en & ~a[2] &  a[1] &  a[0];\n    assign y[4] = en &  a[2] & ~a[1] & ~a[0];\n    assign y[5] = en &  a[2] & ~a[1] &  a[0];\n    assign y[6] = en &  a[2] &  a[1] & ~a[0];\n    assign y[7] = en &  a[2] &  a[1] &  a[0];\nendmodule\n\n// ============================================================\n// MODULE 9: 4-to-2 Encoder (basic, assumes one-hot input)\n// ============================================================\nmodule encoder4to2 (\n    input  wire [3:0] i,     // One-hot input\n    output reg  [1:0] y,     // 2-bit binary output\n    output reg        valid  // At least one input active\n);\n    always @(*) begin\n        valid = |i;           // Reduction OR: any input active?\n        case (i)\n            4'b0001: y = 2'b00;\n            4'b0010: y = 2'b01;\n            4'b0100: y = 2'b10;\n            4'b1000: y = 2'b11;\n            default: y = 2'bxx; // Non-one-hot: undefined\n        endcase\n    end\nendmodule\n\n// ============================================================\n// MODULE 10: 4-to-2 Priority Encoder\n// ============================================================\nmodule priority_encoder4to2 (\n    input  wire [3:0] i,     // Input lines (i[3] = highest priority)\n    output reg  [1:0] y,     // Binary encoded output\n    output reg        valid  // Active when any input is 1\n);\n    always @(*) begin\n        valid = 1'b1;\n        if      (i[3]) y = 2'b11;   // I3 has highest priority\n        else if (i[2]) y = 2'b10;\n        else if (i[1]) y = 2'b01;\n        else if (i[0]) y = 2'b00;\n        else begin\n            y     = 2'b00;           // No input active\n            valid = 1'b0;\n        end\n    end\nendmodule\n\n// ============================================================\n// MODULE 11: 8-to-3 Priority Encoder\n// ============================================================\nmodule priority_encoder8to3 (\n    input  wire [7:0] i,\n    output reg  [2:0] y,\n    output reg        valid\n);\n    always @(*) begin\n        valid = 1'b1;\n        casez (i)                 // casez: treat ? as don't-care\n            8'b1xxxxxxx: y = 3'd7;\n            8'b01xxxxxx: y = 3'd6;\n            8'b001xxxxx: y = 3'd5;\n            8'b0001xxxx: y = 3'd4;\n            8'b00001xxx: y = 3'd3;\n            8'b000001xx: y = 3'd2;\n            8'b0000001x: y = 3'd1;\n            8'b00000001: y = 3'd0;\n            default:    begin\n                y = 3'd0;\n                valid = 1'b0;\n            end\n        endcase\n    end\nendmodule\n\n// ============================================================\n// MODULE 12: 4-bit Barrel Shifter (Logical Left Shift)\n// ============================================================\nmodule barrel_shifter_4bit_left (\n    input  wire [3:0] d,      // 4-bit data input\n    input  wire [1:0] shamt,  // Shift amount: 0-3\n    output wire [3:0] y       // Shifted output\n);\n    wire [3:0] stage0;        // After stage 0\n    // Stage 0: shift left by 1 if shamt[0]=1\n    assign stage0 = shamt[0] ? {d[2:0], 1'b0} : d;\n    // Stage 1: shift left by 2 if shamt[1]=1\n    assign y      = shamt[1] ? {stage0[1:0], 2'b00} : stage0;\nendmodule\n\n// ============================================================\n// MODULE 13: 8-bit Barrel Shifter (Multi-mode)\n// Modes: 00=LSL, 01=LSR, 10=ASR, 11=ROL\n// ============================================================\nmodule barrel_shifter_8bit (\n    input  wire [7:0] d,\n    input  wire [2:0] shamt,  // Shift amount 0-7\n    input  wire [1:0] mode,   // 00:LSL, 01:LSR, 10:ASR, 11:ROL\n    output reg  [7:0] y\n);\n    always @(*) begin\n        case (mode)\n            2'b00: y = d << shamt;                        // Logical Shift Left\n            2'b01: y = d >> shamt;                        // Logical Shift Right\n            2'b10: y = $signed(d) >>> shamt;              // Arithmetic Shift Right\n            2'b11: y = (d << shamt) | (d >> (8 - shamt)); // Rotate Left\n            default: y = 8'hxx;\n        endcase\n    end\nendmodule\n\n// ============================================================\n// MODULE 14: 4-bit ALU (Combinational)\n// ============================================================\nmodule alu_4bit (\n    input  wire [3:0] a, b,\n    input  wire [2:0] opcode,\n    output reg  [3:0] result,\n    output reg        zero, carry_out\n);\n    reg [4:0] temp;  // 5-bit for carry detection\n    always @(*) begin\n        carry_out = 1'b0;\n        case (opcode)\n            3'b000: begin temp = {1'b0, a} + {1'b0, b}; result = temp[3:0]; carry_out = temp[4]; end // ADD\n            3'b001: begin temp = {1'b0, a} - {1'b0, b}; result = temp[3:0]; carry_out = temp[4]; end // SUB\n            3'b010: result = a & b;         // AND\n            3'b011: result = a | b;         // OR\n            3'b100: result = a ^ b;         // XOR\n            3'b101: result = ~a;            // NOT A\n            3'b110: result = a << 1;        // Shift Left\n            3'b111: result = a >> 1;        // Shift Right\n            default: result = 4'bxxxx;\n        endcase\n        zero = (result == 4'b0000);\n    end\nendmodule\n\n// ============================================================\n// MODULE 15: Testbench for Priority Encoder\n// ============================================================\nmodule tb_priority_encoder;\n    reg  [3:0] i;\n    wire [1:0] y;\n    wire       valid;\n\n    priority_encoder4to2 dut (.i(i), .y(y), .valid(valid));\n\n    initial begin\n        $dumpfile(\"priority_enc.vcd\");\n        $dumpvars(0, tb_priority_encoder);\n        $display(\"I[3:0] | Y[1:0] | Valid\");\n        $display(\"-------+--------+------\");\n        i = 4'b0000; #10; $display(\" %b   |   %b   |   %b\", i, y, valid);\n        i = 4'b0001; #10; $display(\" %b   |   %b   |   %b\", i, y, valid);\n        i = 4'b0010; #10; $display(\" %b   |   %b   |   %b\", i, y, valid);\n        i = 4'b0101; #10; $display(\" %b   |   %b   |   %b\", i, y, valid);\n        i = 4'b1111; #10; $display(\" %b   |   %b   |   %b\", i, y, valid);\n        i = 4'b1010; #10; $display(\" %b   |   %b   |   %b\", i, y, valid);\n        $finish;\n    end\nendmodule",
+    "explanation": "Line-by-line explanation of key modules:\n\n--- basic_gates module ---\n'input wire a, b' - declares single-bit input ports as wires\n'output wire y_and, y_or, ...' - declares output wires for each gate function\n'and g1 (y_and, a, b)' - instantiates built-in AND primitive; first port is output, remaining are inputs\n'or g2 (y_or, a, b)' - OR primitive; output y_or = a | b\n'nand g3 (y_nand, a, b)' - NAND primitive; output y_nand = ~(a & b)\n'not g7 (y_not_a, a)' - NOT primitive; single-input, output is complement\n\n--- mux4to1 module ---\n'input wire [3:0] d' - 4-bit bus; d[0] through d[3] are data inputs\n'input wire [1:0] sel' - 2-bit select; chooses which data input passes through\n'output reg y' - declared as reg because driven inside always block\n'always @(*)' - sensitivity list auto-includes all signals read inside (d, sel)\n'case (sel)' - one-hot matching on select; each value maps to corresponding d[i]\n'default: y = 1\\'bx' - good practice; handles unknown sel values in simulation\n\n--- decoder2to4 module ---\n'if (!en) y = 4\\'b0000' - when enable is low, all outputs deasserted\n'case (a)' - maps each 2-bit input to its corresponding one-hot output\n'2\\'b00: y = 4\\'b0001' - input 0 activates output bit 0 only\n'2\\'b11: y = 4\\'b1000' - input 3 activates output bit 3 only\n\n--- priority_encoder4to2 module ---\n'if (i[3]) y = 2\\'b11' - highest index has highest priority; checked first\n'else if (i[2]) y = 2\\'b10' - only reached if i[3]=0; second priority\n'valid = 1\\'b0' in else - valid deasserted when no input is active\nif-else chain creates inherent priority; i[3] always wins over lower indices\n\n--- priority_encoder8to3 with casez ---\n'casez (i)' - case with don\\'t-care for z (also treats ? as don\\'t-care)\n'8\\'b1xxxxxxx' - matches any value with bit 7 set, regardless of bits 6-0\nThis implements priority: bit 7 is checked first (first matching case wins)\n'default: valid = 1\\'b0' - no active inputs, valid is deasserted\n\n--- barrel_shifter_4bit_left module ---\n'wire [3:0] stage0' - intermediate signal between shift stages\n'shamt[0] ? {d[2:0], 1\\'b0} : d' - shift left by 1: drop MSB, append 0 at LSB\n'shamt[1] ? {stage0[1:0], 2\\'b00} : stage0' - shift left by 2: append 2 zeros\nTwo stages allow shifts of 0,1,2,3 positions with only 4 2:1 MUXes per bit\n\n--- barrel_shifter_8bit ---\n'd << shamt' - Verilog logical left shift operator; fills vacated bits with 0\n'd >> shamt' - Verilog logical right shift; fills with 0 from left\n'$signed(d) >>> shamt' - arithmetic right shift; fills with sign bit (d[7])\n'(d << shamt) | (d >> (8-shamt))' - rotate left: OR of two partial shifts\n\n--- tb_priority_encoder ---\n'$dumpfile / $dumpvars' - generates VCD waveform file for viewing in GTKWave\n'$display' - prints formatted output to simulation console\n'#10' - advances simulation time by 10 time units between test vectors"
+  },
+  "truth_table": {
+    "inputs": ["SEL[1]", "SEL[0]", "D0", "D1", "D2", "D3"],
+    "outputs": ["Y (4:1 MUX)"],
+    "table": [
+      ["0", "0", "0", "x", "x", "x", "0"],
+      ["0", "0", "1", "x", "x", "x", "1"],
+      ["0", "1", "x", "0", "x", "x", "0"],
+      ["0", "1", "x", "1", "x", "x", "1"],
+      ["1", "0", "x", "x", "0", "x", "0"],
+      ["1", "0", "x", "x", "1", "x", "1"],
+      ["1", "1", "x", "x", "x", "0", "0"],
+      ["1", "1", "x", "x", "x", "1", "1"],
+      ["DECODER 2:4 - A[1]", "A[0]", "EN", "Y[3]", "Y[2]", "Y[1]", "Y[0]"],
+      ["x", "x", "0", "0", "0", "0", "0"],
+      ["0", "0", "1", "0", "0", "0", "1"],
+      ["0", "1", "1", "0", "0", "1", "0"],
+      ["1", "0", "1", "0", "1", "0", "0"],
+      ["1", "1", "1", "1", "0", "0", "0"],
+      ["PRIORITY ENC 4:2 - I[3]", "I[2]", "I[1]", "I[0]", "Y[1]", "Y[0]", "VALID"],
+      ["0", "0", "0", "0", "0", "0", "0"],
+      ["0", "0", "0", "1", "0", "0", "1"],
+      ["0", "0", "1", "x", "0", "1", "1"],
+      ["0", "1", "x", "x", "1", "0", "1"],
+      ["1", "x", "x", "x", "1", "1", "1"]
+    ]
+  },
+  "timing_diagram": {
+    "description": "Timing diagram for a 4:1 Multiplexer showing how the output Y responds to changes in select lines and data inputs. Gate delay is assumed to be 5ns per stage. The MUX has two levels of logic (AND-OR structure), so total propagation delay = ~10ns. Note that when SEL changes, there may be a brief glitch on Y due to different path delays through the AND-OR network before the output settles.",
+    "signals": [
+      "Time(ns):   0    10   20   30   40   50   60   70   80",
+      "SEL[1]:     __________|----|____|--------|----|________",
+      "SEL[0]:     _____|---------|____|---------|____________",
+      "D0:         ______|----------------------|____________",
+      "D1:         _______________|-------------|____________",
+      "D2:         __________________|----------|____________",
+      "D3:         1111111111111111111111111111111111111111111",
+      "Y(MUX out): ___|glitch|--|------|---|glitch|--|--------",
+      "",
+      "Barrel Shifter 4-bit (LSL) Timing:",
+      "Time(ns):   0    10   20   30   40",
+      "D[3:0]:     4'b1010|4'b1100|4'b0011|",
+      "SHAMT[1:0]: 2'b01  |2'b10  |2'b11  |",
+      "Y[3:0]:     ____4'b0100____4'b0000____4'b1000",
+      "            (shift by 1)  (shift by 2)  (shift by 3)",
+      "",
+      "Priority Encoder Timing:",
+      "Time(ns):   0    10   20   30   40   50",
+      "I[3:0]:     4'b0001|4'b0110|4'b1010|4'b0000|",
+      "Y[1:0]:     2'b00  |2'b10  |2'b11  |2'b00  |",
+      "VALID:      __|--------|--------|_____|-------"
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "2:1 MUX using Assign Statement",
+      "code": "module mux2to1_basic (\n    input  wire a, b, sel,\n    output wire y\n);\n    // Continuous assignment with ternary operator\n    // When sel=1: y=b, when sel=0: y=a\n    assign y = sel ? b : a;\nendmodule\n\n// Testbench\nmodule tb_mux2to1;\n    reg a, b, sel;\n    wire y;\n    mux2to1_basic dut(.a(a), .b(b), .sel(sel), .y(y));\n    initial begin\n        a=0; b=0; sel=0; #10;\n        a=1; b=0; sel=0; #10; // y should be 1 (from a)\n        a=0; b=1; sel=1; #10; // y should be 1 (from b)\n        a=1; b=1; sel=1; #10; // y should be 1 (from b)\n        $finish;\n    end\n    initial $monitor(\"t=%0t a=%b b=%b sel=%b y=%b\", $time, a, b, sel, y);\nendmodule",
+      "output": "t=0  a=0 b=0 sel=0 y=0\nt=10 a=1 b=0 sel=0 y=1\nt=20 a=0 b=1 sel=1 y=1\nt=30 a=1 b=1 sel=1 y=1",
+      "explanation": "The assign statement creates a continuous driver on wire y. The ternary operator '?:' synthesizes to a 2:1 MUX. When sel=0, y tracks a; when sel=1, y tracks b. The $monitor task prints output whenever any monitored signal changes. This is the simplest and most synthesis-friendly way to describe a MUX in Verilog."
+    },
+    {
+      "level": "Intermediate",
+      "title": "8-to-3 Priority Encoder with casez and Testbench",
+      "code": "module priority_encoder8to3 (\n    input  wire [7:0] i,\n    output reg  [2:0] y,\n    output reg        valid\n);\n    always @(*) begin\n        valid = 1'b1;\n        casez (i)\n            8'b1???????: y = 3'd7;\n            8'b01??????: y = 3'd6;\n            8'b001?????: y = 3'd5;\n            8'b0001????: y = 3'd4;\n            8'b00001???: y = 3'd3;\n            8'b000001??: y = 3'd2;\n            8'b0000001?: y = 3'd1;\n            8'b00000001: y = 3'd0;\n            default: begin\n                y     = 3'd0;\n                valid = 1'b0;\n            end\n        endcase\n    end\nendmodule\n\nmodule tb_pe8to3;\n    reg  [7:0] i;\n    wire [2:0] y;\n    wire       valid;\n    priority_encoder8to3 dut(.i(i), .y(y), .valid(valid));\n    integer k;\n    initial begin\n        $display(\"Input      | Output | Valid\");\n        $display(\"-----------|--------|------\");\n        i = 8'b00000000; #5;\n        $display(\"%b |  %0d     |  %b\", i, y, valid);\n        for (k = 0; k < 8; k = k+1) begin\n            i = (1 << k); #5;\n            $display(\"%b |  %0d     |  %b\", i, y, valid);\n        end\n        // Multi-bit active: expect highest priority\n        i = 8'b10110101; #5;\n        $display(\"%b |  %0d     |  %b\", i, y, valid);\n        $finish;\n    end\nendmodule",
+      "output": "Input      | Output | Valid\n-----------|--------|------\n00000000 |  0     |  0\n00000001 |  0     |  1\n00000010 |  1     |  1\n00000100 |  2     |  1\n00001000 |  3     |  1\n00010000 |  4     |  1\n00100000 |  5     |  1\n01000000 |  6     |  1\n10000000 |  7     |  1\n10110101 |  7     |  1",
+      "explanation": "casez treats '?' as don't-care bits in patterns, making priority encoding compact. The first matching case wins, implementing implicit priority — bit 7 always beats lower bits when active. The for loop in the testbench exercises each single-bit input. The final test with 8'b10110101 shows that even with multiple bits active (bits 7,5,4,2,0), the encoder correctly outputs 7 because bit 7 is active and has highest priority."
+    },
+    {
+      "level": "Industry",
+      "title": "Parameterized Barrel Shifter with All Shift Modes",
+      "code": "// Industry-grade parameterized barrel shifter\n// Supports N-bit data, log2(N)-bit shift amount\n// Modes: LSL, LSR, ASR, ROL, ROR\nmodule barrel_shifter #(\n    parameter DATA_WIDTH  = 32,\n    parameter SHAMT_WIDTH = 5   // log2(32) = 5\n) (\n    input  wire [DATA_WIDTH-1:0]  d_in,\n    input  wire [SHAMT_WIDTH-1:0] shamt,\n    input  wire [2:0]             mode,  // 000:LSL 001:LSR 010:ASR 011:ROL 100:ROR\n    output reg  [DATA_WIDTH-1:0]  d_out,\n    output wire                   overflow  // For shift > data_width\n);\n    // Internal wire for double-width rotate support\n    wire [2*DATA_WIDTH-1:0] doubled;\n    assign doubled   = {d_in, d_in};\n    assign overflow  = (shamt >= DATA_WIDTH);\n\n    always @(*) begin\n        case (mode)\n            3'b000: // Logical Shift Left\n                d_out = (overflow) ? {DATA_WIDTH{1'b0}} : (d_in << shamt);\n            3'b001: // Logical Shift Right\n                d_out = (overflow) ? {DATA_WIDTH{1'b0}} : (d_in >> shamt);\n            3'b010: // Arithmetic Shift Right (sign extension)\n                d_out = (overflow) ? {DATA_WIDTH{d_in[DATA_WIDTH-1]}} :\n                        ($signed(d_in) >>> shamt);\n            3'b011: // Rotate Left\n                d_out = doubled[DATA_WIDTH + DATA_WIDTH - 1 - shamt -: DATA_WIDTH];\n            3'b100: // Rotate Right\n                d_out = doubled[DATA_WIDTH - 1 - shamt +: DATA_WIDTH];\n            default:\n                d_out = {DATA_WIDTH{1'bx}};\n        endcase\n    end\nendmodule\n\n// Comprehensive testbench\nmodule tb_barrel_shifter;\n    parameter DW = 32, SW = 5;\n    reg  [DW-1:0] d_in;\n    reg  [SW-1:0] shamt;\n    reg  [2:0]    mode;\n    wire [DW-1:0] d_out;\n    wire          overflow;\n\n    barrel_shifter #(.DATA_WIDTH(DW), .SHAMT_WIDTH(SW))\n        dut(.d_in(d_in), .shamt(shamt), .mode(mode),\n            .d_out(d_out), .overflow(overflow));\n\n    task apply_test;\n        input [DW-1:0] data;\n        input [SW-1:0] amount;\n        input [2:0]    m;\n        input [127:0]  desc;\n        begin\n            d_in = data; shamt = amount; mode = m; #10;\n            $display(\"%s: in=%h shamt=%0d out=%h ovf=%b\",\n                     desc, data, amount, d_out, overflow);\n        end\n    endtask\n\n    initial begin\n        $display(\"=== Barrel Shifter Verification ===\");\n        apply_test(32'hABCD_1234, 5'd4,  3'b000, \"LSL by 4 \");\n        apply_test(32'hABCD_1234, 5'd8,  3'b001, \"LSR by 8 \");\n        apply_test(32'hF000_0000, 5'd4,  3'b010, \"ASR by 4 \");\n        apply_test(32'hABCD_1234, 5'd8,  3'b011, \"ROL by 8 \");\n        apply_test(32'hABCD_1234, 5'd8,  3'b100, \"ROR by 8 \");\n        apply_test(32'hFFFF_FFFF, 5'd31, 3'b000, \"LSL by 31\");\n        apply_test(32'h8000_0000, 5'd31, 3'b010, \"ASR by 31\");\n        $finish;\n    end\nendmodule",
+      "output": "=== Barrel Shifter Verification ===\nLSL by 4 : in=abcd1234 shamt=4  out=bcd12340 ovf=0\nLSR by 8 : in=abcd1234 shamt=8  out=00abcd12 ovf=0\nASR by 4 : in=f0000000 shamt=4  out=ff000000 ovf=0\nROL by 8 : in=abcd1234 shamt=8  out=cd1234ab ovf=0\nROR by 8 : in=abcd1234 shamt=8  out=34abcd12 ovf=0\nLSL by 31: in=ffffffff shamt=31 out=80000000 ovf=0\nASR by 31: in=80000000 shamt=31 out=ffffffff ovf=0",
+      "explanation": "This industry-grade design uses Verilog parameters for reusability with any power-of-2 data width. Key features: (1) Parameter-based generics make the design width-configurable without code changes; (2) Overflow detection flags when shift amount exceeds data width; (3) ASR uses $signed() cast for correct sign extension; (4) ROL/ROR use double-width concatenation trick: {d_in,d_in} creates a 64-bit double; selecting a 32-bit window at offset shamt performs rotation without explicit wrapping logic; (5) The 'task' construct in the testbench encapsulates repetitive stimulus+display logic, mirroring professional verification practice; (6) Parameterized modules are a hallmark of reusable IP core design in the semiconductor industry."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Verilog Gate Primitives Reference",
+        "headers": ["Primitive", "Syntax", "Function", "Inputs", "Output"],
+        "rows": [
+          ["and", "and g(y, a, b, ...)", "Y = A & B & ...", "2 to N", "Y"],
+          ["or", "or g(y, a, b, ...)", "Y = A | B | ...", "2 to N", "Y"],
+          ["nand", "nand g(y, a, b)", "Y = ~(A & B)", "2 to N", "Y"],
+          ["nor", "nor g(y, a, b)", "Y = ~(A | B)", "2 to N", "Y"],
+          ["xor", "xor g(y, a, b)", "Y = A ^ B", "2 to N", "Y"],
+          ["xnor", "xnor g(y, a, b)", "Y = ~(A ^ B)", "2 to N", "Y"],
+          ["not", "not g(y, a)", "Y = ~A", "1", "Y"],
+          ["buf", "buf g(y, a)", "Y = A", "1", "Y"],
+          ["bufif1", "bufif1 g(y, a, en)", "Y = A if en=1 else Z", "1+1 ctrl", "Y/Z"],
+          ["bufif0", "bufif0 g(y, a, en)", "Y = A if en=0 else Z", "1+1 ctrl", "Y/Z"]
+        ]
+      },
+      {
+        "title": "Verilog Operators for Combinational Logic",
+        "headers": ["Category", "Operator", "Example", "Description"],
+        "rows": [
+          ["Bitwise", "&", "a & b", "AND, bit by bit"],
+          ["Bitwise", "|", "a | b", "OR, bit by bit"],
+          ["Bitwise", "^", "a ^ b", "XOR, bit by bit"],
+          ["Bitwise", "~", "~a", "NOT, bit by bit"],
+          ["Bitwise", "~^", "a ~^ b", "XNOR, bit by bit"],
+          ["Reduction", "&a", "& 4'b1111 = 1", "AND all bits"],
+          ["Reduction", "|a", "| 4'b0001 = 1", "OR all bits"],
+          ["Reduction", "^a", "^ 4'b0110 = 0", "XOR all bits"],
+          ["Logical", "&&", "a && b", "Logical AND (1-bit result)"],
+          ["Logical", "||", "a || b", "Logical OR (1-bit result)"],
+          ["Logical", "!", "!a", "Logical NOT"],
+          ["Relational", "==", "a == b", "Equality (x/z aware: ===)"],
+          ["Relational", "!=", "a != b", "Inequality"],
+          ["Conditional", "?:", "s?a:b", "Ternary MUX"],
+          ["Shift", "<<", "a << 2", "Logical shift left"],
+          ["Shift", ">>", "a >> 2", "Logical shift right"],
+          ["Shift", ">>>", "$signed(a)>>>2", "Arithmetic shift right"],
+          ["Concatenation", "{}", "{a,b,c}", "Bit concatenation"],
+          ["Replication", "{n{}}", "{4{1'b1}}", "Replicate n times"]
+        ]
+      },
+      {
+        "title": "Barrel Shifter: 4-bit LSL Truth Table",
+        "headers": ["SHAMT[1:0]", "Shift Amount", "Input D", "Output Y", "Operation"],
+        "rows": [
+          ["2'b00", "0", "4'b1011", "4'b1011", "No shift"],
+          ["2'b01", "1", "4'b1011", "4'b0110", "Shift left 1 (MSB dropped, LSB=0)"],
+          ["2'b10", "2", "4'b1011", "4'b1100", "Shift left 2 (2 MSBs dropped)"],
+          ["2'b11", "3", "4'b1011", "4'b1000", "Shift left 3 (3 MSBs dropped)"]
+        ]
+      },
+      {
+        "title": "Combinational Circuit Complexity Comparison",
+        "headers": ["Circuit", "Inputs", "Outputs", "Min Gates", "Logic Levels", "Use Case"],
+        "rows": [
+          ["2:1 MUX", "3", "1", "3 (AND+NOT+OR)", "2", "Data routing, clock MUX"],
+          ["4:1 MUX", "6", "1", "9", "3", "ALU input select"],
+          ["2-to-4 Decoder", "3(+EN)", "4", "4 ANDs+NOTs", "2", "Address decode"],
+          ["3-to-8 Decoder", "4(+EN)", "8", "8 ANDs+NOTs", "2", "Memory select"],
+          ["4-to-2 Encoder", "4", "3", "4 ORs", "2", "Interrupt encode"],
+          ["4-to-2 Priority Enc", "4", "3", "~8 gates", "4", "Interrupt priority"],
+          ["4-bit Barrel Shifter", "6", "4", "16 MUXes", "2", "ALU shift unit"],
+          ["8-bit Barrel Shifter", "11", "8", "48 MUXes", "3", "DSP shift/rotate"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "assign (Continuous Assignment)",
+        "concept_b": "always @(*) (Behavioral Block)",
+        "explanation": "assign drives wire types with a continuously-evaluated expression; it's concurrent and models dataflow. always @(*) uses procedural statements (if/case/loops) inside a block that re-executes when any input changes; it drives reg types. Both synthesize to combinational logic, but always @(*) supports complex branching. Risk: missing assignments in always blocks infer latches; assign cannot have incomplete conditions."
+      },
+      {
+        "concept_a": "Encoder",
+        "concept_b": "Priority Encoder",
+        "explanation": "A basic encoder assumes only one input is active at a time (one-hot input) and outputs its binary index. Behavior with multiple inputs active is undefined or produces incorrect results. A priority encoder handles multiple simultaneous inputs by defining a priority order: when multiple inputs are asserted, the output represents the highest-priority (typically highest-index) active input. Priority encoders include a 'valid' output and are used in interrupt controllers and arbiters."
+      },
+      {
+        "concept_a": "Decoder",
+        "concept_b": "Demultiplexer (DEMUX)",
+        "explanation": "A decoder converts a binary code to a one-hot output — all outputs are fixed logic values (one active, rest zero). A DEMUX routes a single data input to one of N outputs selected by address lines; the selected output copies the data input, others output 0. A decoder with an enable line effectively implements a 1-to-N DEMUX: the enable is the data input, A[n-1:0] selects which output is active, and all others are 0."
+      },
+      {
+        "concept_a": "Logical Shift (LSL/LSR)",
+        "concept_b": "Arithmetic Shift Right (ASR)",
+        "explanation": "Logical shifts fill vacated bit positions with 0, regardless of the sign of the data. LSL shifts data left by N, inserting N zeros at LSB; LSR shifts right, inserting N zeros at MSB. Arithmetic Shift Right preserves the sign bit: the MSB (sign) is replicated into vacated positions. This maintains the signed magnitude relationship: ASR by 1 is equivalent to division by 2 for two's complement numbers. LSR by 1 on a negative number gives an incorrect positive result."
+      },
+      {
+        "concept_a": "Gate-Level Modeling",
+        "concept_b": "RTL/Behavioral Modeling",
+        "explanation": "Gate-level modeling uses Verilog gate primitives (and, or, nand, etc.) to describe the exact circuit topology. It's verbose but precisely controls the netlist structure. It is used for post-synthesis netlists and cell-level simulation. RTL/behavioral modeling uses assign and always @(*) blocks at a higher abstraction level, letting synthesis tools choose the optimal implementation. RTL is faster to write, more readable, and portable across technology nodes, making it the industry standard for design entry."
+      }
+    ]
+  },
+  "design_errors": [
+    {
+      "title": "Latch Inference from Incomplete always @(*) Assignments",
+      "description": "When an always @(*) block does not assign a value to an output variable in every possible condition (e.g., missing else clause, incomplete case statement), the synthesis tool infers a level-sensitive latch to 'hold' the last value — creating unintended sequential behavior in what was meant to be combinational logic.",
+      "cause": "Omitting 'else' in an if statement, or not including a 'default' clause in a case statement covering all output variables. Example: 'if (sel) y = a;' without 'else y = b;' — y retains its old value when sel=0, implying a latch.",
+      "fix": "Always assign every output in every branch: use 'else' for every 'if', add 'default' to every 'case', or initialize outputs at the top of the always block before conditionals (e.g., 'y = 1'b0;' as default). Use synthesis tools' latch warning messages to catch this early. In SystemVerilog, use always_comb which errors on latch inference."
+    },
+    {
+      "title": "Missing or Incorrect Sensitivity List (Pre-SystemVerilog)",
+      "description": "In Verilog-2001 and earlier, always blocks require an explicit sensitivity list. If any input signal is omitted from the sensitivity list, the always block will not re-execute when that signal changes, causing simulation-synthesis mismatch — the simulation behaves like a sequential element while synthesis creates purely combinational logic.",
+      "cause": "Writing 'always @(a, b)' but forgetting signal 'c' in a block that also uses 'c'. The simulator won't re-evaluate when only 'c' changes, while synthesis includes 'c' in the logic.",
+      "fix": "Use 'always @(*)' (Verilog-2001) or 'always_comb' (SystemVerilog) which automatically include all read signals in the sensitivity list, eliminating this class of bugs entirely. Run lint tools that check for incomplete sensitivity lists."
+    },
+    {
+      "title": "Combinational Loop (Feedback in Combinational Logic)",
+      "description": "A combinational loop occurs when an output of a logic block feeds back to its own input without any flip-flop in the path. This creates a timing loop with zero cycle time, causing oscillation or metastability. Synthesis tools may hang or produce incorrect results. In simulation, it causes infinite event loops (delta cycle explosion).",
+      "cause": "Accidentally writing 'assign y = y & a;' or creating a module hierarchy where combinational outputs loop back to inputs. Can also occur from incomplete mux structures in always blocks.",
+      "fix": "Review all assign and always block connections for feedback paths. Use EDA tools' combinational loop detection (e.g., Synopsys DC check_design). All feedback in digital design must go through a registered element (flip-flop or latch with controlled enable)."
+    },
+    {
+      "title": "Using reg Instead of wire for assign Target",
+      "description": "In Verilog, assign statements must drive wire (or net) types. Using 'reg' as the target of an assign statement is illegal and causes a compilation error: 'a net-type is required for a continuous assignment target'.",
+      "cause": "Confusion between Verilog's net types (wire, tri) and variable types (reg, integer). Beginners often declare everything as 'reg' and then use assign, or declare module outputs as 'reg' and try to drive them with assign.",
+      "fix": "Outputs driven by assign statements must be declared as 'wire'. Outputs driven inside always, initial, or task blocks must be declared as 'reg'. In SystemVerilog, use 'logic' type which can be driven by both procedural and continuous assignments."
+    },
+    {
+      "title": "casez/casex Misuse with X or Z Values",
+      "description": "The casez statement treats 'z' bits as don't-cares in patterns. casex treats both 'x' and 'z' as don't-cares. Misuse can lead to unintended overlapping patterns or safety-critical bugs in synthesis where X propagation is not handled. Some synthesis tools do not correctly handle casex.",
+      "cause": "Using casex when the input can have 'z' (high-Z) values — X don't-cares may match valid data. Or using casez but expecting X propagation for unspecified inputs. Pattern order matters: first-match wins in simulation but synthesis may generate parallel (priority-free) logic.",
+      "fix": "Prefer casez over casex for priority-encoded logic. Use 'parallel_case' synthesis attribute only when patterns are provably non-overlapping. Always include a default clause. For safety-critical designs, avoid casex entirely and use explicit if-else chains."
+    },
+    {
+      "title": "Bit-Width Mismatch and Truncation",
+      "description": "Verilog silently truncates or zero-extends values when assigning wider values to narrower variables. For example, assigning a 4-bit addition result to a 4-bit wire loses the carry bit. This is a very common source of arithmetic bugs that may not show up in functional simulation but fails in edge cases.",
+      "cause": "'assign result[3:0] = a[3:0] + b[3:0];' — the addition produces a 5-bit result but only 4 bits are captured. The carry/overflow is silently discarded.",
+      "fix": "Use an extra bit for intermediate results: 'wire [4:0] temp; assign temp = a + b; assign result = temp[3:0]; assign carry = temp[4];'. Enable synthesis and lint warnings for width mismatch. Use explicit casting and sized literals."
+    }
+  ],
+  "tools": [
+    {
+      "name": "Xilinx Vivado Design Suite",
+      "usage": "Used for synthesizing, simulating, and implementing Verilog combinational logic targeting Xilinx FPGAs (7-Series, UltraScale, UltraScale+). Vivado's Integrated Design Environment (IDE) provides RTL analysis (schematic viewer showing the inferred logic), IP Integrator for block-based design, Vivado Simulator for functional verification, and implementation tools for place-and-route. Combinational logic designs are analyzed for timing in the Static Timing Analysis (STA) report — look for setup/hold violations on purely combinational paths as well as max delay paths."
+    },
+    {
+      "name": "Intel Quartus Prime",
+      "usage": "EDA tool for Intel (Altera) FPGAs (Cyclone, Stratix, Arria families). Synthesizes Verilog combinational logic to FPGA logic elements (LUTs, carry chains). The Technology Map Viewer shows how RTL maps to FPGA primitives. TimeQuest Timing Analyzer reports combinational path delays, critical paths, and slack. RTL Viewer shows the synthesized schematic before technology mapping. Supports Verilog-2001 and SystemVerilog for combinational design."
+    },
+    {
+      "name": "Synopsys Design Compiler (DC)",
+      "usage": "Industry-standard ASIC synthesis tool. Reads Verilog RTL and synthesizes to gate-level netlists targeting TSMC, Samsung, or other foundry standard cell libraries. For combinational logic: use 'compile_ultra' for best area/timing optimization, 'check_design' to detect latch inference and combinational loops, 'report_timing' to analyze critical paths through combinational networks, and 'report_area' for gate count and cell area estimation. Supports full_case/parallel_case pragmas for synthesis optimization."
+    },
+    {
+      "name": "Cadence Incisive / Xcelium Simulator",
+      "usage": "Industry-leading Verilog/SystemVerilog/VHDL simulation tools. Xcelium (successor to Incisive) provides fast compiled-code simulation. For combinational logic verification: run directed testbenches, use $monitor/$display for output checking, generate VCD/SHVC waveforms for debug, perform X-propagation analysis to check uninitialized logic, and run formal-like coverage checks. Supports UVM for advanced verification methodologies."
+    },
+    {
+      "name": "Mentor Graphics ModelSim / QuestaSim",
+      "usage": "Widely used Verilog/VHDL simulator for academic and industrial design. ModelSim is commonly bundled with Xilinx Vivado and Intel Quartus. For combinational logic: add waveforms in the Wave window to visualize all signals, use force/release commands to apply test stimuli interactively, run regression simulations from do-files, and compare pre- and post-synthesis simulation to verify equivalence. QuestaSim adds advanced debug features, code coverage, and formal verification integration."
+    },
+    {
+      "name": "Synopsys VCS (Verilog Compiled Simulator)",
+      "usage": "High-performance Verilog simulator used in large ASIC projects. Compiles RTL to native machine code for fastest simulation speeds. For combinational logic: supports $vcdplusfile for waveform dumping, DVE (Discovery Visualization Environment) for waveform debug, formal assertions (SVA) for automatic property checking of combinational behaviors, and gate-level simulation with SDF back-annotation for accurate delay verification."
+    },
+    {
+      "name": "Cadence Genus Synthesis Solution",
+      "usage": "Modern ASIC synthesis tool (successor to RTL Compiler). Synthesizes Verilog combinational logic with advanced multi-corner/multi-mode (MCMM) optimization. For combinational blocks: uses machine-learning-guided optimization, supports ECO (Engineering Change Order) flows for post-layout fixes, generates QoR (Quality of Results) reports showing timing, area, and power, and integrates with Innovus for physical synthesis."
+    },
+    {
+      "name": "Synopsys Formality (Formal Equivalence Checking)",
+      "usage": "Formal equivalence checking tool that mathematically proves two representations of a design are functionally equivalent. Critical for combinational logic: after synthesis, Formality verifies that the synthesized gate-level netlist is functionally identical to the RTL source. Detects any transformation errors introduced during synthesis optimization. Uses BDD (Binary Decision Diagram) and SAT-based algorithms. Essential in ASIC tapeout flows to guarantee synthesis correctness."
+    }
+  ],
+  "fpga_asic_applications": "FPGA APPLICATIONS:\nVerilog combinational logic targets FPGA Look-Up Tables (LUTs). A 6-input LUT can implement any Boolean function of up to 6 variables. Synthesis tools map combinational expressions to LUT configurations: a 4:1 MUX needs 1 LUT6, a 4-bit carry-lookahead adder uses dedicated CARRY4 primitives, and an 8:1 MUX needs 2 LUT6s in cascade. FPGA-specific considerations: (1) Use FPGA-vendor IP cores for complex functions (e.g., Xilinx Distributed RAM for shift registers); (2) Barrel shifters map efficiently to FPGA LUT cascades; (3) Priority encoders in FPGAs can use carry-chain resources for speed; (4) Combinational timing closure requires meeting the Fmax requirement — long combinational paths between registers must fit within the clock period minus setup time.\n\nASIC APPLICATIONS:\nIn ASIC design, combinational logic is synthesized from standard cells in a foundry library (e.g., TSMC 7nm, Samsung 5nm). Standard cells include AND2, OR2, NAND3, MUX2, INV with multiple drive strengths. Key ASIC considerations: (1) Gate count and cell area directly affect die cost; (2) Combinational path delay (sum of cell delays + wire delays) determines maximum operating frequency; (3) Static power (leakage) from combinational logic must be controlled using multi-threshold cells; (4) Dynamic power from switching in combinational logic is reduced by minimizing toggle rates and using clock gating; (5) DFT (Design for Testability) requires scan insertion — combinational logic coverage is measured by stuck-at and transition fault coverage.\n\nSPECIFIC USE CASES:\n- MUX: Clock domain crossing mux, data path selection in ALUs, cache way selection\n- Decoder: DRAM row/column address decode, instruction decode in CPUs, peripheral chip select\n- Encoder: Interrupt controller input encoding, RAID parity computation\n- Priority Encoder: CPU interrupt handling, GPU warp scheduler, memory arbiter\n- Barrel Shifter: FPU mantissa alignment, crypto shift operations, vector operations in DSPs",
+  "design_flow": {
+    "rtl": "RTL Design Entry: Write synthesizable Verilog modules using assign statements, always @(*) blocks, and gate primitives. Follow coding guidelines: use full sensitivity lists (always @(*)), assign all outputs in every branch, parameterize for reuse. Use meaningful port names and include inline comments. Create a module hierarchy: top-level module instantiates sub-modules (e.g., top_alu instantiates mux4to1, adder, barrel_shifter). Validate RTL intent with hand-calculations and waveform checks.",
+    "synthesis": "Synthesis: Feed RTL to synthesis tool (DC, Genus, or Vivado) with target library, timing constraints (SDC file), and design constraints. Tool performs: (1) Elaboration — parses Verilog, resolves hierarchy; (2) Generic synthesis — maps RTL to generic Boolean gates; (3) Technology mapping — replaces generic gates with library standard cells; (4) Optimization — minimizes area, reduces critical path delay, manages power. Check synthesis reports for: latch warnings, unresolved signals, timing violations, area estimates. Review synthesized schematic to confirm intent was captured correctly.",
+    "simulation": "Functional Simulation: Write testbenches applying all input combinations or representative vectors. Use $monitor, $display, $dumpvars for output capture. Run pre-synthesis RTL simulation to validate functional correctness. Achieve >95% code coverage (line, branch, condition). After synthesis, run gate-level simulation with the synthesized netlist (with timing back-annotated via SDF) to verify timing and functional equivalence. Compare simulation output against a golden reference model.",
+    "implementation": "FPGA Implementation (Vivado/Quartus): Run synthesis, followed by place-and-route (implementation). Placement maps logic cells to FPGA fabric locations. Routing connects them. Timing analysis checks that all combinational paths meet setup slack. For ASIC: After synthesis, run physical design (floor planning, placement, CTS for sequential, routing) in Cadence Innovus or Synopsys ICC2. For pure combinational blocks, focus on placement density and routing congestion. Run DRC (Design Rule Check) and LVS (Layout vs Schematic) before tapeout.",
+    "verification": "Verification Strategy: (1) Directed testing: manually crafted test vectors for corner cases (e.g., all-zeros, all-ones, alternating bits for barrel shifter); (2) Constrained-random simulation: UVM testbenches generating random valid inputs with coverage tracking; (3) Formal verification: model checking (e.g., OneSpin, JasperGold) proves combinational properties like: 'exactly one output of decoder is always high when enable=1', or 'priority encoder output is always the index of the highest set input bit'; (4) Equivalence checking: Formality/LEC verifies RTL-to-netlist equivalence; (5) Static Timing Analysis: Synopsys PrimeTime analyzes all combinational paths for setup and hold compliance across all PVT (Process, Voltage, Temperature) corners."
+  },
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between wire and reg in Verilog, and which is used with assign statements?",
+        "answer": "In Verilog, 'wire' is a net type representing a physical connection — it must be continuously driven by assign statements or module output ports. 'reg' is a variable type used inside procedural blocks (always, initial, task). It holds its value between procedural executions. For continuous assign statements, the target must be a 'wire'. For outputs driven inside 'always' blocks, declare the output as 'reg'. In SystemVerilog, the 'logic' type can be used for both, simplifying this distinction."
+      },
+      {
+        "question": "What are Verilog gate primitives and name five of them?",
+        "answer": "Verilog gate primitives are built-in structural models of basic logic gates that can be instantiated directly in Verilog without a separate module definition. They are used for gate-level (structural) modeling. Five key primitives: (1) and — N-input AND gate; (2) or — N-input OR gate; (3) nand — N-input NAND gate; (4) nor — N-input NOR gate; (5) xor — 2-input XOR gate. Others include: xnor, not, buf, bufif0, bufif1. Syntax: 'gate_type [instance_name] (output, input1, input2, ...);'"
+      },
+      {
+        "question": "How does the ternary operator create a multiplexer in a Verilog assign statement?",
+        "answer": "The ternary operator 'condition ? true_expr : false_expr' in an assign statement directly maps to a 2:1 MUX: 'assign y = sel ? d1 : d0;'. When sel=1, y=d1; when sel=0, y=d0. The select line is 'sel', and the two data inputs are 'd0' and 'd1'. Synthesis tools recognize this pattern and implement it using a MUX2 standard cell or equivalent LUT configuration. Nested ternary operators can implement higher-order MUXes."
+      },
+      {
+        "question": "What is the purpose of always @(*) in combinational logic design?",
+        "answer": "always @(*) is a Verilog-2001 shorthand for an always block whose sensitivity list automatically includes ALL signals read within the block (the * infers the complete sensitivity list). It ensures the block re-executes whenever any input changes, faithfully modeling combinational behavior. Inside, if-else and case statements model complex combinational functions. The outputs must be declared as 'reg'. If any output is not assigned in every possible condition, the synthesis tool infers an unintended level-sensitive latch."
+      },
+      {
+        "question": "What is a decoder and how does it differ from a multiplexer?",
+        "answer": "A decoder is a combinational circuit that converts a binary-encoded input of n bits to a one-hot output of 2^n lines, activating exactly one output for each unique input combination. A multiplexer (MUX) is a data selector that routes one of N inputs to a single output based on select lines. Key difference: a decoder is a one-input-to-many-outputs circuit (data distribution/activation), while a MUX is a many-inputs-to-one-output circuit (data selection). A decoder can implement a DEMUX when the enable pin acts as the data input."
+      },
+      {
+        "question": "Explain what a barrel shifter does and why it is preferred over a multi-cycle shift operation.",
+        "answer": "A barrel shifter is a combinational circuit that shifts (or rotates) a data word by any arbitrary number of positions in a single gate-delay operation, regardless of the shift amount. It uses a cascade of multiplexer stages: stage k either passes data through or shifts it by 2^k positions. For an N-bit word, only log2(N) MUX stages are needed. This is preferred over multi-cycle shifting (shifting by 1 each clock cycle) because: (1) it completes in one clock cycle, avoiding throughput penalty; (2) critical path delay is O(log N), not O(N); (3) it's essential in ALUs, FPUs, and DSP units that must shift during normal instruction execution without stalling the pipeline."
+      },
+      {
+        "question": "What is the difference between case, casez, and casex in Verilog?",
+        "answer": "All three perform multi-way branching in Verilog: 'case' performs exact 4-state matching (0, 1, X, Z are all distinct). 'casez' treats 'z' (and '?') as don't-care in pattern matching — used for priority encoders where '?' replaces don't-care bits. 'casex' treats both 'x' and 'z' as don't-care in patterns — more aggressive don't-care; use with caution as X propagation can mask bugs. For combinational priority logic, casez with '?' is preferred. All case variants should include a 'default' clause to avoid latch inference."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How does an if-else chain in always @(*) synthesize differently from a case statement?",
+        "answer": "An if-else chain synthesizes to a priority-encoded MUX tree: the first condition has highest priority, and lower conditions are checked only when higher ones are false. This creates a series-connected chain of 2:1 MUXes and may have longer critical paths for deep chains. A case statement synthesizes to a parallel decoder structure (when conditions are mutually exclusive), potentially allowing parallel evaluation and a shorter critical path. However, if case conditions overlap, synthesis still implies priority. Using the 'parallel_case' synthesis attribute tells the tool to treat case conditions as mutually exclusive, enabling optimized parallel logic. Best practice: use case for mutually exclusive selections (decoders, state machines) and if-else for true priority logic."
+      },
+      {
+        "question": "What is latch inference and how do you prevent it in always @(*) blocks?",
+        "answer": "Latch inference occurs when synthesis detects that a variable in an always @(*) block is not assigned in all execution paths, requiring the variable to 'remember' its previous value — implying a level-sensitive latch (combinational + memory element). Prevention strategies: (1) Assign default values at the beginning of the always block before any conditional statements; (2) Include an 'else' clause for every 'if'; (3) Include a 'default' case in every 'case' statement that assigns all outputs; (4) Enable synthesis lint warnings for latches; (5) In SystemVerilog, use 'always_comb' which produces a compilation error for latch inference."
+      },
+      {
+        "question": "Describe the implementation of a 4:1 MUX using only 2:1 MUXes in a hierarchical Verilog design.",
+        "answer": "A 4:1 MUX requires 3 instances of 2:1 MUX in a two-level tree structure: Level 1 has two 2:1 MUXes: MUX_A selects between D0 and D1 using SEL[0]; MUX_B selects between D2 and D3 using SEL[0]. Level 2 has one 2:1 MUX: MUX_C selects between MUX_A's output and MUX_B's output using SEL[1]. Verilog implementation uses hierarchical instantiation: 'mux2to1 ma(.d0(D0),.d1(D1),.sel(SEL[0]),.y(wa)); mux2to1 mb(.d0(D2),.d1(D3),.sel(SEL[0]),.y(wb)); mux2to1 mc(.d0(wa),.d1(wb),.sel(SEL[1]),.y(Y));' This demonstrates structural modeling and design reuse."
+      },
+      {
+        "question": "How do you implement a priority encoder using casez in Verilog and what is the role of the 'valid' output?",
+        "answer": "Implementation uses casez where '?' serves as a don't-care: 'casez(i) 8'b1???????: y=7; 8'b01??????: y=6; ... default: begin y=0; valid=0; end endcase'. The first matching case wins due to Verilog's top-to-bottom case evaluation, implementing priority — bit 7 is checked first. The 'valid' output is asserted (logic 1) when at least one input is active, providing a flag that the output code is meaningful. When no input is active, 'valid=0' and the code output is indeterminate (usually set to 0 by convention). The valid signal is essential when the output code 0 is both a valid encoding (for input 0) and the default no-input value."
+      },
+      {
+        "question": "Explain how a barrel shifter is constructed using MUX stages and calculate how many MUXes are needed for a 16-bit barrel shifter.",
+        "answer": "A barrel shifter uses log2(N) stages where each stage k shifts by 2^(k-1) positions if the corresponding shamt bit is set. Stage 0: if shamt[0]=1, shift by 1; else pass through. Stage 1: if shamt[1]=1, shift by 2; else pass through. Stage 2: if shamt[2]=1, shift by 4; else pass through. Each stage contains N 2:1 MUXes (one per output bit). For a 16-bit barrel shifter: log2(16) = 4 stages, each with 16 2:1 MUXes = 4 × 16 = 64 2:1 MUXes total. Critical path delay = 4 × MUX_delay (one MUX stage per shift stage), which is O(log N) — much better than a sequential shifter's O(N) delay."
+      },
+      {
+        "question": "What is the difference between logical shift right (LSR) and arithmetic shift right (ASR) and how are both implemented in Verilog?",
+        "answer": "Logical Shift Right (LSR) fills vacated MSBs with zeros: 'y = a >> n'. For signed number -8 (8'b11111000), LSR by 1 gives 8'b01111100 = +124, which is wrong for division. Arithmetic Shift Right (ASR) fills vacated MSBs with the sign bit (MSB): 'y = $signed(a) >>> n'. For -8 (8'b11111000), ASR by 1 gives 8'b11111100 = -4, correctly implementing signed division by 2. Verilog uses '>>>' for arithmetic shift only when the operand is declared or cast as signed. Without $signed() cast, '>>>' behaves like '>>'. Best practice: explicitly cast to signed — 'assign y = $signed(a) >>> shamt;'"
+      },
+      {
+        "question": "How would you implement a 3-to-8 decoder using two 2-to-4 decoders? Describe the gate connections.",
+        "answer": "A 3-to-8 decoder uses two 2-to-4 decoders and an inverter, with the MSB of input as the enable selector: Let A[2:0] be the 3-bit input. Connect A[1:0] to both 2-to-4 decoders' address inputs. Decoder 0: enable = ~A[2] → active for inputs 0-3 (when A[2]=0), outputs Y[3:0]. Decoder 1: enable = A[2] → active for inputs 4-7 (when A[2]=1), outputs Y[7:4]. When A[2]=0: only Decoder 0 is enabled, producing one-hot output in Y[3:0]. When A[2]=1: only Decoder 1 is enabled, producing one-hot in Y[7:4]. Y[7:0] concatenates both decoders' outputs. Verilog: 'decoder2to4 d0(.a(A[1:0]),.en(~A[2]),.y(Y[3:0])); decoder2to4 d1(.a(A[1:0]),.en(A[2]),.y(Y[7:4]));'"
+      },
+      {
+        "question": "What synthesis pragmas or attributes are used with case statements and what are the risks of misusing them?",
+        "answer": "Two key synthesis pragmas: (1) '// synthesis parallel_case' tells the synthesis tool that case conditions are mutually exclusive, allowing parallel (non-priority) implementation for better timing and area — risk: if conditions actually overlap, the tool generates incorrect logic. (2) '// synthesis full_case' tells the tool that all possible input combinations are covered by the case items (no need for default logic) — risk: if inputs outside listed cases actually occur at runtime, outputs will be X (undefined) in gate-level simulation but the tool may optimize away protective logic. Misuse of these pragmas creates dangerous simulation-synthesis mismatches. Safer alternative: always include an explicit 'default' clause and use SystemVerilog's 'unique case' (implies parallel + full) and 'priority case' (implies priority + full) keywords that are synthesizer-standard without pragma comments."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Describe the implementation of a Wallace Tree multiplier using combinational Verilog and explain how it reduces the critical path compared to ripple-carry addition.",
+        "answer": "A Wallace Tree multiplier reduces an NxN multiplication into a 2-operand addition using a tree of carry-save adders (CSAs). For an N-bit multiply: Step 1 generates N partial products (AND of multiplicand with each multiplicand bit). Step 2 reduces groups of 3 partial products to 2 using full adders (CSA): {sum, carry} = fa(a,b,c). Step 3 repeats CSA reduction until 2 rows remain. Step 4 adds the final 2 rows with a CPA (Carry Propagate Adder, e.g., Kogge-Stone). Verilog uses generate blocks for parameterized CSA stages: 'genvar i; generate for(i=0;i<N;i=i+1) begin: csa_stage full_adder fa_inst(...); end endgenerate'. Critical path: O(log_{1.5} N) for CSA tree + O(log N) for final CPA, versus O(N) for ripple-carry accumulation of partial products. A 32-bit Wallace tree has ~5 CSA levels + 6 CPA levels vs. 32 carry-propagate levels."
+      },
+      {
+        "question": "How does Verilog model X-state propagation in combinational logic and why is this important for VLSI verification?",
+        "answer": "Verilog uses 4-state logic (0, 1, X, Z). X represents an unknown/uninitialized value. In gate simulation: (1) AND(X,0)=0, AND(X,1)=X — optimistic masking; (2) OR(X,1)=1, OR(X,0)=X; (3) XOR(X,0)=X, XOR(X,1)=X. X propagation models uncertainty: a MUX with X on its data input but known select passes the selected input without X contamination. However, synthesis does NOT implement X-aware logic — the real hardware drives a 0 or 1 regardless. This creates a simulation-silicon gap: Verilog simulation may show X-masked 'don't care' paths that in silicon can cause functional failures when uninitialized. Importance: (1) X-propagation verification ensures reset completeness — all registers must be initialized; (2) X-pessimism analysis (using tools like Cadence Modus) finds false X propagation; (3) Formal X-analysis proves no X can reach output under valid input conditions. Low-power designs with power gating must carefully manage X from ungated domains."
+      },
+      {
+        "question": "Explain how formal verification can prove properties of combinational logic circuits and give an example assertion for a priority encoder.",
+        "answer": "Formal verification uses mathematical algorithms (BDD, SAT, model checking) to exhaustively prove or disprove properties over all possible input combinations without simulation. For combinational logic: Bounded Model Checking explores all input space (all 2^N input combinations for N-bit combinational circuit). For a priority encoder, key properties to prove: (1) Correctness: 'assert property (@(*) i[k] && !i[k+1] && !i[k+2]... -> y == k)' — if only bit k is highest, output must be k. (2) Validity: 'assert property (@(*) (|i) -> valid == 1)' — if any input is active, valid must be 1. (3) Priority ordering: 'assert property (@(*) i[k] -> y >= k)' — output is always at least as large as any active input index. Formal tools (JasperGold, OneSpin 360, AVR) bind these SVA assertions to the RTL and prove them over all input combinations in minutes, versus billions of simulation vectors. For a 32-bit priority encoder, formal checks all 2^32 = 4 billion input combinations instantaneously."
+      },
+      {
+        "question": "How would you design a low-power barrel shifter for a mobile processor using operand isolation and power gating techniques in Verilog?",
+        "answer": "Low-power barrel shifter techniques: (1) Operand Isolation: Gate the barrel shifter inputs with the enable signal: 'assign d_gated = (enable) ? d_in : 8'h00;' — when the shifter is not needed (during non-shift instructions), input is forced to 0 preventing any internal switching activity. Synthesis should create ICG (Integrated Clock Gating) cells or isolation cells at the input. (2) Shift-by-Zero optimization: If shamt==0, bypass all stages: 'assign y = (shamt==0) ? d : shifted_result;' — saves energy for the common case. (3) Activity-sensitive architecture: For a rotate-capable shifter, implement ROL and ROR as a shared resource by controlling the input concatenation. (4) Multi-Vth cells: Use high-Vth (HVT) cells in non-critical paths of the barrel shifter to reduce leakage, low-Vth (LVT) only on the critical shift path. (5) Power domains: In aggressive power-managed SoCs, barrel shifter subunit can be in a separate power domain with retention flip-flops, allowing power-down when the ALU is idle. (6) Verilog coding: Annotate cells with synthesis attributes: '(* keep_hierarchy = \"yes\" *)' to preserve power domain boundaries; use 'always_comb' for clean synthesis. Estimated power savings: 30-50% dynamic power reduction with operand isolation."
+      },
+      {
+        "question": "How do you verify that a synthesized gate-level netlist is functionally equivalent to the RTL source for a complex combinational block?",
+        "answer": "Functional Equivalence Checking (FEC) for RTL-to-gate verification: (1) Formal Equivalence Checking (FEC) with tools like Synopsys Formality or Cadence LEC: The tool reads RTL (golden) and gate-level netlist (revised), automatically maps corresponding points (module boundaries, named signals), and uses BDD/SAT to prove or disprove equivalence of all output cones. Combinational modules are checked as pure combinational cones — fast and exhaustive. FEC is now industry-standard for all synthesis sign-off. (2) Structural comparison: After synthesis, verify that all ports are preserved, no ports are optimized away, and all named nets match. (3) Gate-level simulation with SDF: Run the same testbench against both RTL and gate-level netlist with back-annotated delays (SDF file). Compare output waveforms — mismatches indicate synthesis bugs. (4) X-aware FEC: Run FEC with 'verify -assume_inputs_constant 0/1' to check behavior under all conditions including potential X inputs. (5) Cone-of-influence analysis: For very large designs, break into manageable cones around each output for incremental FEC. Result interpretation: 'SUCCEEDED' means 100% provable equivalence; 'FAILED' identifies the specific output and input combination causing mismatch for debug."
+      },
+      {
+        "question": "Describe the timing analysis of a critical combinational path through a barrel shifter in a 28nm ASIC flow.",
+        "answer": "Timing analysis process: (1) Path identification: STA tool (Synopsys PrimeTime) identifies the critical path as the longest combinational path from any input register Q-pin to any output register D-pin. For an 8-bit barrel shifter: path = Register[Q] → input buffer → Stage0_MUX_delay → Stage1_MUX_delay → Stage2_MUX_delay → output buffer → Register[D]. (2) Delay components: Cell delay (function of input slew rate and output capacitive load, from NLDM/CCS liberty model) + wire delay (from RC extraction, back-annotated via SPEF file). In 28nm: typical MUX2 cell delay ≈ 15-20ps at SS corner, wire delay ≈ 5-15ps per stage. (3) Setup check: Required time = clock_period - setup_margin - clock_uncertainty. Slack = Required - Arrival. Negative slack is a violation. (4) PVT corners: Run STA at SS (slow-slow, low Vdd, high temp) corner for setup violations; at FF (fast-fast, high Vdd, low temp) for hold violations. (5) Optimization: For negative setup slack in barrel shifter, options: increase clock period, pipeline the barrel shifter (add register mid-stage, halving frequency requirement), resize cells on critical path to higher drive strength, use HI-drive MUX cells, optimize floorplan to reduce wire length. (6) ECO: If violations found post-route, perform timing ECO: swap cells to stronger drive, add buffers, or reroute critical wires."
+      },
+      {
+        "question": "How do SystemVerilog features like always_comb, unique case, and typedef enum improve combinational logic design quality over Verilog-2001?",
+        "answer": "SystemVerilog enhancements for combinational logic: (1) 'always_comb': Compiler-enforced combinational intent. Unlike always @(*), always_comb: (a) flags compile-time error for latch inference; (b) automatically triggers at time 0 (no initialization delta needed); (c) is prohibited from containing any sequential statements. Tools can optimize more aggressively knowing the block is purely combinational. (2) 'unique case': Asserts to the tool that case items are mutually exclusive AND exhaustive. Equivalent to '// synthesis parallel_case full_case' but is IEEE-1800 standard, not vendor-specific. If multiple items match at runtime, a runtime error is generated (unlike parallel_case which silently picks one). (3) 'priority case': Asserts the case should be treated as priority-encoded (like if-else) — useful for explicitly documenting intent without using if-else. (4) 'typedef enum logic [1:0] {IDLE, ADD, SUB, SHIFT} opcode_t': Named enumerated types improve readability in case statements vs. raw 2'b00, 2'b01 literals. Synthesis tools can report meaningful signal names. (5) 'logic' type: Replaces both wire and reg — can be driven by assign and always blocks, eliminating the wire/reg confusion. (6) Packed structs: 'typedef struct packed {logic [7:0] data; logic [2:0] shamt; logic [1:0] mode;} shifter_ctrl_t;' groups related signals, improving code clarity and preventing port ordering bugs."
+      }
+    ]
+  },
+  "practice_problems": {
+    "easy": [
+      "Design a 2:1 MUX using three different Verilog styles: (a) assign with ternary operator, (b) always @(*) with if-else, (c) gate primitives. Write a single testbench that instantiates all three and verifies identical outputs for all 8 input combinations (a, b, sel ∈ {0,1}).",
+      "Implement a 2-to-4 decoder with active-low enable (EN_N) in Verilog using an assign statement for each output. Write the complete truth table for all 8 input combinations (A[1:0], EN_N). Verify with simulation that only one output is LOW when EN_N=0 (active-low outputs convention).",
+      "Write a Verilog module for a 4-bit ripple carry adder by cascading four full adder instances. Instantiate each full adder as a separate module. Verify correctness by testing: 4'b0110 + 4'b0101 (expected: 4'b1011, cout=0), 4'b1111 + 4'b0001 (expected: 4'b0000, cout=1).",
+      "Implement an 8:1 MUX using the Verilog vector-indexed assign: 'assign y = d[sel];'. Also implement it using a case statement in always @(*). Test with sel cycling 0-7 and a data bus d=8'b10110100."
+    ],
+    "medium": [
+      "Design a parameterized N-to-2^N decoder using a generate-for loop in Verilog. The module should have parameters for input width N and support N=2,3,4. Use the generate block: 'genvar i; generate for(i=0;i<(1<<N);i++) assign y[i] = en & (a == i[N-1:0]); endgenerate'. Verify for N=3 (3-to-8 decoder) with enable functionality.",
+      "Implement a 4-to-2 priority encoder and a standard 4-to-2 encoder in Verilog. Create a comprehensive testbench that applies all 16 possible 4-bit input values to both. Document all cases where the two encoders produce different outputs (multi-bit inputs). Extend the priority encoder to detect and output the two highest-priority active inputs simultaneously.",
+      "Design a parameterized barrel shifter that supports 8-bit or 16-bit data width (parameter DATA_WIDTH) and all four modes: LSL, LSR, ASR, ROL. Implement using a multi-stage MUX cascade (not Verilog shift operators). Verify: (a) 8'hAB shifted left by 3 = 8'h58; (b) 8'hF0 arithmetically shifted right by 2 = 8'hFC; (c) 8'hAB rotated left by 4 = 8'hBA.",
+      "Implement a 4-bit ALU supporting 8 operations (add, sub, and, or, xor, not, shl, shr) using Verilog always @(*) with case on a 3-bit opcode. Include: (a) 5-bit output (4-bit result + carry); (b) zero flag; (c) negative flag (MSB of result); (d) overflow flag (for signed add/sub). Write a testbench that verifies all 8 operations and all flag combinations."
+    ],
+    "hard": [
+      "Design a fully parameterized Wallace Tree multiplier for N×N unsigned multiplication using Verilog generate blocks. Implement: (a) partial product generation using AND gates; (b) carry-save adder tree reduction using full adders; (c) final carry-propagate adder (carry lookahead or Kogge-Stone). Parameterize for N=4 and N=8. Compare gate count and critical path depth against a simple shift-and-add multiplier. Verify 8-bit × 8-bit: 8'hFF × 8'hFF = 16'hFE01.",
+      "Implement a Booth-encoded multiplier (radix-2 or radix-4) in Verilog for N-bit signed multiplication. Include: (a) Booth encoder module generating partial product select signals; (b) partial product generator; (c) CSA reduction tree; (d) final CPA. Extend with a saturating arithmetic option: if product exceeds N-bit signed range, output the maximum (2^(N-1)-1) or minimum (-2^(N-1)) signed value. Write a SystemVerilog testbench with formal assertions verifying overflow detection correctness.",
+      "Design a complete combinational floating-point adder for 32-bit IEEE 754 single-precision numbers (1 sign bit, 8 exponent bits, 23 mantissa bits). The design must handle: (a) exponent comparison and alignment (mantissa shift using barrel shifter); (b) sign-magnitude addition/subtraction; (c) leading-zero detection for normalization; (d) round-to-nearest-even; (e) special cases: infinity + infinity, NaN propagation, denormal numbers, zero + zero. Implement and verify in Verilog with at least 20 test cases covering all special cases. Measure the critical path depth and identify which sub-block (exponent compare, barrel shift, adder, normalizer) dominates.",
+      "Create a full Verilog implementation of a 32-bit Kogge-Stone parallel prefix carry-lookahead adder. Implement: (a) generate/propagate signals for each bit; (b) the parallel prefix tree (log2(32) = 5 levels); (c) final sum computation. Compare timing (critical path gate levels) against a 32-bit ripple carry adder and 4-level carry-select adder. Write equivalence checking assertions that formally prove your Kogge-Stone adder produces identical results to the behavioral 'assign sum = a + b' for all input combinations."
+    ]
+  },
+  "mini_exercises": [
+    {
+      "problem": "Implement a 1-bit Full Adder using only NAND gates in structural Verilog (NAND-only implementation). Verify using a testbench.",
+      "circuit_design": "A 1-bit full adder from NAND gates requires 9 NAND gates:\n- Sum = A XOR B XOR Cin\n- XOR from NAND: A XOR B = NAND(NAND(A,NAND(A,B)), NAND(B,NAND(A,B)))\n- Apply same structure for sum with Cin\n- Cout = NAND(NAND(A,B), NAND(B,Cin), NAND(A,Cin))\n\nGate connections:\nG1: NAND(A,B) -> n1\nG2: NAND(A,n1) -> n2\nG3: NAND(B,n1) -> n3\nG4: NAND(n2,n3) -> ab_xor  (A XOR B)\nG5: NAND(ab_xor,Cin) -> n5\nG6: NAND(ab_xor,n5) -> n6\nG7: NAND(Cin,n5) -> n7\nG8: NAND(n6,n7) -> SUM\nG9: NAND(n1, NAND(ab_xor,Cin)) -> COUT",
+      "hdl_solution": "module fa_nand_only(\n    input  wire a, b, cin,\n    output wire sum, cout\n);\n    wire n1,n2,n3,ab_xor,n5,n6,n7,n8;\n    nand g1(n1, a, b);\n    nand g2(n2, a, n1);\n    nand g3(n3, b, n1);\n    nand g4(ab_xor, n2, n3);  // a XOR b\n    nand g5(n5, ab_xor, cin);\n    nand g6(n6, ab_xor, n5);\n    nand g7(n7, cin, n5);\n    nand g8(sum, n6, n7);     // SUM = ab_xor XOR cin\n    nand g9(cout, n1, n5);    // COUT\nendmodule\n\nmodule tb_fa_nand;\n    reg a,b,cin; wire sum,cout;\n    fa_nand_only dut(.a(a),.b(b),.cin(cin),.sum(sum),.cout(cout));\n    initial begin\n        $display(\"A B Cin | Sum Cout\");\n        for({a,b,cin}=0;{a,b,cin}<8;{a,b,cin}={a,b,cin}+1) begin\n            #10; $display(\"%b %b %b   |  %b    %b\",a,b,cin,sum,cout);\n        end\n    end\nendmodule",
+      "explanation": "NAND gates are universal — any Boolean function can be implemented using only NAND gates. The XOR function requires 4 NANDs; the full adder sum (double XOR) and carry (majority function) require 9 NANDs total. This exercise demonstrates structural modeling with gate primitives and the concept of universal gates. NAND-only implementations are important in CMOS design because NAND gates are more area-efficient than NOR gates in CMOS technology (series NMOS + parallel PMOS is faster and smaller than parallel NMOS + series PMOS)."
+    },
+    {
+      "problem": "Implement a 4-bit Gray code to Binary converter using only assign statements and XOR gates.",
+      "circuit_design": "Gray to Binary conversion:\n- B[3] = G[3]  (MSB is the same)\n- B[2] = B[3] XOR G[2]\n- B[1] = B[2] XOR G[1]\n- B[0] = B[1] XOR G[0]\n\nXOR gate chain structure:\nG[3] ---+-----------> B[3]\n        |\nG[2] --XOR---------> B[2]\n           |\nG[1] -----XOR------> B[1]\n                |\nG[0] ----------XOR-> B[0]",
+      "hdl_solution": "module gray_to_binary(\n    input  wire [3:0] gray,\n    output wire [3:0] binary\n);\n    // MSB passes through directly\n    assign binary[3] = gray[3];\n    // Each binary bit XORs with next higher binary bit\n    assign binary[2] = binary[3] ^ gray[2];\n    assign binary[1] = binary[2] ^ gray[1];\n    assign binary[0] = binary[1] ^ gray[0];\nendmodule\n\n// Testbench\nmodule tb_gray_binary;\n    reg  [3:0] gray;\n    wire [3:0] binary;\n    gray_to_binary dut(.gray(gray), .binary(binary));\n    integer i;\n    initial begin\n        $display(\"Gray   | Binary | Expected\");\n        // Test all 16 Gray codes\n        for(i=0; i<16; i=i+1) begin\n            // Generate Gray code from binary i\n            gray = i ^ (i >> 1); #5;\n            $display(\"%b |  %b  |    %0d\", gray, binary, i);\n        end\n    end\nendmodule",
+      "explanation": "Gray code is a binary numeral system where adjacent values differ by exactly one bit. The Gray-to-Binary conversion uses a ripple XOR chain: each binary bit is the XOR of all Gray bits from the MSB down to the current position. This is a classic example of combinational logic where intermediate signals (binary[2], binary[1]) feed downstream computations — this is naturally expressed with multiple assign statements. Note that the chain creates a 3-gate critical path (for a 4-bit converter), which lengthens with bit width. Gray codes are used in rotary encoders, counters to reduce power (only 1 bit switches per count), and error correction."
+    },
+    {
+      "problem": "Design a parameterized Leading-Zero Counter (LZC) — a combinational circuit that counts the number of leading zeros in an N-bit input word.",
+      "circuit_design": "Leading Zero Counter for 8-bit input:\n- Uses a priority encoder in reverse: find the position of the MSB '1'\n- Result = 7 - (position of highest '1') if any '1' exists; else 8\n- Can be built as a cascaded tree of 2-bit LZC cells:\n  Stage 0: 4 pairs of 2-bit inputs -> 4 LZC results\n  Stage 1: 2 pairs of 4-bit LZC -> 2 results\n  Stage 2: 1 pair of 8-bit LZC -> final result\n- Each 2-bit LZC: if MSB=1: zeros=0; elif LSB=1: zeros=1; else zeros=2, all_zero=1",
+      "hdl_solution": "module lzc_8bit(\n    input  wire [7:0] d,\n    output reg  [3:0] lz_count,  // 0-8 leading zeros\n    output reg        all_zero   // all bits are zero\n);\n    always @(*) begin\n        all_zero = 1'b0;\n        casez (d)\n            8'b1xxxxxxx: lz_count = 4'd0;\n            8'b01xxxxxx: lz_count = 4'd1;\n            8'b001xxxxx: lz_count = 4'd2;\n            8'b0001xxxx: lz_count = 4'd3;\n            8'b00001xxx: lz_count = 4'd4;\n            8'b000001xx: lz_count = 4'd5;\n            8'b0000001x: lz_count = 4'd6;\n            8'b00000001: lz_count = 4'd7;\n            8'b00000000: begin lz_count = 4'd8; all_zero = 1'b1; end\n            default:     lz_count = 4'd0;\n        endcase\n    end\nendmodule\n\nmodule tb_lzc;\n    reg  [7:0] d;\n    wire [3:0] lz;\n    wire       az;\n    lzc_8bit dut(.d(d),.lz_count(lz),.all_zero(az));\n    initial begin\n        $display(\"D        | LZ | AllZero\");\n        d=8'h00; #5; $display(\"%b | %0d  |    %b\", d, lz, az);\n        d=8'h01; #5; $display(\"%b | %0d  |    %b\", d, lz, az);\n        d=8'h0F; #5; $display(\"%b | %0d  |    %b\", d, lz, az);\n        d=8'h80; #5; $display(\"%b | %0d  |    %b\", d, lz, az);\n        d=8'hFF; #5; $display(\"%b | %0d  |    %b\", d, lz, az);\n        d=8'h10; #5; $display(\"%b | %0d  |    %b\", d, lz, az);\n    end\nendmodule",
+      "explanation": "The Leading Zero Counter is essential in floating-point normalization (finding the MSB of a mantissa), SIMD operations, and bit manipulation instructions. It implements priority encoding in reverse — the position of the highest '1' bit determines the leading zero count. Using casez with don't-care ('?') in descending priority order is the most efficient Verilog representation. The all_zero flag handles the edge case of a zero input. In hardware, this is often implemented as a parallel-prefix tree for logarithmic depth — critical for floating-point unit timing in high-performance processors."
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "CPUs",
+      "explanation": "Combinational logic is pervasive in CPU datapaths. The ALU (Arithmetic Logic Unit) is entirely combinational: adders, subtractors, logical operators, and comparators operate in a single pipeline stage. Barrel shifters implement the shift/rotate instructions (SHL, SHR, ROL, ROR, SAR) in one cycle. Decoders translate instruction opcode fields into control signals that activate specific datapath units. Priority encoders in interrupt controllers select the highest-priority pending interrupt. MUXes at the input of the ALU select between register file outputs, immediate values, and forwarded data. In modern out-of-order processors (Intel Core, AMD Zen), critical combinational paths through the ALU and bypass network must meet setup time within a 300-400ps clock period (3-4 GHz operation)."
+    },
+    {
+      "field": "GPUs",
+      "explanation": "GPUs contain thousands of SIMD (Single Instruction Multiple Data) lanes, each with combinational arithmetic units. Vector ALUs perform parallel combinational operations on 16-64 bit elements simultaneously. Barrel shifters in FPUs align mantissas during floating-point addition across all lanes in parallel. Texture samplers use combinational interpolation logic. Priority encoders in the warp scheduler select which thread warp to issue next based on readiness and priority. The GPU's thread dispatch unit uses large decoder banks to convert instruction encodings to control signals for hundreds of functional units. Combinational logic density in GPUs (e.g., NVIDIA A100, AMD RDNA3) is among the highest of any chip, with tens of billions of logic gates."
+    },
+    {
+      "field": "Mobile Processors",
+      "explanation": "In mobile SoCs (ARM Cortex-A series, Apple A-series), energy efficiency is paramount, so combinational logic is designed with aggressive power optimization. Operand isolation (gating combinational inputs to zero when the unit is idle) reduces dynamic power by preventing unnecessary switching. Multi-threshold CMOS (MTCMOS) uses low-Vth cells only on timing-critical combinational paths, high-Vth for the rest to reduce leakage. Clock gating cells (combinational AND of clock with enable) prevent flip-flops from toggling when data is unchanged. Barrel shifters and MUXes are designed for minimum energy-delay product rather than peak performance. Dynamic voltage/frequency scaling (DVFS) changes the supply voltage, which directly affects combinational path delays — timing analysis must be performed across all DVFS operating points."
+    },
+    {
+      "field": "Automotive Electronics",
+      "explanation": "Safety-critical automotive chips (ADAS processors, powertrain controllers) require fault-tolerant combinational logic. Dual-module redundancy (DMR) instantiates combinational logic twice and compares outputs: 'assign error = (y1 != y2);'. Priority encoders in safety monitors select highest-priority fault for immediate handling. Decoders in CAN/LIN bus controllers decode message IDs. Barrel shifters implement fast division-by-power-of-2 in sensor data processing. ISO 26262 ASIL-D compliance requires: (1) combinational logic coverage >99% for diagnostic coverage (ASILB/C/D); (2) formal verification of safety properties; (3) fault injection testing. Watchdog timers use combinational window detectors (combinational comparators) to detect timing anomalies."
+    },
+    {
+      "field": "AI Accelerators",
+      "explanation": "AI accelerators (Google TPU, NVIDIA Tensor Core, Apple Neural Engine) are dominated by multiply-accumulate (MAC) units — combinational multipliers feeding into adder trees. The inner product of two vectors is computed combinationally across hundreds of parallel MACs in a single pipeline stage. Quantized neural networks use 8-bit or 4-bit integer multipliers, enabling much higher combinational density than 32-bit FP. Look-up table (LUT)-based activation functions implement non-linear functions (ReLU, sigmoid, GELU) as combinational ROM lookups. Crossbar interconnects in systolic arrays use large MUX banks to route data. Priority encoders in neural architecture search (NAS) hardware accelerators select candidate operations. Barrel shifters implement the scaling operations required for quantization and dequantization of tensors."
+    },
+    {
+      "field": "Communication Systems",
+      "explanation": "High-speed communication chips (Ethernet MACs, PCIe controllers, 5G modems) use combinational logic for line-rate data processing. Encoders/decoders implement 8b/10b or 64b/66b line coding that ensures DC balance in serial links — the encoder maps 8-bit data to 10-bit symbols combinationally based on running disparity. CRC (Cyclic Redundancy Check) computation uses XOR-based combinational LFSR unrolling: all 32 CRC bits are computed in one clock cycle using a large combinational XOR network. Priority encoders in packet schedulers select the highest-priority pending packet queue. Barrel shifters align received data to byte boundaries in deserializers. Combinational multiplexers implement link layer arbitration between multiple ingress ports in switch fabrics. At 400Gbps+ speeds, combinational paths must meet timing within 1ns clock periods."
+    }
+  ],
+  "best_practices": [
+    "Always use 'always @(*)' or SystemVerilog's 'always_comb' for combinational logic — never rely on manual sensitivity lists which are error-prone and cause simulation-synthesis mismatches.",
+    "Assign default values to ALL outputs at the beginning of an always @(*) block before any conditional statements to prevent unintended latch inference.",
+    "Use 'case' for mutually exclusive selections (MUX, decoder) and 'if-else' for inherently prioritized logic (priority encoder) — this communicates intent clearly to both tools and readers.",
+    "Include a 'default' clause in every 'case' statement and an 'else' for every 'if' — this ensures all outputs are driven in every condition and prevents latches.",
+    "Use casez with '?' for don't-care bits in priority-encoded case statements; avoid casex as it can mask X-propagation bugs in simulation.",
+    "Declare assign statement targets as 'wire' and always-block output targets as 'reg' in Verilog-2001; in SystemVerilog, use 'logic' for both to eliminate this confusion.",
+    "Parameterize combinational modules (DATA_WIDTH, SHAMT_WIDTH) for reusability across projects and technology migrations — parameterized RTL is a hallmark of professional IP design.",
+    "Minimize logic depth (number of gate levels) in the critical path — each gate level adds propagation delay; use parallel prefix trees (carry-lookahead, Kogge-Stone) instead of ripple structures.",
+    "Run lint tools (Spyglass, Verilint) on all combinational RTL to detect: incomplete sensitivity lists, latch inference, X/Z comparisons, bit-width mismatches, and unreachable code before simulation.",
+    "Always write synthesizable RTL — avoid non-synthesizable constructs in design modules: $display, $time, initial blocks, delays (#N), wait statements, and system tasks.",
+    "Use reduction operators (& |a, ^ |a) for compact multi-bit logic functions instead of explicit multi-level boolean expressions — synthesis tools optimize both equally but reduction operators are more readable.",
+    "Check synthesis reports for: (a) any inferred latches (should be zero for combinational modules); (b) undriven inputs or unloaded outputs; (c) constant propagated outputs (may indicate logic error); (d) timing violations on combinational paths.",
+    "When using Verilog shift operators (<<, >>), explicitly specify the destination width to avoid truncation: 'assign result = (8'(a)) << 2;' ensures the shifted result is 8 bits wide.",
+    "Avoid combinational feedback loops — all feedback paths in digital design must pass through a flip-flop or intentional latch. Use EDA 'check_design' or 'comb_loop_check' to detect feedback before synthesis.",
+    "Use $signed() cast explicitly when performing arithmetic shift right (>>>) on signed values — without the cast, Verilog treats operands as unsigned, giving wrong results for negative numbers."
+  ],
+  "summary": [
+    "Combinational logic in Verilog has three modeling styles: gate primitives (structural), assign statements (dataflow), and always @(*) blocks (behavioral) — all synthesize to combinational gates but with different levels of abstraction.",
+    "Verilog gate primitives (and, or, nand, nor, xor, xnor, not, buf) directly instantiate logic gates and are used for gate-level modeling and post-synthesis netlists; the first port is always the output.",
+    "Continuous assign statements create permanent, concurrently-evaluated drivers on wire types; the ternary operator (?:) directly synthesizes to a 2:1 MUX and nested ternaries to higher-order MUXes.",
+    "always @(*) blocks automatically infer the correct sensitivity list; outputs must be 'reg' type; all outputs must be assigned in every code path to avoid latch inference — the most common combinational bug.",
+    "A Multiplexer (MUX) routes one of N data inputs to a single output based on select lines; implemented with ternary (assign), case (always), or AND-OR gate structure; fundamental to all data routing.",
+    "A Decoder converts an n-bit binary input to a one-hot 2^n output; used in address decoding, instruction decoding, and DEMUX operation; each output is a minterm of the input bits.",
+    "A Priority Encoder handles multiple simultaneous active inputs by outputting the binary code of the highest-priority (usually highest-index) active input, with a 'valid' output indicating any input is active; implemented with cascaded if-else or casez.",
+    "A Barrel Shifter shifts/rotates an N-bit data word by any amount in ONE clock cycle using log2(N) stages of 2:1 MUXes; critical path is O(log N) gate delays; supports LSL, LSR, ASR, ROL, ROR modes.",
+    "casez with '?' allows don't-care bit matching in patterns — first-match wins implements priority; always include a default clause; prefer casez over casex in safety-critical designs.",
+    "Latch inference is the most dangerous combinational coding error: occurs when not all outputs are assigned in all branches of always @(*); prevented by default assignments, complete if-else/case coverage, and using always_comb.",
+    "Parameterized modules using Verilog parameter and localparam enable reusable, width-configurable combinational IP; parameterized barrel shifters, adders, and encoders are industry-standard practice.",
+    "Formal verification (JasperGold, OneSpin) can exhaustively prove combinational circuit properties — correctness, priority ordering, output range — across ALL input combinations in seconds, far more thorough than simulation.",
+    "In ASIC design, combinational logic is the primary source of dynamic power consumption (switching activity × capacitance × voltage²); operand isolation, clock gating, and multi-Vth cell selection are key power reduction techniques.",
+    "The synthesis quality of combinational Verilog depends heavily on coding style: if-else chains synthesize to priority MUX trees, case statements to parallel decoders, assign expressions to two-level logic — choose based on hardware intent.",
+    "SystemVerilog improvements over Verilog-2001 for combinational design: always_comb (latch-safe), unique/priority case (explicit synthesis intent), logic type (universal net/var), and typedef enum (self-documenting opcode fields) — use SystemVerilog for all new designs."
+  ],
+  "quiz": [
+    {
+      "question": "What happens if an 'always @(*)' block assigns an output in only one branch of an 'if' statement without an 'else'?",
+      "options": [
+        "A. The output is set to 0 by default",
+        "B. A level-sensitive latch is inferred for that output",
+        "C. A D flip-flop is inferred for that output",
+        "D. The simulator generates a compile error"
+      ],
+      "answer": "B",
+      "explanation": "When an output is not assigned in all branches of a combinational always block, the synthesis tool must preserve the last value — implying a level-sensitive latch. This is the most common and dangerous combinational coding mistake in Verilog. Always assign default values or provide complete if-else/case coverage."
+    },
+    {
+      "question": "In Verilog, which operator correctly performs Arithmetic Shift Right on a signed 8-bit value?",
+      "options": [
+        "A. a >> 2",
+        "B. a >>> 2",
+        "C. $signed(a) >>> 2",
+        "D. $unsigned(a) >> 2"
+      ],
+      "answer": "C",
+      "explanation": "The '>>>' operator performs arithmetic shift right only when the operand is a signed type. Without the $signed() cast, Verilog treats the operand as unsigned and '>>>' behaves like '>>'. '$signed(a) >>> 2' forces Verilog to sign-extend the MSB during the shift, correctly implementing signed division by 4. Option B would also work if 'a' is declared as 'reg signed [7:0]'."
+    },
+    {
+      "question": "How many 2-input NAND gate equivalents are needed for a 4-to-2 priority encoder?",
+      "options": [
+        "A. 4 gates",
+        "B. 8 gates",
+        "C. 6 gates",
+        "D. 12 gates"
+      ],
+      "answer": "B",
+      "explanation": "A 4-to-2 priority encoder outputs Y[1] = I[3] | I[2] and Y[0] = I[3] | (I[1] & ~I[2]), plus VALID = I[3]|I[2]|I[1]|I[0]. Implementing Y[1] requires 1 OR (2 NAND), Y[0] requires 1 NOT + 1 AND + 1 OR (~4-6 NAND), and VALID requires 1 OR-4 (~3 NAND). Total approximately 8-10 NAND equivalents. The closest answer is 8 gates for a minimized implementation."
+    },
+    {
+      "question": "What is the minimum number of MUX stages required in a barrel shifter to shift a 16-bit word by any amount from 0 to 15?",
+      "options": [
+        "A. 4",
+        "B. 8",
+        "C. 16",
+        "D. 2"
+      ],
+      "answer": "A",
+      "explanation": "A barrel shifter needs log2(N) stages for an N-bit word. For 16-bit: log2(16) = 4 stages. Stage 0 shifts by 1 or 0 (controlled by shamt[0]), Stage 1 by 2 or 0 (shamt[1]), Stage 2 by 4 or 0 (shamt[2]), Stage 3 by 8 or 0 (shamt[3]). Any combination of stages (0 to 15) produces the desired shift amount. Each stage contains 16 2:1 MUXes, for a total of 64 2:1 MUXes."
+    },
+    {
+      "question": "Which Verilog gate primitive correctly implements the function Y = ~(A & B)?",
+      "options": [
+        "A. nor g(Y, A, B)",
+        "B. nand g(Y, A, B)",
+        "C. xnor g(Y, A, B)",
+        "D. or g(Y, A, B)"
+      ],
+      "answer": "B",
+      "explanation": "Y = ~(A & B) is the NAND function. The Verilog 'nand' primitive computes the complement of the AND of all its inputs. 'nand g(Y, A, B)' sets Y = ~(A & B). 'nor' computes ~(A | B), 'xnor' computes ~(A ^ B), and 'or' computes A | B. NAND gates are fundamental in CMOS design as NAND is a universal gate and more area-efficient than NOR."
+    },
+    {
+      "question": "In a 3-to-8 decoder with active-high enable EN, what is the output Y[7:0] when EN=1 and input A[2:0] = 3'b101?",
+      "options": [
+        "A. 8'b0010_0000",
+        "B. 8'b0001_0000",
+        "C. 8'b0100_0000",
+        "D. 8'b0000_0101"
+      ],
+      "answer": "A",
+      "explanation": "A[2:0] = 3'b101 = decimal 5. A decoder with EN=1 activates output Y[5]. Y[5] is bit position 5 in the 8-bit output (0-indexed from LSB). 8'b0010_0000 = 2^5 = 32 = bit 5 is '1', all others '0'. Answer A (8'b0010_0000) is correct. Option D (8'b0000_0101) incorrectly shows binary 5 as the output rather than one-hot encoding."
+    },
+    {
+      "question": "What is the key difference between 'casez' and 'casex' in Verilog?",
+      "options": [
+        "A. casez is faster in simulation; casex is used only for synthesis",
+        "B. casez treats Z (and ?) as don't-care in patterns; casex treats both X and Z as don't-care",
+        "C. casex allows X values in the input; casez does not",
+        "D. casez is for signed comparison; casex is for unsigned"
+      ],
+      "answer": "B",
+      "explanation": "casez treats 'z' and '?' characters in case item patterns as don't-care bits during comparison. casex additionally treats 'x' in patterns as don't-care. For priority encoding with don't-care bits, casez with '?' is recommended. casex is generally discouraged in safety-critical designs because masking X values can hide uninitialized signal bugs in simulation while synthesis ignores X states entirely."
+    },
+    {
+      "question": "Which coding style avoids latch inference in Verilog always @(*) blocks?",
+      "options": [
+        "A. Declare outputs as 'wire' inside the always block",
+        "B. Use non-blocking assignments (<=) for all outputs",
+        "C. Assign all outputs a default value at the start of the always block",
+        "D. Add a 'posedge clk' to the sensitivity list"
+      ],
+      "answer": "C",
+      "explanation": "Assigning a default value to all outputs at the beginning of the always @(*) block ensures every output has a valid assignment regardless of which branch the code takes. This eliminates the need for storage (latch) to hold the previous value. Options A and B are incorrect (wire can't be assigned in always blocks; non-blocking assignments in always @(*) create simulation/synthesis issues). Option D would make it a synchronous sequential block, not combinational."
+    },
+    {
+      "question": "Which assign statement correctly implements a 4:1 MUX for 4-bit buses where sel selects D0 through D3?",
+      "options": [
+        "A. assign y = d[sel];",
+        "B. assign y = sel ? d3 : sel ? d2 : sel ? d1 : d0;",
+        "C. assign y = (sel==2'b00)?d0:(sel==2'b01)?d1:(sel==2'b10)?d2:d3;",
+        "D. assign y = d0 & d1 & d2 & d3;"
+      ],
+      "answer": "C",
+      "explanation": "Option C correctly chains ternary operators to implement a 4:1 MUX: if sel=00 select d0, elif sel=01 select d1, elif sel=10 select d2, else d3. Option A would work if d is a 4-element array with vector inputs, but for separate input wires, C is correct. Option B has incorrect nesting (uses same 'sel' for all levels without extracting different bits). Option D incorrectly ANDs all inputs regardless of select."
+    },
+    {
+      "question": "In a priority encoder with inputs I[3:0] where I[3] has highest priority, what is the output Y[1:0] and VALID when I = 4'b0110?",
+      "options": [
+        "A. Y=2'b10, VALID=1",
+        "B. Y=2'b01, VALID=1",
+        "C. Y=2'b11, VALID=1",
+        "D. Y=2'b10, VALID=0"
+      ],
+      "answer": "A",
+      "explanation": "I = 4'b0110 means I[2]=1 and I[1]=1 (I[3]=0, I[0]=0). Priority encoder checks from highest to lowest: I[3]=0 (skip), I[2]=1 (match!) — outputs Y=2'b10 (binary code for index 2) and VALID=1. Even though I[1] is also active, it is overridden by I[2]'s higher priority. VALID=1 because at least one input is active. Answer A is correct."
+    }
+  ]
+}

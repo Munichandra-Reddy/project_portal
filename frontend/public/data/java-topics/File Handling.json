@@ -1,0 +1,268 @@
+{
+  "title": "File Handling in Java",
+  "introduction": {
+    "what_it_is": "File handling in Java implies reading from and writing to files. It allows us to persist data beyond the execution of a program. Java provides the java.io and java.nio packages which contain various classes to handle files.",
+    "why_important": "Data created during a program's execution is typically lost when the program terminates. File handling allows this data to be stored permanently on a storage device, enabling data retrieval, logging, and state management in applications.",
+    "real_world": [
+      "Configuration files: Storing user preferences and application settings (e.g., .properties or .xml files).",
+      "Log files: Recording application events, errors, and system states for monitoring and debugging.",
+      "Data export/import: Processing CSV, JSON, or Excel files in enterprise applications."
+    ]
+  },
+  "detailed_theory": "In Java, file handling is traditionally performed using streams. A stream is a logical entity that represents a continuous flow of data. Java defines two types of streams: Byte Streams (for handling binary data like images or audio, processing 8 bits at a time) and Character Streams (for handling text data, processing 16 bits at a time). The `File` class in `java.io` provides an abstract representation of file and directory pathnames, allowing for operations like creation, deletion, and property checks, but not for reading or writing data. To read and write, we use classes like `FileReader`, `FileWriter`, `FileInputStream`, `FileOutputStream`, `BufferedReader`, `BufferedWriter`, and `Scanner`. Java 7 introduced the `java.nio.file` package (NIO.2), which offers a more modern, scalable, and feature-rich approach to file I/O using the `Path`, `Paths`, and `Files` classes. NIO (New I/O) operates on buffers and channels, making it highly efficient for complex operations.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Stream-based I/O",
+        "description": "Reads and writes data sequentially using byte or character streams."
+      },
+      {
+        "name": "NIO Support",
+        "description": "Provides non-blocking I/O operations through Channels and Buffers for improved performance."
+      },
+      {
+        "name": "File Metadata Access",
+        "description": "Allows checking properties like readability, writability, size, and modification dates."
+      }
+    ],
+    "advantages": [
+      "Enables persistent storage of application data.",
+      "Supports various file types (text, binary, serialization).",
+      "Provides robust error handling and exception management through IOException."
+    ],
+    "limitations": [
+      "Traditional java.io operations are blocking, which can hinder performance in multi-threaded environments.",
+      "Improper stream management (failing to close streams) can lead to resource leaks and locked files."
+    ]
+  },
+  "syntax": {
+    "explanation": "File operations generally involve opening a stream, performing read/write operations, and closing the stream within a try-catch-finally block or a try-with-resources statement.",
+    "breakdown": [
+      "1. Identify the file: Create a File or Path object.",
+      "2. Open a Stream/Writer/Reader: E.g., `FileWriter writer = new FileWriter(\"file.txt\");`",
+      "3. Perform the Operation: `writer.write(\"Hello\");`",
+      "4. Close the Resource: `writer.close();`"
+    ],
+    "rules": [
+      "Always handle or declare `IOException`.",
+      "Use `try-with-resources` to ensure streams are automatically closed.",
+      "Verify file existence before attempting to read to avoid `FileNotFoundException`."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Creating and Writing to a File",
+      "code": "import java.io.FileWriter;\nimport java.io.IOException;\n\npublic class WriteFile {\n    public static void main(String[] args) {\n        try (FileWriter writer = new FileWriter(\"example.txt\")) {\n            writer.write(\"Hello, Java File Handling!\");\n            System.out.println(\"Successfully wrote to the file.\");\n        } catch (IOException e) {\n            System.out.println(\"An error occurred.\");\n            e.printStackTrace();\n        }\n    }\n}",
+      "output": "Successfully wrote to the file.",
+      "explanation": "This example uses FileWriter within a try-with-resources block. It creates 'example.txt' (or overwrites it) and writes a string. The stream is automatically closed."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Reading a File using Scanner",
+      "code": "import java.io.File;\nimport java.io.FileNotFoundException;\nimport java.util.Scanner;\n\npublic class ReadFile {\n    public static void main(String[] args) {\n        try {\n            File myObj = new File(\"example.txt\");\n            Scanner myReader = new Scanner(myObj);\n            while (myReader.hasNextLine()) {\n                String data = myReader.nextLine();\n                System.out.println(data);\n            }\n            myReader.close();\n        } catch (FileNotFoundException e) {\n            System.out.println(\"An error occurred.\");\n            e.printStackTrace();\n        }\n    }\n}",
+      "output": "Hello, Java File Handling!",
+      "explanation": "Here, the File class points to 'example.txt'. A Scanner reads the file line-by-line using a loop until no more lines exist."
+    },
+    {
+      "level": "Advanced",
+      "title": "Using Java NIO to Read and Write",
+      "code": "import java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.nio.file.StandardOpenOption;\nimport java.io.IOException;\nimport java.util.List;\n\npublic class NIOExample {\n    public static void main(String[] args) {\n        Path filePath = Paths.get(\"nio_example.txt\");\n        String content = \"Java NIO is fast and efficient.\\n\";\n        \n        try {\n            // Write to file\n            Files.write(filePath, content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);\n            \n            // Read from file\n            List<String> lines = Files.readAllLines(filePath);\n            System.out.println(\"File content:\");\n            for (String line : lines) {\n                System.out.println(line);\n            }\n        } catch (IOException e) {\n            e.printStackTrace();\n        }\n    }\n}",
+      "output": "File content:\nJava NIO is fast and efficient.",
+      "explanation": "This uses Java NIO's Files class to write bytes and read all lines simultaneously. It's more concise and performs well for small to medium-sized files."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Byte Streams vs. Character Streams",
+        "headers": [
+          "Feature",
+          "Byte Streams",
+          "Character Streams"
+        ],
+        "rows": [
+          [
+            "Data Type",
+            "Raw binary data (bytes)",
+            "Text data (characters)"
+          ],
+          [
+            "Processing",
+            "8 bits at a time",
+            "16 bits (Unicode) at a time"
+          ],
+          [
+            "Base Classes",
+            "InputStream / OutputStream",
+            "Reader / Writer"
+          ],
+          [
+            "Examples",
+            "FileInputStream, FileOutputStream",
+            "FileReader, FileWriter"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "java.io (Legacy I/O)",
+        "concept_b": "java.nio (New I/O)",
+        "explanation": "java.io is stream-oriented and blocking, suitable for simple tasks. java.nio is buffer and channel-oriented, non-blocking, and highly scalable for intensive I/O operations."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "createNewFile()",
+      "description": "Creates a new, empty file named by the abstract pathname if and only if a file with this name does not yet exist.",
+      "parameters": "None",
+      "return_value": "boolean - true if the named file does not exist and was successfully created; false if the named file already exists.",
+      "example_usage": "File file = new File(\"data.txt\"); boolean created = file.createNewFile();"
+    },
+    {
+      "name": "exists()",
+      "description": "Tests whether the file or directory denoted by this abstract pathname exists.",
+      "parameters": "None",
+      "return_value": "boolean - true if and only if the file or directory exists; false otherwise.",
+      "example_usage": "if (file.exists()) { System.out.println(\"File exists.\"); }"
+    },
+    {
+      "name": "delete()",
+      "description": "Deletes the file or directory denoted by this abstract pathname.",
+      "parameters": "None",
+      "return_value": "boolean - true if and only if the file or directory is successfully deleted; false otherwise.",
+      "example_usage": "boolean isDeleted = file.delete();"
+    },
+    {
+      "name": "length()",
+      "description": "Returns the length of the file denoted by this abstract pathname.",
+      "parameters": "None",
+      "return_value": "long - The length, in bytes, of the file, or 0L if the file does not exist.",
+      "example_usage": "long size = file.length();"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Not Closing Streams",
+      "description": "Failing to close a stream after reading or writing can cause resource leaks and prevent other programs from accessing the file.",
+      "wrong_example": "FileWriter fw = new FileWriter(\"file.txt\");\nfw.write(\"data\");\n// Program ends without fw.close()",
+      "correct_example": "try (FileWriter fw = new FileWriter(\"file.txt\")) {\n    fw.write(\"data\");\n} // Automatically closes stream",
+      "debugging_tip": "If a file shows as 0 bytes or locked, verify if the writer or stream was closed properly. Use try-with-resources whenever possible."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between FileInputStream and FileReader?",
+        "answer": "FileInputStream is a byte stream that reads raw bytes (8-bit) and is suitable for binary files like images. FileReader is a character stream that reads text data (16-bit Unicode) and is suitable for reading text files."
+      },
+      {
+        "question": "How do you check if a file exists in Java?",
+        "answer": "You can use the `exists()` method of the `File` class. For example: `new File(\"path.txt\").exists();`"
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "What is the purpose of try-with-resources in file handling?",
+        "answer": "The try-with-resources statement ensures that every resource (like file streams) declared within it is closed automatically at the end of the statement, preventing resource leaks and reducing boilerplate finally blocks."
+      },
+      {
+        "question": "What does Serialization mean in Java?",
+        "answer": "Serialization is the process of converting an object's state into a byte stream so that it can be stored in a file or transmitted over a network. The class must implement the `Serializable` interface."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "Explain the advantages of Java NIO over traditional Java IO.",
+        "answer": "Java NIO offers non-blocking I/O operations using channels and buffers, which improves scalability for network and file operations. It also provides the `Files` utility class for efficient bulk file operations, symbolic link support, and file system metadata access."
+      },
+      {
+        "question": "How would you handle reading a massive 10GB file in Java without memory overflow?",
+        "answer": "Instead of loading the entire file into memory (e.g., using `Files.readAllLines`), I would stream it line by line using `Files.lines(Path)` or use a `BufferedReader` to process chunks sequentially. Alternatively, using NIO `FileChannel` with a `ByteBuffer` allows efficient chunked processing."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a Java program to create an empty file named 'test.txt'.",
+      "Write a Java program to check if a specified file has read and write permissions."
+    ],
+    "medium": [
+      "Write a Java program to append text to an existing file without overwriting its content.",
+      "Create a program that reads a text file and counts the number of words in it."
+    ],
+    "hard": [
+      "Write a Java program that reads a CSV file containing employee details and serializes the objects into a binary file.",
+      "Implement a program using NIO that copies a directory and all its contents (including subdirectories) to a new location."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Write a Java method `copyFile(String source, String destination)` that copies the content of one file to another using Streams.",
+      "input": "Source file containing: 'Hello World'. Destination file is empty.",
+      "output": "Destination file contains: 'Hello World'.",
+      "constraints": "Must handle large files without throwing OutOfMemoryError. Handle missing source files properly.",
+      "solution": "import java.io.*;\n\npublic class FileCopy {\n    public static void copyFile(String source, String destination) {\n        try (InputStream in = new FileInputStream(source);\n             OutputStream out = new FileOutputStream(destination)) {\n            byte[] buffer = new byte[1024];\n            int bytesRead;\n            while ((bytesRead = in.read(buffer)) > 0) {\n                out.write(buffer, 0, bytesRead);\n            }\n        } catch (IOException e) {\n            System.err.println(\"Error copying file: \" + e.getMessage());\n        }\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Web Servers",
+      "explanation": "Serving static files (HTML, CSS, images) to clients. Java web applications read these files from the server's disk using file I/O before transmitting them over the network."
+    },
+    {
+      "field": "Database Engines",
+      "explanation": "While databases manage data via memory, they ultimately persist data to storage drives. Java-based databases (like HSQLDB) heavily rely on sophisticated file handling and NIO for fast read/write."
+    }
+  ],
+  "best_practices": [
+    "Always use try-with-resources to automatically close I/O streams.",
+    "Use Buffered streams (BufferedReader, BufferedWriter) to minimize disk access and improve performance.",
+    "Specify character encoding explicitly (e.g., StandardCharsets.UTF_8) when reading/writing text to avoid platform-dependent encoding issues.",
+    "Use java.nio.file APIs (Paths, Files) for modern applications as they are more robust and feature-rich than java.io.File.",
+    "Do not read an entire file into memory unless you are sure its size is small enough to avoid OutOfMemoryError."
+  ],
+  "summary": [
+    "File handling in Java enables persistent data storage, overcoming the volatile nature of program memory.",
+    "java.io provides traditional byte and character streams, while java.nio offers modern, non-blocking channels and buffers.",
+    "The File class represents metadata, whereas Streams, Readers, and Writers handle the actual data manipulation.",
+    "Proper resource management, primarily using try-with-resources, is critical to avoid memory leaks and file locks."
+  ],
+  "quiz": [
+    {
+      "question": "Which package is generally used for legacy file handling in Java?",
+      "options": [
+        "java.util",
+        "java.io",
+        "java.nio",
+        "java.file"
+      ],
+      "answer": "java.io",
+      "explanation": "The java.io package contains the traditional I/O stream classes like FileInputStream, File, and BufferedReader."
+    },
+    {
+      "question": "Which class is best suited for reading text from a character-input stream, buffering characters to provide efficient reading?",
+      "options": [
+        "FileInputStream",
+        "FileReader",
+        "BufferedReader",
+        "ObjectInputStream"
+      ],
+      "answer": "BufferedReader",
+      "explanation": "BufferedReader reads text from a character-input stream, buffering characters for efficient reading of characters, arrays, and lines."
+    },
+    {
+      "question": "How do you append data to an existing file using FileWriter?",
+      "options": [
+        "new FileWriter(\"file.txt\", true)",
+        "new FileWriter(\"file.txt\").append()",
+        "new FileWriter(\"file.txt\", false)",
+        "FileWriter.append(\"file.txt\")"
+      ],
+      "answer": "new FileWriter(\"file.txt\", true)",
+      "explanation": "Passing 'true' as the second argument to the FileWriter constructor opens the file in append mode."
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "title": "Java Interview Questions",
+  "introduction": {
+    "what_it_is": "A structured compilation of fundamental, intermediate, and advanced Java concepts specifically targeted for technical interviews.",
+    "why_important": "It evaluates a candidate's core understanding of Java mechanics, memory management, and algorithmic thinking, which are critical for building scalable enterprise applications.",
+    "real_world": [
+      "Software Engineering technical screening rounds.",
+      "Low-Level Design (LLD) interviews.",
+      "Day-to-day enterprise application debugging and optimization."
+    ]
+  },
+  "detailed_theory": "Java interview preparation requires mastery over several pillars. First, Core Java, which encompasses OOP concepts, String manipulation (String Pool), Exception Handling, and fundamental keywords (final, static, volatile). Second, the Collections Framework, where candidates must thoroughly understand data structure hierarchy, Big O complexities, and the internal workings of classes like HashMap and ArrayList. Third, Multithreading and Concurrency, focusing on the Thread lifecycle, Synchronization, ExecutorService, and concurrent utilities like CountDownLatch and ConcurrentHashMap. Finally, modern Java features (Java 8+) are highly tested, especially functional programming constructs like Lambdas, the Stream API, Optional, and interface enhancements. Interviewers also probe into memory management, particularly the JVM architecture, Heap vs. Stack memory, and Garbage Collection algorithms (G1GC, ZGC).",
+  "key_features": {
+    "features": [
+      {
+        "name": "Internal Mechanics",
+        "description": "Focuses on 'how' things work under the hood, such as the hashing mechanism inside a HashMap."
+      },
+      {
+        "name": "Concurrency Control",
+        "description": "Evaluates knowledge of thread synchronization, race conditions, and deadlock prevention."
+      },
+      {
+        "name": "Object-Oriented Design",
+        "description": "Assesses the ability to apply SOLID principles and Design Patterns (e.g., Singleton, Factory, Builder)."
+      }
+    ],
+    "advantages": [
+      "Identifies developers who write highly optimized and safe concurrent code.",
+      "Ensures strong theoretical foundations, which translate to better architectural decisions.",
+      "Standardizes the evaluation of candidates across various experience levels."
+    ],
+    "limitations": [
+      "Can heavily skew towards algorithmic puzzles rather than real-world framework knowledge.",
+      "Some 'gotcha' questions test trivia rather than actual engineering capability.",
+      "Constant updates to Java mean interview prep must be continuously refreshed."
+    ]
+  },
+  "syntax": {
+    "explanation": "Interviews often require writing syntactically correct code on a whiteboard or basic editor without IDE assistance.",
+    "breakdown": [
+      "Custom Exception: 'public class MyException extends RuntimeException { ... }'",
+      "Singleton: 'public static synchronized MyClass getInstance() { ... }'",
+      "Immutability: 'public final class Immutable { private final int val; ... }'"
+    ],
+    "rules": [
+      "Always override hashCode() when you override equals().",
+      "Do not use == to compare Strings; always use .equals().",
+      "Avoid empty catch blocks; always log or rethrow exceptions."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Reverse a String manually",
+      "code": "public class StringReverse {\n    public static void main(String[] args) {\n        String str = \"Interview\";\n        String reversed = \"\";\n        for (int i = str.length() - 1; i >= 0; i--) {\n            reversed += str.charAt(i);\n        }\n        System.out.println(reversed);\n    }\n}",
+      "output": "weivretnI",
+      "explanation": "A classic warm-up question to test basic loop mechanics and string indexing without using StringBuilder.reverse()."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Custom Object as HashMap Key",
+      "code": "import java.util.HashMap;\nimport java.util.Objects;\n\nclass Employee {\n    int id;\n    public Employee(int id) { this.id = id; }\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (o == null || getClass() != o.getClass()) return false;\n        Employee emp = (Employee) o;\n        return id == emp.id;\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(id);\n    }\n}\n\npublic class MapTest {\n    public static void main(String[] args) {\n        HashMap<Employee, String> map = new HashMap<>();\n        map.put(new Employee(1), \"John\");\n        System.out.println(map.get(new Employee(1)));\n    }\n}",
+      "output": "John",
+      "explanation": "Demonstrates why overriding both equals() and hashCode() is mandatory when using a custom object as a key in hash-based collections."
+    },
+    {
+      "level": "Advanced",
+      "title": "Producer-Consumer Problem using wait() and notify()",
+      "code": "class SharedBuffer {\n    private int data;\n    private boolean hasData = false;\n\n    public synchronized void produce(int val) throws InterruptedException {\n        while (hasData) wait();\n        data = val;\n        System.out.println(\"Produced: \" + data);\n        hasData = true;\n        notify();\n    }\n\n    public synchronized void consume() throws InterruptedException {\n        while (!hasData) wait();\n        System.out.println(\"Consumed: \" + data);\n        hasData = false;\n        notify();\n    }\n}",
+      "output": "Produced: 1\nConsumed: 1\nProduced: 2\n...",
+      "explanation": "A standard concurrency interview question demonstrating thread synchronization, inter-thread communication, and avoiding race conditions."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "String vs StringBuilder vs StringBuffer",
+        "headers": ["Feature", "String", "StringBuilder", "StringBuffer"],
+        "rows": [
+          ["Mutability", "Immutable", "Mutable", "Mutable"],
+          ["Thread-Safety", "Yes (Immutable)", "No", "Yes (Synchronized)"],
+          ["Performance", "Slow (creates new objects)", "Fastest", "Slower than Builder"]
+        ]
+      },
+      {
+        "title": "HashMap vs ConcurrentHashMap",
+        "headers": ["Feature", "HashMap", "ConcurrentHashMap"],
+        "rows": [
+          ["Thread Safety", "No", "Yes"],
+          ["Null Key/Value", "Allows 1 null key, multiple null values", "Throws NullPointerException"],
+          ["Locking Mechanism", "None", "Lock stripping at Node level (Java 8+)"]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "final, finally, finalize",
+        "concept_b": "What's the difference?",
+        "explanation": "'final' is a keyword to restrict modification. 'finally' is a block used in exception handling for resource cleanup. 'finalize()' is a method used by the Garbage Collector before an object is destroyed (deprecated in Java 9)."
+      },
+      {
+        "concept_a": "Comparable",
+        "concept_b": "Comparator",
+        "explanation": "Comparable is implemented by the class itself (e.g., implements Comparable<T>) to define its natural sorting using compareTo(). Comparator is a separate utility interface used to define custom sorting logic using compare()."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "Object.equals()",
+      "description": "Compares the memory location (identity) by default, but should be overridden to compare state (equality).",
+      "parameters": "Object obj",
+      "return_value": "boolean",
+      "example_usage": "if (str1.equals(str2)) { ... }"
+    },
+    {
+      "name": "Object.hashCode()",
+      "description": "Returns an integer representation of the object memory address. Must be overridden if equals() is overridden.",
+      "parameters": "None",
+      "return_value": "int",
+      "example_usage": "int hash = obj.hashCode();"
+    },
+    {
+      "name": "String.intern()",
+      "description": "Returns a canonical representation for the string object from the String Pool.",
+      "parameters": "None",
+      "return_value": "String",
+      "example_usage": "String pooled = new String(\"A\").intern();"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Using == instead of .equals() for Strings",
+      "description": "Using == compares memory references, not the actual string content, which fails when comparing strings created with the 'new' keyword.",
+      "wrong_example": "if (str1 == str2) { ... }",
+      "correct_example": "if (str1.equals(str2)) { ... }",
+      "debugging_tip": "Always use .equals() for objects. Only use == for primitives or when you explicitly want to check if they point to the exact same memory location."
+    },
+    {
+      "title": "Calling run() instead of start() on a Thread",
+      "description": "Calling run() directly executes the code in the current thread instead of spawning a new call stack.",
+      "wrong_example": "Thread t = new Thread(runnable); t.run();",
+      "correct_example": "Thread t = new Thread(runnable); t.start();",
+      "debugging_tip": "If your multithreaded application seems to run sequentially and blocks the main thread, check if you accidentally called run()."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between JDK, JRE, and JVM?",
+        "answer": "JDK (Java Development Kit) provides tools (compiler, debugger) to develop Java apps. JRE (Java Runtime Environment) provides the libraries and JVM needed to run apps. JVM (Java Virtual Machine) executes the bytecode."
+      },
+      {
+        "question": "Why is Java platform independent?",
+        "answer": "Java code is compiled into bytecode (.class files), which is platform-agnostic. The JVM, which is platform-specific, translates this bytecode into machine code."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "How does a HashMap work internally in Java 8?",
+        "answer": "It uses an array of Nodes. When an element is inserted, it calculates the hash code of the key to find the index (bucket). In case of a collision, it stores nodes in a LinkedList. If a bucket's LinkedList grows beyond 8 elements, it converts to a Red-Black Tree for O(log n) access."
+      },
+      {
+        "question": "Explain the difference between Checked and Unchecked exceptions.",
+        "answer": "Checked exceptions (e.g., IOException) are checked at compile-time and must be handled using try-catch or declared with throws. Unchecked exceptions (e.g., NullPointerException) extend RuntimeException and occur at runtime."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "What is the Volatile keyword?",
+        "answer": "The volatile keyword ensures that the value of a variable is always read from main memory, not from the thread's local cache. It guarantees visibility but not atomicity."
+      },
+      {
+        "question": "Explain the Garbage Collection process in Java.",
+        "answer": "Java uses a Mark-and-Sweep approach. The Heap is divided into Young Generation (Eden, S0, S1) and Old Generation. Minor GC cleans the Young Gen, while Major GC cleans the Old Gen. Algorithms include Serial, Parallel, G1, and ZGC."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Check if a given string is a palindrome.",
+      "Find the factorial of a number using recursion.",
+      "Write a program to remove duplicate characters from a string."
+    ],
+    "medium": [
+      "Sort a list of Employee objects by name and then by salary using Java 8 Streams.",
+      "Implement a thread-safe Singleton class.",
+      "Find the first non-repeating character in a string."
+    ],
+    "hard": [
+      "Implement a custom BlockingQueue from scratch.",
+      "Design an LRU Cache with O(1) get and put time complexity.",
+      "Write a program to print numbers from 1 to 100 using three separate threads in a sequence (Thread 1: 1, Thread 2: 2, Thread 3: 3, Thread 1: 4, etc.)."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Implement the Two Sum problem: Given an array of integers and a target sum, return indices of the two numbers such that they add up to the target.",
+      "input": "nums = [2, 7, 11, 15], target = 9",
+      "output": "[0, 1]",
+      "constraints": "O(n) time complexity, exactly one solution exists.",
+      "solution": "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        Map<Integer, Integer> map = new HashMap<>();\n        for (int i = 0; i < nums.length; i++) {\n            int complement = target - nums[i];\n            if (map.containsKey(complement)) {\n                return new int[] { map.get(complement), i };\n            }\n            map.put(nums[i], i);\n        }\n        return new int[]{};\n    }\n}"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Hiring & Recruitment",
+      "explanation": "Interview questions are heavily utilized by HR and engineering teams to filter out candidates and assess coding capabilities."
+    },
+    {
+      "field": "Code Quality Assurance",
+      "explanation": "The strict rules assessed in interviews (like SOLID principles and memory management) are precisely what teams enforce during code reviews."
+    }
+  ],
+  "best_practices": [
+    "Always clarify the problem statement and constraints before jumping into writing code during an interview.",
+    "Think out loud. Interviewers care as much about your thought process and problem-solving approach as the final code.",
+    "Test your code using dry runs and edge cases (null inputs, empty arrays, large data sets).",
+    "Brush up on Java 8 features (Lambdas, Streams) as they are heavily preferred for writing clean, concise code."
+  ],
+  "summary": [
+    "Java interviews cover a wide spectrum, from basic JVM architecture to advanced concurrency and memory management.",
+    "Data Structures, specifically the Collections framework (HashMap, ArrayList), are the most critical aspect to master.",
+    "Practical implementation, analyzing Big-O complexity, and handling edge cases are vital for passing the coding rounds."
+  ],
+  "quiz": [
+    {
+      "question": "Which of these is NOT a valid access modifier in Java?",
+      "options": ["public", "private", "protected", "friendly"],
+      "answer": "friendly",
+      "explanation": "'friendly' is not a Java keyword. Default access (no modifier) is sometimes colloquially called package-private, but 'friendly' doesn't exist."
+    },
+    {
+      "question": "What is the time complexity of a get() operation in a HashMap without collisions?",
+      "options": ["O(1)", "O(log n)", "O(n)", "O(n^2)"],
+      "answer": "O(1)",
+      "explanation": "A HashMap provides constant O(1) time complexity for get and put operations in the ideal case where there are no hash collisions."
+    }
+  ]
+}

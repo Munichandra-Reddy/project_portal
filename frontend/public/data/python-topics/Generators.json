@@ -1,0 +1,377 @@
+{
+  "title": "Generators",
+  "introduction": {
+    "what_it_is": "Generators are a special type of function in Python that return an iterator object, yielding items one at a time rather than returning a single list all at once.",
+    "why_important": "Generators are highly memory efficient. Instead of storing large datasets in memory (like lists do), generators compute and yield values on the fly. This makes them ideal for processing massive data streams, reading huge files, or generating infinite sequences.",
+    "real_world": [
+      "Reading a 50GB log file line-by-line without causing a MemoryError.",
+      "Generating a continuous stream of sensor data or stock market ticks.",
+      "Paginating through thousands of database records efficiently."
+    ]
+  },
+  "detailed_theory": "In Python, traditional functions use the `return` statement to send a value back to the caller, effectively terminating the function and destroying its local state. If a function needs to return a collection of items, it typically constructs a list in memory and returns the whole list.\n\nGenerators, however, use the `yield` statement. When a generator function yields a value, it temporarily suspends its execution, saves its current state (including local variables and the instruction pointer), and hands control back to the caller. The next time the generator is iterated over (using `next()` or in a `for` loop), it resumes execution exactly where it left off, immediately after the `yield` statement.\n\nBecause they produce items one at a time and only when asked (lazy evaluation), generators are incredibly memory-efficient. A list of one million integers takes up considerable RAM; a generator that produces one million integers takes up almost no RAM, as it only holds one integer at a time.\n\nGenerators can be created in two ways:\n1. Generator Functions: Defined just like normal functions using `def`, but containing at least one `yield` statement.\n2. Generator Expressions: A concise syntax similar to list comprehensions, but using parentheses `()` instead of square brackets `[]`.\n\nGenerators are inherently iterators. They automatically implement the `__iter__()` and `__next__()` methods. When a generator is exhausted (i.e., it has no more values to yield), it automatically raises a `StopIteration` exception, which is how `for` loops know when to stop.\n\nAdvanced generator features include the ability to receive data back from the caller using the `send()` method, which allows generators to act as coroutines, enabling cooperative multitasking.",
+  "key_features": {
+    "features": [
+      {
+        "name": "Yield Statement",
+        "description": "Suspends function execution and sends a value to the caller, preserving state."
+      },
+      {
+        "name": "Lazy Evaluation",
+        "description": "Computes values strictly on demand, saving memory and CPU cycles."
+      },
+      {
+        "name": "State Retention",
+        "description": "Local variables are kept alive between successive calls to the generator."
+      }
+    ],
+    "advantages": [
+      "Massive memory savings for large datasets.",
+      "Can represent infinite streams of data.",
+      "Cleaner, more readable code compared to writing custom Iterator classes."
+    ],
+    "limitations": [
+      "Generators are single-pass; they can only be iterated over once. To reuse, you must recreate the generator.",
+      "You cannot use indexing or slicing (e.g., `gen[0]`) on a generator.",
+      "You cannot get the length (`len()`) of a generator without exhausting it."
+    ]
+  },
+  "syntax": {
+    "explanation": "Generators use `def` and `yield`. Generator expressions use parentheses.",
+    "breakdown": [
+      "def my_generator():",
+      "    yield 1",
+      "    yield 2",
+      "",
+      "gen = my_generator()",
+      "next(gen) # Returns 1",
+      "",
+      "# Generator Expression",
+      "gen_exp = (x**2 for x in range(10))"
+    ],
+    "rules": [
+      "A function becomes a generator automatically if it contains a `yield` keyword.",
+      "Use `next()` to manually fetch the next item.",
+      "A `for` loop automatically handles `next()` and the `StopIteration` exception."
+    ]
+  },
+  "examples": [
+    {
+      "level": "Basic",
+      "title": "Simple Generator Function",
+      "code": "def countdown(n):\n    while n > 0:\n        yield n\n        n -= 1\n\nfor number in countdown(3):\n    print(number)",
+      "output": "3\n2\n1",
+      "explanation": "The `countdown` function yields a number, pauses, and resumes on the next loop iteration until `n` is 0."
+    },
+    {
+      "level": "Intermediate",
+      "title": "Generator Expression",
+      "code": "squares_list = [x**2 for x in range(5)] # List comprehension\nsquares_gen = (x**2 for x in range(5))  # Generator expression\n\nprint(list(squares_gen))",
+      "output": "[0, 1, 4, 9, 16]",
+      "explanation": "The generator expression uses `()` instead of `[]`. It is evaluated lazily, and wrapped in `list()` to consume and print all values."
+    },
+    {
+      "level": "Advanced",
+      "title": "Infinite Generator",
+      "code": "def fibonacci():\n    a, b = 0, 1\n    while True:\n        yield a\n        a, b = b, a + b\n\nfib = fibonacci()\nfor _ in range(5):\n    print(next(fib))",
+      "output": "0\n1\n1\n2\n3",
+      "explanation": "The `while True` loop makes it an infinite generator. Because it evaluates lazily, it doesn't crash the program; it only generates the next Fibonacci number when `next()` is called."
+    },
+    {
+      "level": "Real-world",
+      "title": "Reading Large Files",
+      "code": "def read_large_file(file_path):\n    with open(file_path, 'r') as file:\n        for line in file:\n            yield line.strip()\n\n# Example usage:\n# for line in read_large_file('massive_log.txt'):\n#     process(line)",
+      "output": "Yields lines one by one.",
+      "explanation": "This pattern prevents loading an entire huge file into RAM. It yields one line, processes it, and then discards it before fetching the next line."
+    }
+  ],
+  "visuals": {
+    "tables": [
+      {
+        "title": "Generators vs Lists",
+        "headers": [
+          "Feature",
+          "List",
+          "Generator"
+        ],
+        "rows": [
+          [
+            "Memory Usage",
+            "High (stores all elements)",
+            "Low (stores one element at a time)"
+          ],
+          [
+            "Evaluation",
+            "Eager (computes immediately)",
+            "Lazy (computes on demand)"
+          ],
+          [
+            "Iteration",
+            "Multiple times",
+            "Only once (exhausts)"
+          ],
+          [
+            "Syntax",
+            "`[x for x in data]`",
+            "`(x for x in data)`"
+          ]
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "concept_a": "return",
+        "concept_b": "yield",
+        "explanation": "`return` terminates the function entirely and destroys local variables. `yield` pauses the function, returns a value, and saves state for resumption."
+      },
+      {
+        "concept_a": "Iterable",
+        "concept_b": "Iterator / Generator",
+        "explanation": "A List is an Iterable (you can loop over it). A Generator is an Iterator (it drives the iteration using `next()`). All generators are iterators."
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "next(generator)",
+      "description": "Retrieves the next item from the generator. Raises `StopIteration` if exhausted.",
+      "parameters": "generator object",
+      "return_value": "Yielded value",
+      "example_usage": "val = next(gen)"
+    },
+    {
+      "name": "generator.send(value)",
+      "description": "Resumes the execution and 'sends' a value into the generator function, which becomes the result of the current yield expression.",
+      "parameters": "value (any)",
+      "return_value": "Next yielded value",
+      "example_usage": "gen.send('data')"
+    },
+    {
+      "name": "generator.close()",
+      "description": "Raises a GeneratorExit at the point where the generator function was paused.",
+      "parameters": "None",
+      "return_value": "None",
+      "example_usage": "gen.close()"
+    }
+  ],
+  "mistakes": [
+    {
+      "title": "Trying to iterate a Generator twice",
+      "description": "Generators are exhausted after one full iteration. Looping over it a second time will yield nothing.",
+      "wrong_example": "gen = (x for x in range(3))\nlist(gen) # Returns [0,1,2]\nlist(gen) # Returns []",
+      "correct_example": "To iterate again, you must recreate the generator object.",
+      "debugging_tip": "If a loop over a generator suddenly does nothing, ensure the generator wasn't already consumed."
+    },
+    {
+      "title": "Using len() on a Generator",
+      "description": "Generators do not know their length beforehand because they calculate values lazily.",
+      "wrong_example": "gen = (x for x in range(10))\nprint(len(gen)) # Raises TypeError",
+      "correct_example": "Use a list if you need the length, or exhaust the generator using `sum(1 for _ in gen)`.",
+      "debugging_tip": "Never use `len()` or indexing `[0]` on generators."
+    }
+  ],
+  "interview_questions": {
+    "basic": [
+      {
+        "question": "What is the difference between `yield` and `return`?",
+        "answer": "`return` exits a function entirely, returning a single value. `yield` pauses the function, returning a value, but retains state to resume execution later."
+      },
+      {
+        "question": "What is a generator expression?",
+        "answer": "It is a concise way to create generators using syntax similar to list comprehensions, but enclosed in parentheses instead of square brackets."
+      }
+    ],
+    "intermediate": [
+      {
+        "question": "Why are generators considered memory efficient?",
+        "answer": "Because they evaluate data lazily (on demand). Instead of creating an entire large collection in memory at once, they yield one item at a time, maintaining a tiny memory footprint."
+      },
+      {
+        "question": "What exception is raised when a generator runs out of values?",
+        "answer": "A `StopIteration` exception is raised when `next()` is called on an exhausted generator."
+      }
+    ],
+    "advanced": [
+      {
+        "question": "How can you send data back into a running generator?",
+        "answer": "Using the `generator.send(value)` method. The value passed is received by the generator as the result of the `yield` expression it is currently paused at."
+      },
+      {
+        "question": "What is the `yield from` statement?",
+        "answer": "`yield from` is used to delegate part of a generator's operations to another generator or iterable. It effectively flattens nested structures."
+      }
+    ]
+  },
+  "practice_questions": {
+    "easy": [
+      "Write a generator function that yields the strings 'First', 'Second', and 'Third' successively.",
+      "Create a generator expression that generates the squares of numbers from 1 to 10.",
+      "Use `next()` to retrieve the first three values from the generator created in the previous question.",
+      "Write a generator that yields even numbers up to a specified limit.",
+      "Attempt to find the `len()` of a generator and observe the resulting error."
+    ],
+    "medium": [
+      "Write a generator to produce the Fibonacci sequence infinitely. Use a loop to print the first 10 numbers.",
+      "Write a generator that takes a string and yields its characters one by one in reverse order.",
+      "Create a list of names. Write a generator expression to yield names that start with the letter 'A'.",
+      "Compare the memory size of a list containing 10,000 integers vs a generator yielding 10,000 integers using `sys.getsizeof()`.",
+      "Write a generator that reads a CSV file line by line and yields each line as a list of strings."
+    ],
+    "hard": [
+      "Implement a generator acting as a coroutine that receives integers via `send()` and yields a running average.",
+      "Write a generator that uses `yield from` to yield all elements from a nested list (e.g., `[1, [2, 3], 4]`).",
+      "Implement a custom `range()` function using a generator that accepts start, stop, and step arguments.",
+      "Write a generator pipeline: Generator A yields raw data, Generator B takes Generator A and filters it, Generator C takes Generator B and formats it.",
+      "Handle a `GeneratorExit` exception inside a generator by adding a `try-finally` block to perform cleanup when `.close()` is called."
+    ]
+  },
+  "coding_challenges": [
+    {
+      "statement": "Create a generator pipeline. First, write a generator `read_numbers()` that yields numbers from 1 to 10. Second, write a generator `filter_even(gen)` that takes a generator and yields only even numbers. Third, loop through the filtered generator to print results.",
+      "input": "None",
+      "output": "2\\n4\\n6\\n8\\n10",
+      "constraints": "You must chain generators; do not use lists.",
+      "solution": "def read_numbers():\n    for i in range(1, 11):\n        yield i\n\ndef filter_even(gen):\n    for num in gen:\n        if num % 2 == 0:\n            yield num\n\npipeline = filter_even(read_numbers())\nfor n in pipeline:\n    print(n)"
+    }
+  ],
+  "real_world_applications": [
+    {
+      "field": "Data Pipelines",
+      "explanation": "Chaining generators together to extract, transform, and load (ETL) streaming data efficiently."
+    },
+    {
+      "field": "Web Scraping",
+      "explanation": "Yielding parsed items from a paginated API or website rather than waiting for all pages to load."
+    },
+    {
+      "field": "Asynchronous Programming",
+      "explanation": "Generators laid the foundation for `async`/`await` in Python by utilizing `yield` to pause tasks while waiting for I/O operations."
+    }
+  ],
+  "best_practices": [
+    "Use generators instead of lists whenever you are processing large datasets sequentially.",
+    "Use generator expressions `(x for x in data)` for simple transformations instead of full generator functions.",
+    "Remember that generators are single-use. If you need to iterate over data multiple times, use a list or recreate the generator.",
+    "Use `yield from` to simplify code when a generator needs to yield all values from another iterable.",
+    "Avoid holding strong references to large objects within a generator's local scope if they are no longer needed."
+  ],
+  "summary": [
+    "Generators produce items lazily using the `yield` keyword.",
+    "They are incredibly memory efficient compared to traditional lists.",
+    "State is preserved between successive `next()` calls.",
+    "They can be infinite and are iterated over using loops or the `next()` function.",
+    "Generator expressions offer a concise syntax using parentheses."
+  ],
+  "quiz": [
+    {
+      "question": "What keyword turns a normal function into a generator?",
+      "options": [
+        "return",
+        "generate",
+        "yield",
+        "iter"
+      ],
+      "answer": "yield",
+      "explanation": "The presence of the `yield` keyword inside a function body makes it a generator function."
+    },
+    {
+      "question": "Which of the following creates a generator expression?",
+      "options": [
+        "[x * 2 for x in range(5)]",
+        "{x * 2 for x in range(5)}",
+        "(x * 2 for x in range(5))",
+        "<x * 2 for x in range(5)>"
+      ],
+      "answer": "(x * 2 for x in range(5))",
+      "explanation": "Parentheses `()` are used for generator expressions. `[]` creates a list, `{}` creates a set/dict."
+    },
+    {
+      "question": "What built-in function is used to manually advance a generator?",
+      "options": [
+        "forward()",
+        "next()",
+        "advance()",
+        "step()"
+      ],
+      "answer": "next()",
+      "explanation": "`next(generator)` retrieves the next yielded value from the generator."
+    },
+    {
+      "question": "What happens when you call `next()` on a generator that has no more values to yield?",
+      "options": [
+        "It returns None.",
+        "It starts over from the beginning.",
+        "It raises a StopIteration exception.",
+        "It raises an IndexError."
+      ],
+      "answer": "It raises a StopIteration exception.",
+      "explanation": "Generators signal exhaustion by raising `StopIteration`, which `for` loops catch silently."
+    },
+    {
+      "question": "Why are generators more memory efficient than lists?",
+      "options": [
+        "They compress data using zip algorithms.",
+        "They evaluate elements lazily, keeping only one element in memory at a time.",
+        "They store data on the hard drive instead of RAM.",
+        "They automatically delete the program's history."
+      ],
+      "answer": "They evaluate elements lazily, keeping only one element in memory at a time.",
+      "explanation": "Lazy evaluation means values are calculated on-the-fly and discarded, saving RAM."
+    },
+    {
+      "question": "Can you iterate over a generator multiple times?",
+      "options": [
+        "Yes, as many times as you want.",
+        "Yes, but only if you use a while loop.",
+        "No, they are exhausted after a single iteration.",
+        "No, unless you cast them to a dictionary."
+      ],
+      "answer": "No, they are exhausted after a single iteration.",
+      "explanation": "Generators are single-pass iterators. Once exhausted, they yield nothing. You must create a new one."
+    },
+    {
+      "question": "Which method sends a value back into a paused generator?",
+      "options": [
+        "push()",
+        "send()",
+        "inject()",
+        "input()"
+      ],
+      "answer": "send()",
+      "explanation": "`gen.send(value)` resumes the generator and provides a value that becomes the result of the current `yield` expression."
+    },
+    {
+      "question": "What is the primary use case for an infinite generator?",
+      "options": [
+        "To purposefully crash the application.",
+        "To process finite lists faster.",
+        "To model continuous streams of data like time, sensor readings, or math sequences.",
+        "To bypass security systems."
+      ],
+      "answer": "To model continuous streams of data like time, sensor readings, or math sequences.",
+      "explanation": "Because of lazy evaluation, infinite generators safely model continuous data streams."
+    },
+    {
+      "question": "What does the `yield from` syntax do?",
+      "options": [
+        "It imports an external module.",
+        "It delegates yielding operations to another iterable or generator.",
+        "It forces the generator to yield a specific data type.",
+        "It skips the next yielded value."
+      ],
+      "answer": "It delegates yielding operations to another iterable or generator.",
+      "explanation": "`yield from iterable` is a shortcut for `for item in iterable: yield item`."
+    },
+    {
+      "question": "If you try to access `gen[0]` on a generator `gen`, what happens?",
+      "options": [
+        "It returns the first element.",
+        "It skips the first element.",
+        "It raises a TypeError.",
+        "It turns the generator into a list."
+      ],
+      "answer": "It raises a TypeError.",
+      "explanation": "Generators are not subscriptable. They don't support indexing or slicing because values are not pre-calculated."
+    }
+  ]
+}
