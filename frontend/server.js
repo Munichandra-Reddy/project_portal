@@ -48,13 +48,27 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', time: new Date() });
 });
 
+// Favicon handler
+app.get('/favicon.ico', (req, res) => {
+  // Return a simple SVG favicon
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💻</text></svg>';
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(svg);
+});
+
 // Serve frontend assets in production (optional fallback)
 const frontendBuildPath = path.join(__dirname, '../frontend/dist');
 app.use(express.static(frontendBuildPath));
 
-app.listen(PORT, () => {
-  console.log(`===============================================`);
-  console.log(`🚀 Geonixa Compiler Server running on port ${PORT}`);
-  console.log(`👉 Mode: ${process.env.USE_LOCAL_COMPILER === 'true' ? 'Local Sandbox Compiler' : 'Judge0 Engine API'}`);
-  console.log(`===============================================`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`===============================================`);
+    console.log(`🚀 Geonixa Compiler Server running on port ${PORT}`);
+    console.log(`👉 Mode: ${process.env.USE_LOCAL_COMPILER === 'true' ? 'Local Sandbox Compiler' : 'Judge0 Engine API'}`);
+    console.log(`===============================================`);
+  });
+}
+
+// Export for Vercel
+export default app;
