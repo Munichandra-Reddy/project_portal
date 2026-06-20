@@ -1,20 +1,44 @@
 :root {
-  --color-bg: #ffffff;
-  --color-sidebar: #f8f9fa;
-  --color-border: #e5e7eb;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-easy: #16a34a;
-  --color-medium: #d97706;
-  --color-hard: #dc2626;
-  --color-btn: #2563eb;
-  --color-btn-hover: #1d4ed8;
-
-  --font-main: Arial, Helvetica, sans-serif;
-  --font-code: 'Fira Code', 'JetBrains Mono', monospace;
+  /* Core Backgrounds */
+  --color-bg: #0F172A;
+  --color-sidebar: #1E293B;
+  --color-card: #1E293B;
   
-  --transition-speed: 0.2s;
-  --border-radius: 6px;
+  /* Accents */
+  --color-primary: #4F46E5;
+  --color-secondary: #38BDF8;
+  --color-accent: #10B981;
+  
+  /* Text */
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  
+  /* Borders */
+  --color-border: #334155;
+  
+  /* Status / Difficulty */
+  --color-easy: #22C55E;
+  --color-medium: #F59E0B;
+  --color-hard: #EF4444;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+
+  /* Buttons */
+  --color-btn: #4F46E5;
+  --color-btn-hover: #4338CA;
+  
+  /* Gradients */
+  --premium-gradient: linear-gradient(135deg, #4F46E5, #38BDF8, #10B981);
+  --btn-primary-gradient: linear-gradient(135deg, #4F46E5, #6366F1);
+  --btn-secondary-gradient: linear-gradient(135deg, #38BDF8, #0EA5E9);
+
+  /* Typography */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-code: 'Fira Code', 'JetBrains Mono', 'Menlo', monospace;
+  
+  --transition-speed: 0.3s;
+  --border-radius: 8px;
 }
 
 /* CSS Reset */
@@ -25,7 +49,8 @@
 }
 
 body {
-  background-color: var(--color-bg);
+  background: linear-gradient(135deg, #0F172A, #020617); /* Slate Dark to Deep Night */
+  background-attachment: fixed;
   color: var(--color-text-primary);
   font-family: var(--font-main);
   font-size: 16px;
@@ -40,11 +65,13 @@ p { font-size: 16px; margin-bottom: 16px; }
 small, .text-small { font-size: 14px; }
 
 a {
-  color: var(--color-btn);
+  color: var(--color-primary);
   text-decoration: none;
+  transition: color var(--transition-speed);
 }
 a:hover {
   text-decoration: underline;
+  color: var(--color-accent);
 }
 
 button {
@@ -52,16 +79,74 @@ button {
   cursor: pointer;
   border: none;
   background: none;
-  transition: background-color var(--transition-speed) ease;
+  transition: all var(--transition-speed) ease;
 }
 
 input, textarea, select {
   font-family: inherit;
   font-size: 16px;
+  background-color: var(--color-sidebar);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
 }
 
 ul, ol {
   list-style: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.card-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 15px var(--color-primary);
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: var(--border-radius);
+  background: var(--color-card);
+  background-clip: padding-box;
+  border: 1px solid transparent;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -1;
+  margin: -1px;
+  border-radius: inherit;
+  background: var(--premium-gradient);
+}
+
+.glassmorphism {
+  background: rgba(28, 33, 40, 0.7);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Common Layout Utilities */

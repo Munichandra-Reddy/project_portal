@@ -1,0 +1,158 @@
+[
+  {
+    "id": "1",
+    "thumbnail": "https://images.unsplash.com/photo-1618401471353-b98aedd07871?auto=format&fit=crop&w=600&q=80",
+    "title": "E-Commerce Microservices Engine",
+    "technologyStack": [
+      "Node.js",
+      "Express.js",
+      "Redis",
+      "Docker",
+      "RabbitMQ"
+    ],
+    "shortDescription": "A highly-scalable distributed e-commerce backend implementing transaction patterns and event-driven communications.",
+    "difficulty": "Hard",
+    "category": "System Design",
+    "duration": "4 weeks",
+    "overview": "This project provides a production-grade template for scalable e-commerce systems using a decoupled microservices architecture. It focuses on order processing speeds, event messaging, and reliable caching layers.",
+    "completeDescription": "The E-Commerce Microservices Engine separates critical actions (Authentication, Catalog, Ordering, Payments, Notification) into independent processes. Leveraging Docker for containerization and RabbitMQ as a message broker, it achieves fault tolerance and asynchronous task queue management.",
+    "features": [
+      "Decoupled microservice architecture with Gateway routing",
+      "Event-driven transaction handling using RabbitMQ queues",
+      "Idempotency checks on ordering/billing systems",
+      "Redis memory database integration for lightning-fast catalog search responses"
+    ],
+    "objectives": [
+      "Minimize order checkout latency to < 100ms",
+      "Enable horizontal scaling of payment modules during peak workloads",
+      "Implement dead-letter-queue (DLQ) structures for order retry limits"
+    ],
+    "modules": [
+      "API Gateway Service: Centralized security, CORS, and request forwarding",
+      "Catalog Service: Manages item availability, tags, and category hierarchies",
+      "Order processing Service: Implements transaction locking to prevent overselling",
+      "Notification Worker: Asynchronously processes order confirmation emails"
+    ],
+    "technologiesUsed": [
+      "Express.js & Node.js (Core Application Server)",
+      "Redis (Session state caching & Item catalogs caching)",
+      "Docker & Compose (Infrastructure encapsulation)",
+      "RabbitMQ (Asynchronous message exchange broker)"
+    ],
+    "screenshots": [
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
+    ],
+    "installationSteps": [
+      "Clone the repository: `git clone https://github.com/geonixa/ecommerce-microservices.git`",
+      "Navigate to root: `cd ecommerce-microservices`",
+      "Configure variables: Copy `.env.example` to `.env` in all service folder subdirectories",
+      "Launch using Docker: Run `docker-compose up --build` in the root folder"
+    ],
+    "sourceCodeUrl": "https://github.com/geonixa/ecommerce-microservices",
+    "demoVideoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "downloadableReportUrl": "#"
+  },
+  {
+    "id": "2",
+    "thumbnail": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80",
+    "title": "Interactive Markdown Wiki Platform",
+    "technologyStack": [
+      "React.js",
+      "Vite",
+      "Tailwind CSS",
+      "Markdown-it",
+      "LocalStorage"
+    ],
+    "shortDescription": "A personal document workspace engine supporting live rendering, custom plugin nodes, and structured file trees.",
+    "difficulty": "Medium",
+    "category": "Frontend Web Development",
+    "duration": "2 weeks",
+    "overview": "A modern React web-app serving as an interactive wiki workspace, optimized for developer notes, task boards, and quick documentation writes.",
+    "completeDescription": "This workspace enables technical writers to organize documentation in a recursive sidebar file system. Features inline markdown compilers, custom alert panels, code highlights, and offline persistence via local storage.",
+    "features": [
+      "Recursive file system builder (Folders and pages nesting)",
+      "Split-screen live markdown compiler with custom CSS styling",
+      "Tag-based semantic searching across stored wiki nodes",
+      "Export capability to plain HTML/Markdown zip packages"
+    ],
+    "objectives": [
+      "Deliver smooth typing rendering updates under 5ms latency",
+      "Fully responsive editing experience on mobile, tablet, and desktop formats"
+    ],
+    "modules": [
+      "File Tree Navigator: Recursive sidebar tree with folders addition/removal",
+      "Editor Slate: Monaco or text area with autocomplete shortcuts",
+      "Wiki Graph View: Visualizes internal links and relations using Canvas drawing"
+    ],
+    "technologiesUsed": [
+      "React.js (Component structure)",
+      "Vite (Application builder & HMR)",
+      "Tailwind CSS (Layout formatting)",
+      "Lucide-react (Premium iconography set)"
+    ],
+    "screenshots": [
+      "https://images.unsplash.com/photo-1542744094-3a31f103e35f?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80"
+    ],
+    "installationSteps": [
+      "Clone code: `git clone https://github.com/geonixa/wiki-markdown-workspace.git`",
+      "Install modules: `npm install` inside folders",
+      "Execute dev server: `npm run dev`"
+    ],
+    "sourceCodeUrl": "https://github.com/geonixa/wiki-markdown-workspace",
+    "demoVideoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "downloadableReportUrl": "#"
+  },
+  {
+    "id": "3",
+    "thumbnail": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+    "title": "Geonixa IDE & Compiler Server",
+    "technologyStack": [
+      "Node.js",
+      "Express.js",
+      "Docker Sandbox",
+      "WebSocket",
+      "Tailwind CSS"
+    ],
+    "shortDescription": "A self-hosted backend runner that compiles and executes user code in isolated Docker runtime containers.",
+    "difficulty": "Hard",
+    "category": "Infrastructure",
+    "duration": "3 weeks",
+    "overview": "This is a simplified self-hosted clone of Judge0, allowing users to safely send code batches to be executed inside temporary isolated environments.",
+    "completeDescription": "This compiler server provides REST APIs to compile, execute, and evaluate scripts across Python, Javascript, C++, and Java. It manages resources strictly to avoid host depletion (Memory limits, network containment, CPU limits).",
+    "features": [
+      "Safe sandboxed execution using short-lived container runtimes",
+      "Resource containment policies (CPU shares, RAM limitations)",
+      "WebSockets channel streaming live standard output streams",
+      "Multiple language runtime support with customized compilation configs"
+    ],
+    "objectives": [
+      "Achieve process containment to block host-system tampering or malware",
+      "Respond dynamically to batch requests with low network overhead"
+    ],
+    "modules": [
+      "Job Dispatcher: Queue incoming compilation tasks using worker pools",
+      "Sandbox Container Orchestrator: Spawns Docker runtime environments dynamically",
+      "Report collector: Fetches stdout, exit codes, and execution wall-times"
+    ],
+    "technologiesUsed": [
+      "Express.js & Node.js (Core REST controllers)",
+      "Docker CLI API integration (Container controls)",
+      "BullMQ / Redis (Job queues management)"
+    ],
+    "screenshots": [
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80"
+    ],
+    "installationSteps": [
+      "Clone code: `git clone https://github.com/geonixa/ide-compiler-server.git`",
+      "Install modules: `npm install`",
+      "Ensure Docker Daemon is running locally",
+      "Run server: `npm start`"
+    ],
+    "sourceCodeUrl": "https://github.com/geonixa/ide-compiler-server",
+    "demoVideoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "downloadableReportUrl": "#"
+  }
+]

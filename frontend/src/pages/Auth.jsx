@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../components/Toast';
-import { Terminal, Lock, User, ArrowRight } from 'lucide-react';
+import { Lock, User, ArrowRight } from 'lucide-react';
+import logoUrl from '../assets/logo.svg';
+import { ParticlesBackground } from '../components/ParticlesBackground';
 import './Auth.css';
 
 export const Auth = ({ setActivePage }) => {
@@ -44,19 +46,20 @@ export const Auth = ({ setActivePage }) => {
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page fade-in">
+      <ParticlesBackground />
       <div className="auth-container">
         {/* Brand Banner */}
         <div className="auth-brand">
-          <div className="auth-logo">
-            <Terminal size={28} />
+          <div className="auth-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={logoUrl} alt="Logo" style={{ width: '64px', height: '64px' }} />
           </div>
-          <h1 className="auth-title">Geonixa Code</h1>
+          <h1 className="auth-title">Geonixa Project Portal</h1>
           <p className="auth-subtitle">Learn. Compile. Build. Showcase.</p>
         </div>
 
         {/* Auth Panel Card */}
-        <div className="auth-card">
+        <div className="auth-card glassmorphism card-lift">
           <div className="auth-tabs">
             <button
               onClick={() => setIsLogin(true)}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { LogOut, Terminal, User, FolderGit2 } from 'lucide-react';
+import { LogOut, User, FolderGit2 } from 'lucide-react';
+import logoUrl from '../assets/logo.svg';
 import { useAuth } from '../hooks/useAuth';
 import './Navbar.css';
 
@@ -14,10 +15,10 @@ export const Navbar = ({ activePage, setActivePage }) => {
           onClick={() => setActivePage('dashboard')} 
           className="navbar-brand"
         >
-          <div className="brand-icon">
-            <Terminal size={20} />
+          <div className="brand-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={logoUrl} alt="Logo" style={{ width: '40px', height: '40px' }} />
           </div>
-          <span className="brand-title">Geonixa Code</span>
+          <span className="brand-title">Geonixa Project Portal</span>
         </button>
 
         {/* Main Navigation Links */}

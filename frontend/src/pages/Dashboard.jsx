@@ -6,6 +6,7 @@ import {
   ArrowRight, ExternalLink, Bookmark, CheckCircle2, Circle
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ParticlesBackground } from '../components/ParticlesBackground';
 import './Dashboard.css';
 
 export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
@@ -65,11 +66,15 @@ export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
   };
 
   return (
-    <div className="page-wrapper dashboard-page">
+    <div className="dashboard-container fade-in" style={{ position: 'relative' }}>
+      <ParticlesBackground />
+      
       {/* Welcome header */}
-      <div className="dashboard-header">
-        <div>
-          <h1 className="page-title">Developer Workspace</h1>
+      <section className="hero-section glassmorphism">
+        <div className="hero-content">
+          <h1 className="hero-title" style={{ background: 'var(--premium-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Welcome back, {stats.username}
+          </h1>
           <p className="page-subtitle">Build coding streaks and showcase project structures.</p>
         </div>
         <button
@@ -80,12 +85,12 @@ export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
           Browse Problems
           <ArrowRight size={16} />
         </button>
-      </div>
+      </section>
 
       {/* Numerical dashboard cards */}
-      <div className="metrics-grid">
+      <div className="metrics-grid" style={{ position: 'relative', zIndex: 1 }}>
         {/* Streak card */}
-        <div className="metric-card">
+        <div className="stat-card card-lift glassmorphism">
           <div className="metric-info">
             <span className="metric-label">Current Streak</span>
             <span className="metric-value">{streak} Days</span>
@@ -97,7 +102,7 @@ export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
         </div>
 
         {/* Solved ratio card */}
-        <div className="metric-card">
+        <div className="stat-card card-lift glassmorphism">
           <div className="metric-info">
             <span className="metric-label">Problems Solved</span>
             <span className="metric-value">
@@ -113,7 +118,7 @@ export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
         </div>
 
         {/* Attempted card */}
-        <div className="metric-card">
+        <div className="stat-card card-lift glassmorphism">
           <div className="metric-info">
             <span className="metric-label">Problems Attempted</span>
             <span className="metric-value">{attemptedCount}</span>
@@ -125,7 +130,7 @@ export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
         </div>
 
         {/* Project progress card */}
-        <div className="metric-card">
+        <div className="stat-card card-lift glassmorphism">
           <div className="metric-info">
             <span className="metric-label">Project Showcase</span>
             <span className="metric-value">{projectProgress}%</span>
@@ -140,10 +145,10 @@ export const Dashboard = ({ setActivePage, setSelectedProblemId }) => {
       </div>
 
       {/* Main analytics section */}
-      <div className="analytics-grid">
+      <div className="analytics-grid" style={{ position: 'relative', zIndex: 1 }}>
         
         {/* Chart area */}
-        <div className="chart-card">
+        <div className="stat-card card-lift glassmorphism">
           <div>
             <h3 className="card-title">Submission Activity</h3>
             <p className="card-subtitle">Total compile runs & submissions completed this week</p>

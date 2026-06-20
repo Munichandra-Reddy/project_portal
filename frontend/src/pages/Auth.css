@@ -23,10 +23,9 @@
 
 .auth-logo {
   display: inline-flex;
-  width: 56px;
-  height: 56px;
+  width: 72px;
+  height: 72px;
   border-radius: 16px;
-  background-color: var(--color-btn);
   align-items: center;
   justify-content: center;
   color: #fff;
@@ -34,7 +33,7 @@
 }
 
 .auth-title {
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 800;
   color: var(--color-btn);
   margin: 0;
@@ -138,22 +137,27 @@
 }
 
 .auth-submit-btn {
-  margin-top: 16px;
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
-  background-color: var(--color-btn);
-  color: #fff;
-  font-weight: bold;
-  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: var(--btn-primary-gradient);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  position: relative;
+  overflow: hidden;
 }
 
 .auth-submit-btn:hover:not(:disabled) {
-  background-color: var(--color-btn-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 
 .auth-submit-btn:disabled {

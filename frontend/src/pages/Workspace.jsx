@@ -296,26 +296,46 @@ export const Workspace = ({ problemId, setActivePage }) => {
 
           <div className="panel-content">
             {leftTab === 'description' && (
-              <div>
-                <h3 className="problem-desc-title">{problem.title}</h3>
-                <div className="problem-desc-text">{problem.description}</div>
+              <div className="problem-statement-container">
+                <h3 className="problem-desc-title"># {problem.title}</h3>
+                <div className="problem-desc-text" style={{ whiteSpace: 'pre-wrap' }}>{problem.description}</div>
 
-                <div className="section-title">Examples</div>
-                {problem.examples?.map((ex, i) => (
-                  <div key={i} className="example-box">
-                    <div><strong>Example {i + 1}:</strong></div>
-                    <div><strong>Input:</strong> {ex.input}</div>
-                    <div><strong>Output:</strong> {ex.output}</div>
-                    {ex.explanation && <div><strong>Explanation:</strong> {ex.explanation}</div>}
-                  </div>
-                ))}
+                {problem.examples && problem.examples.length > 0 && (
+                  <>
+                    <div className="section-title">Examples</div>
+                    {problem.examples.map((ex, i) => (
+                      <div key={i} className="example-box">
+                        <div><strong>Example {i + 1}</strong></div>
+                        <div><strong>Input:</strong> {ex.input}</div>
+                        <div><strong>Output:</strong> {ex.output}</div>
+                        {ex.explanation && <div><strong>Explanation:</strong> {ex.explanation}</div>}
+                      </div>
+                    ))}
+                  </>
+                )}
 
-                <div className="section-title">Constraints</div>
-                <ul className="constraints-list">
-                  {problem.constraints?.map((con, idx) => (
-                    <li key={idx}>{con}</li>
+                {problem.constraints && problem.constraints.length > 0 && (
+                  <>
+                    <div className="section-title">Constraints</div>
+                    <ul className="constraints-list">
+                      {problem.constraints.map((con, idx) => (
+                        <li key={idx}>{con}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                <div className="section-title">Tags</div>
+                <div className="category-tags" style={{ marginBottom: '16px' }}>
+                  {problem.tags?.map(tag => (
+                    <span key={tag} className="category-tag">{tag}</span>
                   ))}
-                </ul>
+                </div>
+
+                <div className="section-title">Difficulty</div>
+                <span className={`difficulty-badge ${problem.difficulty?.toLowerCase()}`}>
+                  {problem.difficulty}
+                </span>
               </div>
             )}
 

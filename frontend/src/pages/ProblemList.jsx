@@ -14,6 +14,8 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
   const [difficulty, setDifficulty] = useState('');
   const [solvedStatus, setSolvedStatus] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
+  const [acceptanceRate, setAcceptanceRate] = useState('');
+  const [sort, setSort] = useState('ascId');
   
   // Pagination State
   const [page, setPage] = useState(1);
@@ -32,6 +34,8 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
         difficulty,
         solvedStatus,
         tag: selectedTag,
+        acceptanceRate,
+        sort,
         page,
         limit
       });
@@ -49,7 +53,7 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
 
   useEffect(() => {
     fetchProblems();
-  }, [page, difficulty, solvedStatus, selectedTag]);
+  }, [page, difficulty, solvedStatus, selectedTag, acceptanceRate, sort]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -62,6 +66,8 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
     setDifficulty('');
     setSolvedStatus('');
     setSelectedTag('');
+    setAcceptanceRate('');
+    setSort('ascId');
     setPage(1);
   };
 
@@ -136,6 +142,30 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
           <option value="solved">Solved</option>
           <option value="unsolved">Unsolved</option>
         </select>
+
+        {/* Acceptance Rate */}
+        <select
+          value={acceptanceRate}
+          onChange={(e) => { setAcceptanceRate(e.target.value); setPage(1); }}
+          className="filter-select"
+        >
+          <option value="">Any Acc. Rate</option>
+          <option value="90">≥ 90%</option>
+          <option value="70">≥ 70%</option>
+          <option value="50">≥ 50%</option>
+        </select>
+
+        {/* Sort */}
+        <select
+          value={sort}
+          onChange={(e) => { setSort(e.target.value); setPage(1); }}
+          className="filter-select"
+        >
+          <option value="ascId">ID (Asc)</option>
+          <option value="descId">ID (Desc)</option>
+          <option value="difficulty">Difficulty</option>
+          <option value="acceptanceRate">Acceptance Rate</option>
+        </select>
       </div>
 
       {/* Quick Tag Badges */}
@@ -183,6 +213,7 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
                 <th style={{ width: '80px', paddingLeft: '24px' }}>Status</th>
                 <th>Title</th>
                 <th style={{ width: '120px' }}>Difficulty</th>
+                <th style={{ width: '120px' }}>Acc. Rate</th>
                 <th>Category</th>
                 <th style={{ width: '100px', textAlign: 'center' }}>Action</th>
               </tr>
@@ -219,10 +250,17 @@ export const ProblemList = ({ setActivePage, setSelectedProblemId }) => {
                     </span>
                   </td>
 
+                  {/* Acc Rate Column */}
+                  <td>
+                    <span className="acc-rate">
+                      {prob.acceptanceRate ? `${prob.acceptanceRate}%` : 'N/A'}
+                    </span>
+                  </td>
+
                   {/* Category Column */}
                   <td>
                     <div className="category-tags">
-                      {prob.tags.filter(t => t !== prob.difficulty).map(tag => (
+                      {prob.tags && prob.tags.filter(t => t !== prob.difficulty).map(tag => (
                         <span key={tag} className="category-tag">{tag}</span>
                       ))}
                     </div>

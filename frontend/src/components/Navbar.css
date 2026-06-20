@@ -32,10 +32,9 @@
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--border-radius);
-  background-color: var(--color-btn);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +42,7 @@
 }
 
 .brand-title {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: bold;
 }
 

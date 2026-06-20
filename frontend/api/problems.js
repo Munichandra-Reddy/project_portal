@@ -1,4 +1,6 @@
 import express from 'express';
+import { fetchProblemDetailsOnDemand } from '../utils/leetcodeGraphQL.js';
+import { runGlobalDeduplication } from '../utils/globalDeduplicator.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -62,6 +64,9 @@ const saveUserState = (userId, state) => {
  * Query Params: page, limit, search, difficulty, tag, solvedStatus, userId
  */
 router.get('/', (req, res) => {
+  // Automatically remove duplicate content every time data is loaded
+  runGlobalDeduplication();
+
   const problemsPath = path.join(DATA_DIR, 'problems.json');
   let problems = readJsonFile(problemsPath, []);
   
@@ -78,13 +83,13 @@ router.get('/', (req, res) => {
   }));
 
   // Filtering
-  const { search, difficulty, tag, solvedStatus, page = 1, limit = 20 } = req.query;
+  const { search, difficulty, tag, solvedStatus, acceptanceRate, sort, page = 1, limit = 20 } = req.query;
   
   if (search) {
     const q = search.toLowerCase();
     problems = problems.filter(p => 
       p.title.toLowerCase().includes(q) || 
-      p.description.toLowerCase().includes(q) ||
+      (p.description && p.description.toLowerCase().includes(q)) ||
       p.id.includes(q)
     );
   }
@@ -94,7 +99,7 @@ router.get('/', (req, res) => {
   }
   
   if (tag) {
-    problems = problems.filter(p => p.tags.some(t => t.toLowerCase() === tag.toLowerCase()));
+    problems = problems.filter(p => p.tags && p.tags.some(t => t.toLowerCase() === tag.toLowerCase()));
   }
   
   if (solvedStatus) {
@@ -105,6 +110,25 @@ router.get('/', (req, res) => {
     }
   }
 
+  if (acceptanceRate) {
+    const minRate = parseFloat(acceptanceRate);
+    problems = problems.filter(p => p.acceptanceRate >= minRate);
+  }
+
+  // Sorting
+  if (sort) {
+    if (sort === 'ascId') {
+      problems.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    } else if (sort === 'descId') {
+      problems.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+    } else if (sort === 'difficulty') {
+      const dMap = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
+      problems.sort((a, b) => (dMap[a.difficulty] || 0) - (dMap[b.difficulty] || 0));
+    } else if (sort === 'acceptanceRate') {
+      problems.sort((a, b) => b.acceptanceRate - a.acceptanceRate);
+    }
+  }
+
   // Pagination
   const total = problems.length;
   const startIndex = (parseInt(page) - 1) * parseInt(limit);
@@ -112,7 +136,9 @@ router.get('/', (req, res) => {
 
   // Gather all unique tags for filter autocomplete
   const allTagsSet = new Set();
-  problems.forEach(p => p.tags.forEach(t => allTagsSet.add(t)));
+  problems.forEach(p => {
+    if (p.tags) p.tags.forEach(t => allTagsSet.add(t));
+  });
 
   res.json({
     problems: paginatedProblems,
@@ -130,13 +156,18 @@ router.get('/', (req, res) => {
 /**
  * GET /api/problems/:id
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const problemsPath = path.join(DATA_DIR, 'problems.json');
   const problems = readJsonFile(problemsPath, []);
   
-  const problem = problems.find(p => p.id === req.params.id);
+  let problem = problems.find(p => p.id === req.params.id);
   if (!problem) {
     return res.status(404).json({ error: 'Problem not found' });
+  }
+
+  // Fetch detailed data on demand if missing
+  if (problem.titleSlug && !problem.description) {
+    problem = await fetchProblemDetailsOnDemand(problem.titleSlug, problem.id);
   }
   
   const userId = req.query.userId || 'guest';
